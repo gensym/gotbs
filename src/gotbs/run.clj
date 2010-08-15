@@ -1,7 +1,7 @@
 (ns gotbs.run
   (use [ring.adapter.jetty])
-  (use [gotbs.core]))
+  (require [gotbs.core]))
 
-(run-jetty app {:port 8080})
+(run-jetty #'gotbs.core/app {:port 8080})
 
   

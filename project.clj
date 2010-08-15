@@ -1,7 +1,11 @@
-(defproject gotbs "1.0.0-SNAPSHOT"
-  :description "FIXME: write"
-  :dependencies [[org.clojure/clojure "1.2.0-RC2"]
-                 [org.clojure/clojure-contrib "1.2.0-RC2"]
-		 [ring "0.1.1-SNAPSHOT"]
+(defproject gotbs "0.0.1"
+  :description "CTA Bus Tracker predictions for multi-leg commutes"
+  :dependencies [[org.clojure/clojure "1.2.0-RC3"]
+                 [org.clojure/clojure-contrib "1.2.0-RC3"]
+		 [ring/ring-core "0.2.5"]
+		 [ring/ring-devel "0.2.5"]
+		 [ring/ring-jetty-adapter "0.2.5"]
 		 [enlive "1.0.0-SNAPSHOT"]]
-  :dev-dependencies [[swank-clojure "1.2.1"]])
+  :dev-dependencies [
+		     [swank-clojure "1.2.1"]
+		     [lein-run "1.0.0-SNAPSHOT"]])
