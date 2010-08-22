@@ -4,8 +4,20 @@
   (:use ring.middleware.file-info)
   (:use net.cgrand.enlive-html))
 
-(deftemplate locations "web/index.html" [a]
+(deftemplate locations-old "web/index.html" [a]
   [:div#main] (content a))
+
+(def *dummy-context*
+     [{
+       :route "72 North"
+       :direction "Westbound"
+       :eta "4:20"
+       }
+      {
+       :route "50 Armitage"
+       :direction "Westbound"
+       :eta "4:25"
+       }])
 
 (defsnippet locations-model "web/locations.html" 
   [:#locations [:.location (nth-of-type 1)]]
@@ -13,6 +25,10 @@
   [:.route-name] (content route)
   [:.route-direction] (content direction)
   [:.prediction-time] (content eta))
+
+(deftemplate locations "web/index.html"
+  [locations-data]
+  [:div#main] (content (map locations-model locations-data)))
 
 (defn router [req]
   (condp = (:uri req)
@@ -24,22 +40,13 @@
 		   :body (str "This is Ring on " (:server-name req))}
       "/locations" {:status 200
 		    :headers {"Content-Type" "text/html"}
-		    :body (apply str (locations "SUBSTITUTED!"))}
+		    :body (apply str (locations *dummy-context*))}
       "/locations2" {:status 200
 		    :headers {"Content-Type" "text/html"}
 		    :body (do-get req)}
       {:status 200
        :headers {"Content-Type" "text/html"}
        :body (str "Welcome")}))
-
-(def *dummy-context*
-     [{
-       :route "72 North"
-       :direction "Westbound"
-       :eta "4:20"
-       }])
-
-
 
 (defn handler [req]
   (router req))
