@@ -7,6 +7,13 @@
 (deftemplate locations "web/index.html" [a]
   [:div#main] (content a))
 
+(defsnippet locations-model "web/locations.html" 
+  [:#locations [:.location (nth-of-type 1)]]
+  [{:keys [route direction eta]}]
+  [:.route-name] (content route)
+  [:.route-direction] (content direction)
+  [:.prediction-time] (content eta))
+
 (defn router [req]
   (condp = (:uri req)
       "/error"    {:status 404
@@ -31,6 +38,8 @@
        :direction "Westbound"
        :eta "4:20"
        }])
+
+
 
 (defn handler [req]
   (router req))
