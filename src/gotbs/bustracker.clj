@@ -28,9 +28,12 @@
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
 
-(defn fetch-prediction-data-xml []
+(defn fetch-prediction-data-xml [stop-id]
   (fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getpredictions?key=" api-key "&rt=" route)))
+   (str
+    "http://www.ctabustracker.com/bustime/api/v1/getpredictions?key=" api-key
+    "&rt=" route
+    "&stpid=" stop-id)))
 
 (defn fetch-stop-data-xml []
   (fetch-url
@@ -56,8 +59,18 @@
 (defn make-predictions [xml]
   (map content-xml-to-map (map :content (filter #(= (:tag %) :vehicle) (xml-seq xml)))))
 
+(defn filter-tag [tag-name s]
+  (filter #(= :tag %) tag-name) s)
+
 (defn fetch-prediction-data []
-     (fetch-prediction-data-xml))
+  (map
+   content-xml-to-map
+   (map
+    :content
+    (filter-tag
+     :prd
+     (:content
+      (parse (StringBufferInputStream. (fetch-prediction-data-xml (stop-id)))))))))
 
 (defn fetch-location-data []
   (make-vehicles (parse (StringBufferInputStream. (fetch-location-data-xml)))))
@@ -70,9 +83,9 @@
    content-xml-to-map
    (map
     :content 
-    (filter
-     #(= (:tag %) :stop)
-     (xml-seq 
+    (filter-tag
+     :stop
+     (:content
       (parse
        (StringBufferInputStream.
 	(fetch-stop-data-xml))))))))
