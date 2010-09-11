@@ -1,5 +1,7 @@
 (ns gotbs.web.locations
-  (:use net.cgrand.enlive-html))
+  (:use
+   net.cgrand.enlive-html
+   gotbs.bustracker (make-predictions)))
 
 					;(defn do-get [req]
 					;  (str "Hello world: " (:uri req) " " (:query-string req)))
@@ -25,5 +27,4 @@
 
 (deftemplate locations "web/index.html"
   [req] ; Unused right now
-  [:div#main] (content (map locations-model *dummy-context*)))
-
+  [:div#main] (content (map locations-model (make-predictions))))

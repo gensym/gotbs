@@ -52,31 +52,9 @@
 		(first content)))))]
     (reduce xml-to-map {} xml)))
 
-(defn make-vehicles
-	[xml]
-	(map content-xml-to-map (map :content (filter #(= (:tag %) :vehicle) (xml-seq xml)))))
-
-(defn make-predictions [xml]
-  (map content-xml-to-map (map :content (filter #(= (:tag %) :vehicle) (xml-seq xml)))))
 
 (defn filter-tag [tag-name s]
   (filter #(= :tag %) tag-name) s)
-
-(defn fetch-prediction-data []
-  (map
-   content-xml-to-map
-   (map
-    :content
-    (filter-tag
-     :prd
-     (:content
-      (parse (StringBufferInputStream. (fetch-prediction-data-xml (stop-id)))))))))
-
-(defn fetch-location-data []
-  (make-vehicles (parse (StringBufferInputStream. (fetch-location-data-xml)))))
-
-(defn stop-id []
-  (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data)))))
 
 (defn fetch-stop-data []
   (map
@@ -89,5 +67,33 @@
       (parse
        (StringBufferInputStream.
 	(fetch-stop-data-xml))))))))
+
+(defn stop-id []
+  (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data)))))
+
+(defn fetch-prediction-data []
+  (map
+   content-xml-to-map
+   (map
+    :content
+    (filter-tag
+     :prd
+     (:content
+      (parse (StringBufferInputStream. (fetch-prediction-data-xml (stop-id)))))))))
+
+(defstruct prediction :route :direction :eta)
+
+(defn make-prediction [bustracker-prediction]
+  (struct-map
+      prediction
+      :route (:rt bustracker-prediction)
+      :direction (:rtdir bustracker-prediction)
+      :eta (last (re-seq #"\S+" (:prdtm bustracker-prediction)))))
+
+(defn make-predictions []
+  (map
+   make-prediction
+   (fetch-prediction-data)))
+
 
 
