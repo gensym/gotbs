@@ -12,8 +12,6 @@
 (def route "72")
 
 (def direction "West+Bound")
-
-(def stop-name  "North Ave & Milwaukee/Damen (Blue Line)")
 ;; END HARDCODING
 
 (defn fetch-url
@@ -68,10 +66,13 @@
        (StringBufferInputStream.
 	(fetch-stop-data-xml))))))))
 
-(defn stop-id []
+(defn stop-id [stop-name]
   (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data)))))
 
-(defn fetch-prediction-data []
+(defn stop-name [stop-id]
+     (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data)))))
+
+(defn fetch-prediction-data [stop-id]
   (map
    content-xml-to-map
    (map
@@ -79,7 +80,7 @@
     (filter-tag
      :prd
      (:content
-      (parse (StringBufferInputStream. (fetch-prediction-data-xml (stop-id)))))))))
+      (parse (StringBufferInputStream. (fetch-prediction-data-xml stop-id))))))))
 
 (defstruct prediction :route :direction :eta)
 
@@ -90,10 +91,10 @@
       :direction (:rtdir bustracker-prediction)
       :eta (last (re-seq #"\S+" (:prdtm bustracker-prediction)))))
 
-(defn make-predictions []
+(defn make-predictions [stop-id]
   (map
    make-prediction
-   (fetch-prediction-data)))
+   (fetch-prediction-data stop-id)))
 
 
 

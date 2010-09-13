@@ -1,30 +1,42 @@
 (ns gotbs.web.locations
   (:use
    net.cgrand.enlive-html
-   gotbs.bustracker (make-predictions)))
+   [gotbs.bustracker :only (make-predictions stop-name)]))
 
 					;(defn do-get [req]
 					;  (str "Hello world: " (:uri req) " " (:query-string req)))
 
 (def *dummy-context*
      [{
+       :stop-name "North/Milwaukee/Damen"
        :route "72 North"
        :direction "Westbound"
        :eta "4:20"
        }
       {
+       :stop-name "North/Milwaukee/Damen"
        :route "50 Armitage"
        :direction "Westbound"
        :eta "4:25"
        }])
 
+;; TODO - this snippet whacks out the wrapping "locations" div. Probably not what we want
 (defsnippet locations-model "web/locations.html" 
   [:#locations [:.location (nth-of-type 1)]]
-  [{:keys [route direction eta]}]
+  [{:keys [stop-name route direction eta]}]
+  [:.stop-name] (content stop-name)
   [:.route-name] (content route)
   [:.route-direction] (content direction)
   [:.prediction-time] (content eta))
 
+(defn make-stop-arrival-info [stop-id]
+  (cons (assoc (first (make-predictions stop-id)) :stop-name (stop-name stop-id)) ()))
+
 (deftemplate locations "web/index.html"
   [req] ; Unused right now
-  [:div#main] (content (map locations-model (make-predictions))))
+  [:div#main] (content
+	       (map 
+		#(map
+		 locations-model
+		 (make-stop-arrival-info %))
+		'("945" "945"))))
