@@ -1,10 +1,8 @@
 (ns gotbs.web.locations
   (:use
    net.cgrand.enlive-html
-   [gotbs.bustracker :only (make-predictions stop-name)]))
-
-					;(defn do-get [req]
-					;  (str "Hello world: " (:uri req) " " (:query-string req)))
+   [gotbs.bustracker :only (stop-name)]
+   [gotbs.stopinfo :only (make-stop-arrival-info)]))
 
 (def *dummy-context*
      [{
@@ -29,14 +27,20 @@
   [:.route-direction] (content direction)
   [:.prediction-time] (content eta))
 
-(defn make-stop-arrival-info [stop-id]
-  (cons (assoc (first (make-predictions stop-id)) :stop-name (stop-name stop-id)) ()))
+(def north-route "72")
+
+(def armitage-route "73")
+(def damen-milwaukee-western "945")
+(def western-and-armitage "4105")
+
+(defn stops-with-arrival-info []
+  (map 
+   (fn [[stop route]]
+     (map
+      locations-model
+      (make-stop-arrival-info stop route)))
+   (list (list damen-milwaukee-western north-route) (list western-and-armitage armitage-route))))
 
 (deftemplate locations "web/index.html"
   [req] ; Unused right now
-  [:div#main] (content
-	       (map 
-		#(map
-		 locations-model
-		 (make-stop-arrival-info %))
-		'("945" "945"))))
+  [:div#main] (content (stops-with-arrival-info)))
