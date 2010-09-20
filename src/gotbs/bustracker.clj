@@ -10,6 +10,8 @@
 (def api-key "kv6yHNkUrkZJkjA8u7V5sxNTq")
 
 (def direction "West+Bound")
+
+(def destination "Jefferson Park Blue Line")
 ;; END HARDCODING
 
 (defn fetch-url
@@ -34,6 +36,14 @@
 (defn fetch-stop-data-xml [route]
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" direction)))
+
+(defn fetch-vehicle-data-xml [route]
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
+
+(defn fetch-pattern-data-xml [route]
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&rt=" route)))
 
 (defn content-xml-to-map [xml]
   (let [
@@ -69,6 +79,32 @@
 
 (defn stop-name [route stop-id]
      (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data route)))))
+
+
+(defn fetch-vehicle-data [route]
+  (map
+   :content
+   (filter-tag
+    :vehicle
+    (:content
+     (parse (StringBufferInputStream. (fetch-vehicle-data-xml route)))))))
+
+(defn fetch-pattern-data [route dir]
+  (map
+   content-xml-to-map
+   (map
+    :content
+    (filter-tag
+     :pt
+     (first
+      (filter
+       #(= dir (first (:content (first (filter-tag :rtdir %)))))
+       (map
+	:content
+	(filter-tag
+	 :ptr
+	 (:content
+	  (parse (StringBufferInputStream. (fetch-pattern-data-xml route))))))))))))
 
 (defn fetch-prediction-data [route stop-id]
   (map
