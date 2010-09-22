@@ -4,12 +4,15 @@
    (java.io BufferedReader InputStreamReader StringBufferInputStream))
   (:use
    clojure.xml (parse)
-   clojure.java.io (input-stream)))
+   clojure.java.io (input-stream)
+   clojure.contrib.str-utils (re-gsub)))
 
 ;; BEGIN HARDCODING
 (def api-key "kv6yHNkUrkZJkjA8u7V5sxNTq")
 
-(def direction "West+Bound")
+(def west-bound "West Bound")
+
+(def milwaukee-and-north-avenue-damen-56 "15847")
 
 (def destination "Jefferson Park Blue Line")
 ;; END HARDCODING
@@ -33,9 +36,10 @@
     "&rt=" route
     "&stpid=" stop-id)))
 
-(defn fetch-stop-data-xml [route]
-  (fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" direction)))
+(defn fetch-stop-data-xml [route direction]
+  (let [dir (re-gsub #"\s" "+" direction)]
+    (fetch-url
+     (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" dir))))
 
 (defn fetch-vehicle-data-xml [route]
   (fetch-url
@@ -62,7 +66,7 @@
 (defn filter-tag [tag-name s]
   (filter #(= (:tag %) tag-name) s))
 
-(defn fetch-stop-data [route]
+(defn fetch-stop-data [route direction]
   (map
    content-xml-to-map
    (map
@@ -72,14 +76,13 @@
      (:content
       (parse
        (StringBufferInputStream.
-	(fetch-stop-data-xml route))))))))
+	(fetch-stop-data-xml route direction))))))))
 
 (defn stop-id [route stop-name]
   (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data route)))))
 
 (defn stop-name [route stop-id]
      (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data route)))))
-
 
 (defn fetch-vehicle-data [route]
   (map
@@ -88,6 +91,9 @@
     :vehicle
     (:content
      (parse (StringBufferInputStream. (fetch-vehicle-data-xml route)))))))
+
+(defn fetch-vehicles-past-stop [route dest stop-id]
+  (fetch-vehicle-data route))
 
 (defn fetch-pattern-data [route dir]
   (map
@@ -105,6 +111,20 @@
 	 :ptr
 	 (:content
 	  (parse (StringBufferInputStream. (fetch-pattern-data-xml route))))))))))))
+
+(defn destination [route dir]
+  (:stpnm (last (fetch-pattern-data route dir))))
+
+(defn stop-pdist [route dir stop-id]
+  (fetch-pattern-data route dir))
+
+(defn pattern-dist [stop-id route dir]
+  (Float/parseFloat
+   (:pdist
+    (first
+     (filter
+      #(= stop-id (:stpid %))
+      (fetch-pattern-data route dir))))))
 
 (defn fetch-prediction-data [route stop-id]
   (map

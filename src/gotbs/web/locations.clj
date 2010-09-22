@@ -31,6 +31,7 @@
 
 (def armitage-route "73")
 (def damen-milwaukee-western "945")
+(def milwaukee-and-armitage "14564")
 (def western-and-armitage "4105")
 
 (defn stops-with-arrival-info []
