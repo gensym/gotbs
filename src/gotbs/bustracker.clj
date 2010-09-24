@@ -12,6 +12,8 @@
 
 (def west-bound "West Bound")
 
+(def north-bound "North Bound")
+
 (def milwaukee-and-north-avenue-damen-56 "15847")
 
 (def destination "Jefferson Park Blue Line")
@@ -86,14 +88,20 @@
 
 (defn fetch-vehicle-data [route]
   (map
-   :content
-   (filter-tag
-    :vehicle
-    (:content
-     (parse (StringBufferInputStream. (fetch-vehicle-data-xml route)))))))
+   content-xml-to-map
+   (map
+    :content
+    (filter-tag
+     :vehicle
+     (:content
+      (parse (StringBufferInputStream. (fetch-vehicle-data-xml route))))))))
 
-(defn fetch-vehicles-past-stop [route dest stop-id]
-  (fetch-vehicle-data route))
+(defn fetch-vehicles-past-stop [route dir stop-id]
+  (filter
+   #(>
+     (Float/parseFloat (:pdist %))
+     (stop-pdist route dir stop-id))
+   (fetch-vehicle-data route)))
 
 (defn fetch-pattern-data [route dir]
   (map
@@ -116,9 +124,6 @@
   (:stpnm (last (fetch-pattern-data route dir))))
 
 (defn stop-pdist [route dir stop-id]
-  (fetch-pattern-data route dir))
-
-(defn pattern-dist [stop-id route dir]
   (Float/parseFloat
    (:pdist
     (first
