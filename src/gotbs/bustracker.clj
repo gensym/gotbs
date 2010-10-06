@@ -96,12 +96,22 @@
      (:content
       (parse (StringBufferInputStream. (fetch-vehicle-data-xml route))))))))
 
-(defn fetch-vehicles-past-stop [route dir stop-id]
-  (filter
-   #(>
-     (Float/parseFloat (:pdist %))
-     (stop-pdist route dir stop-id))
-   (fetch-vehicle-data route)))
+
+(let
+    [compare-stop
+     (fn [comparer route dir stop-id]
+       (filter
+	#(comparer
+	  (Float/parseFloat (:pdist %))
+	  (stop-pdist route dir stop-id))
+	(fetch-vehicle-data route)))]
+  
+  (defn fetch-vehicles-past-stop [route dir stop-id]
+    (compare-stop > route dir stop-id))
+
+  (defn fetch-vehicles-before-stop [route dir stop-id]
+    (compare-stop < route dir stop-id))) 
+  
 
 (defn fetch-pattern-data [route dir]
   (map
