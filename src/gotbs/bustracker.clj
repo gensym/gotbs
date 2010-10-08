@@ -80,11 +80,11 @@
        (StringBufferInputStream.
 	(fetch-stop-data-xml route direction))))))))
 
-(defn stop-id [route stop-name]
-  (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data route)))))
+(defn stop-id [route direction stop-name]
+  (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data route direction)))))
 
-(defn stop-name [route stop-id]
-     (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data route)))))
+(defn stop-name [route direction stop-id]
+     (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data route direction)))))
 
 (defn fetch-vehicle-data [route]
   (map
@@ -95,23 +95,6 @@
      :vehicle
      (:content
       (parse (StringBufferInputStream. (fetch-vehicle-data-xml route))))))))
-
-
-(let
-    [compare-stop
-     (fn [comparer route dir stop-id]
-       (filter
-	#(comparer
-	  (Float/parseFloat (:pdist %))
-	  (stop-pdist route dir stop-id))
-	(fetch-vehicle-data route)))]
-  
-  (defn fetch-vehicles-past-stop [route dir stop-id]
-    (compare-stop > route dir stop-id))
-
-  (defn fetch-vehicles-before-stop [route dir stop-id]
-    (compare-stop < route dir stop-id))) 
-  
 
 (defn fetch-pattern-data [route dir]
   (map
@@ -130,9 +113,6 @@
 	 (:content
 	  (parse (StringBufferInputStream. (fetch-pattern-data-xml route))))))))))))
 
-(defn destination [route dir]
-  (:stpnm (last (fetch-pattern-data route dir))))
-
 (defn stop-pdist [route dir stop-id]
   (Float/parseFloat
    (:pdist
@@ -140,6 +120,10 @@
      (filter
       #(= stop-id (:stpid %))
       (fetch-pattern-data route dir))))))
+
+
+(defn destination [route dir]
+  (:stpnm (last (fetch-pattern-data route dir))))
 
 (defn fetch-prediction-data [route stop-id]
   (map
@@ -165,5 +149,20 @@
    make-prediction
    (fetch-prediction-data route stop-id)))
 
+(let
+    [compare-stop
+     (fn [comparer route dir stop-id]
+       (filter
+	#(comparer
+	  (Float/parseFloat (:pdist %))
+	  (stop-pdist route dir stop-id))
+	(fetch-vehicle-data route)))]
+  
+  (defn fetch-vehicles-past-stop [route dir stop-id]
+    (compare-stop > route dir stop-id))
+
+  (defn fetch-vehicles-before-stop [route dir stop-id]
+    (compare-stop < route dir stop-id))) 
+  
 
 

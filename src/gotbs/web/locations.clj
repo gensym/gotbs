@@ -1,7 +1,7 @@
 (ns gotbs.web.locations
   (:use
    net.cgrand.enlive-html
-   [gotbs.bustracker :only (stop-name)]
+   [gotbs.bustracker :only (stop-name north-bound west-bound)]
    [gotbs.stopinfo :only (make-stop-arrival-info)]))
 
 (def *dummy-context*
@@ -36,12 +36,20 @@
 
 (defn stops-with-arrival-info []
   (map 
-   (fn [[stop route]]
+   (fn [[route direction stop]]
      (map
       locations-model
-      (make-stop-arrival-info stop route)))
-   (list (list damen-milwaukee-western north-route) (list western-and-armitage armitage-route))))
+      (make-stop-arrival-info route direction stop)))
+   (list (list north-route west-bound damen-milwaukee-western) (list armitage-route west-bound western-and-armitage))))
 
-(deftemplate locations "web/index.html"
-  [req] ; Unused right now
-  [:div#main] (content (stops-with-arrival-info)))
+(defsnippet locations-content "web/locations.html"
+  [:div#locations]
+  [req]
+  [:div#locations] (content (stops-with-arrival-info)))
+
+(deftemplate pagetemplate "web/index.html"
+  [req]
+  [:div#main] (content (locations-content req)))
+
+(defn locations [req]
+     (pagetemplate req))
