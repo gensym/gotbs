@@ -18,7 +18,6 @@
        :eta "4:25"
        }])
 
-;; TODO - this snippet whacks out the wrapping "locations" div. Probably not what we want
 (defsnippet locations-model "web/locations.html" 
   [:#locations [:.location (nth-of-type 1)]]
   [{:keys [stop-name route direction eta]}]

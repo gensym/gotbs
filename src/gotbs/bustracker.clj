@@ -43,9 +43,14 @@
     (fetch-url
      (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" dir))))
 
-(defn fetch-vehicle-data-xml [route]
+(defn fetch-vehicles-on-route-data-xml [route]
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
+
+(defn fetch-vehicles-data-xml [vehicles]
+  "Takes a sequence of vehicles (limit 10) and gets their information"
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&vid=" (reduce #(str %1 "," %2) vehicles))))
 
 (defn fetch-pattern-data-xml [route]
   (fetch-url
@@ -86,15 +91,21 @@
 (defn stop-name [route direction stop-id]
      (first (map :stpnm (filter #(= (:stpid %) stop-id) (fetch-stop-data route direction)))))
 
-(defn fetch-vehicle-data [route]
-  (map
-   content-xml-to-map
-   (map
-    :content
-    (filter-tag
-     :vehicle
-     (:content
-      (parse (StringBufferInputStream. (fetch-vehicle-data-xml route))))))))
+(let [construct-vehicle-data
+      (fn [vehicle-data-xml]
+	(map
+	 content-xml-to-map
+	 (map
+	  :content
+	  (filter-tag
+	   :vehicle
+	   (:content
+	    (parse (StringBufferInputStream. vehicle-data-xml)))))))]
+  (defn fetch-vehicles-on-route-data [route]
+    (construct-vehicle-data (fetch-vehicles-on-route-data-xml route)))
+
+  (defn fetch-vehicles-data [& vehicle_ids]
+     (construct-vehicle-data (fetch-vehicles-data-xml vehicle_ids))))
 
 (defn fetch-pattern-data [route dir]
   (map
@@ -156,13 +167,10 @@
 	#(comparer
 	  (Float/parseFloat (:pdist %))
 	  (stop-pdist route dir stop-id))
-	(fetch-vehicle-data route)))]
+	(fetch-vehicles-on-route-data route)))]
   
   (defn fetch-vehicles-past-stop [route dir stop-id]
     (compare-stop > route dir stop-id))
 
   (defn fetch-vehicles-before-stop [route dir stop-id]
     (compare-stop < route dir stop-id))) 
-  
-
-

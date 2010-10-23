@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<bustime-response>
+  <prd>
+    <tmstmp>20100909 22:45</tmstmp>
+    <typ>A</typ>
+    <stpnm>North Ave &amp; Milwaukee/Damen (Blue Line)</stpnm>
+    <stpid>945</stpid>
+    <vid>2010</vid>
+    <dstp>2967</dstp>
+    <rt>72</rt>
+    <rtdir>West Bound</rtdir>
+    <des>Harlem</des>
+    <prdtm>20100909 22:49</prdtm>
+  </prd>
+  <prd>
+    <tmstmp>20100909 22:45</tmstmp>
+    <typ>A</typ>
+    <stpnm>North Ave &amp; Milwaukee/Damen (Blue Line)</stpnm>
+    <stpid>945</stpid>
+    <vid>1444</vid>
+    <dstp>12711</dstp>
+    <rt>72</rt>
+    <rtdir>West Bound</rtdir>
+    <des>Harlem</des>
+    <prdtm>20100909 23:02</prdtm>
+  </prd>
+</bustime-response>
