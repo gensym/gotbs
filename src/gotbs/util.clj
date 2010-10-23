@@ -5,4 +5,3 @@
   (map #(apply func %) (partition-all chunk-size coll)))
 
 (defn chunk-fun)
-

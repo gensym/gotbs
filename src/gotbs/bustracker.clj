@@ -8,7 +8,7 @@
    clojure.contrib.str-utils (re-gsub)))
 
 ;; BEGIN HARDCODING
-(def api-key "kv6yHNkUrkZJkjA8u7V5sxNTq")
+(def api-key (System/getenv "CTA_BUSTRACKER_API_KEY"))
 
 (def west-bound "West Bound")
 
