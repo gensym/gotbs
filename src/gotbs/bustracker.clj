@@ -16,6 +16,10 @@
 
 (def milwaukee-and-north-avenue-damen-56 "15847")
 
+(def milwaukee-and-talman-56 "5552")
+
+(def madison-and-clinton-56 "455")
+
 (def destination "Jefferson Park Blue Line")
 ;; END HARDCODING
 
@@ -52,9 +56,14 @@
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&vid=" (reduce #(str %1 "," %2) vehicles))))
 
-(defn fetch-pattern-data-xml [route]
+(defn fetch-pattern-data-for-route-xml [route]
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&rt=" route)))
+
+(defn fetch-pattern-data-by-id-xml [pattern-id]
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&pid=" pattern-id)))
+
 
 (defn content-xml-to-map [xml]
   (let [
@@ -72,6 +81,9 @@
 
 (defn filter-tag [tag-name s]
   (filter #(= (:tag %) tag-name) s))
+
+(defn remove-tag [tag-name s]
+  (remove #(= (:tag %) tag-name) s))
 
 (defn fetch-stop-data [route direction]
   (map
@@ -105,9 +117,24 @@
     (construct-vehicle-data (fetch-vehicles-on-route-data-xml route)))
 
   (defn fetch-vehicles-data [& vehicle_ids]
-     (construct-vehicle-data (fetch-vehicles-data-xml vehicle_ids))))
+    (construct-vehicle-data (fetch-vehicles-data-xml vehicle_ids))))
 
-(defn fetch-pattern-data [route dir]
+
+;; Milwaukee PIDs - 1970, 1971
+
+(defn fetch-pattern-data-by-id [pattern-id]
+  (content-xml-to-map
+   (remove-tag
+    :pt
+    (first
+     (map
+      :content
+      (filter-tag
+       :ptr
+       (:content
+        (parse (StringBufferInputStream. (fetch-pattern-data-by-id-xml pattern-id))))))))))
+
+(defn fetch-pattern-data-for-route [route dir]
   (map
    content-xml-to-map
    (map
@@ -122,7 +149,7 @@
 	(filter-tag
 	 :ptr
 	 (:content
-	  (parse (StringBufferInputStream. (fetch-pattern-data-xml route))))))))))))
+	  (parse (StringBufferInputStream. (fetch-pattern-data-for-route-xml route))))))))))))
 
 (defn stop-pdist [route dir stop-id]
   (Float/parseFloat
@@ -130,11 +157,10 @@
     (first
      (filter
       #(= stop-id (:stpid %))
-      (fetch-pattern-data route dir))))))
-
+      (fetch-pattern-data-for-route route dir))))))
 
 (defn destination [route dir]
-  (:stpnm (last (fetch-pattern-data route dir))))
+  (:stpnm (last (fetch-pattern-data-for-route route dir))))
 
 (defn fetch-prediction-data [route stop-id]
   (map
@@ -160,17 +186,3 @@
    make-prediction
    (fetch-prediction-data route stop-id)))
 
-(let
-    [compare-stop
-     (fn [comparer route dir stop-id]
-       (filter
-	#(comparer
-	  (Float/parseFloat (:pdist %))
-	  (stop-pdist route dir stop-id))
-	(fetch-vehicles-on-route-data route)))]
-  
-  (defn fetch-vehicles-past-stop [route dir stop-id]
-    (compare-stop > route dir stop-id))
-
-  (defn fetch-vehicles-before-stop [route dir stop-id]
-    (compare-stop < route dir stop-id))) 
