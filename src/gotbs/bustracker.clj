@@ -66,6 +66,7 @@
 
 
 (defn content-xml-to-map [xml]
+  "Takes a seq in the form of [{:tag :a :content [\"something\"]} {:tag b :content [\"else\"]}] and turns it into a map, with the value of the :tag as the keys and the values of :content as values. If the value of :content is a list, takes the first item off of that list."
   (let [
 	xml-to-map
 	(fn [coll tag-attrs]
@@ -123,6 +124,7 @@
 ;; Milwaukee PIDs - 1970, 1971
 
 (defn fetch-pattern-data-by-id [pattern-id]
+  "Fetch data about the pattern by the pattern ID. Excludes waypoints"
   (content-xml-to-map
    (remove-tag
     :pt
@@ -150,14 +152,6 @@
 	 :ptr
 	 (:content
 	  (parse (StringBufferInputStream. (fetch-pattern-data-for-route-xml route))))))))))))
-
-(defn stop-pdist [route dir stop-id]
-  (Float/parseFloat
-   (:pdist
-    (first
-     (filter
-      #(= stop-id (:stpid %))
-      (fetch-pattern-data-for-route route dir))))))
 
 (defn destination [route dir]
   (:stpnm (last (fetch-pattern-data-for-route route dir))))

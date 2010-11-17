@@ -1,14 +1,26 @@
 (ns gotbs.busdata
   (:use gotbs.bustracker))
 
-(defn mock-test []
-  (stop-pdist "56" north-bound milwaukee-and-north-avenue-damen-56))
+;; TODO - test this. It probably does not work
+(defn stop-pdist [route dir stop-id]
+  (Float/parseFloat
+   (:pdist
+    (first
+     (filter
+      #(= stop-id (:stpid %))
+      (fetch-pattern-data-for-route route dir))))))
 
 (defn in-flight-vehicles [route dir]
   (filter
    (fn [veh]
      (= (:des veh) (destination route dir)))
    (fetch-vehicles-on-route-data route)))
+
+
+(defn vehicle-direction [vehicle]
+  (fetch-pattern-data-for-route
+   (:pid vehicle)))
+
 
 ;; TODO - fetch-vehicles-on-route-data needs to take a direction so we
 ;; don't get vehicles moving in the wrong direction
@@ -38,7 +50,6 @@
                  (> dist start-dist))))
             (fetch-vehicles-on-route-data route))))
   
-
 (defn extract-vehicles [predictions]
   (map :vid predictions))
 
