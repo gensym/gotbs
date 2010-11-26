@@ -13,14 +13,14 @@
 (defn in-flight-vehicles [route dir]
   (filter
    (fn [veh]
-     (= (:des veh) (destination route dir)))
+     (=
+      dir
+      (:rtdir (fetch-pattern-data-by-id (:pid veh)))))
    (fetch-vehicles-on-route-data route)))
 
-
 (defn vehicle-direction [vehicle]
-  (fetch-pattern-data-for-route
-   (:pid vehicle)))
-
+  (:rtdir (fetch-pattern-data-by-id
+           (:pid vehicle))))
 
 ;; TODO - fetch-vehicles-on-route-data needs to take a direction so we
 ;; don't get vehicles moving in the wrong direction
