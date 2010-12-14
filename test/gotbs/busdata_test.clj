@@ -15,12 +15,33 @@
      (fake (bustracker/fetch-pattern-data-by-id 2 2) => 10)
      (fake (another-fake) => 100)))
 
+(test/deftest should-fetch-stop-pdist
+  (expect (stop-pdist "56" "North Bound" "15847") => 19452
+          (fake (bustracker/fetch-pattern-data-for-route "56" "North Bound") =>
+                (list
+                 {:pdist "19452.0",
+                  :stpnm "Milwaukee & North Avenue/Damen",
+                  :stpid "15847",
+                  :typ "S",
+                  :lon "-87.677861452103",
+                  :lat "41.910716957663",
+                  :seq "35"}
+                 {:pdist "12345.0",
+                  :stpnm "Some other stop",
+                  :stpid "42",
+                  :typ "S",
+                  :lon "-23",
+                  :lat "23"}))
+          ))
+
 (test/deftest should-get-vehicle-direction
   (let [vehicle
         {:pid "1970"}]
     (expect
      (vehicle-direction vehicle) => "North Bound"
      (fake (bustracker/fetch-pattern-data-by-id "1970") => {:rtdir "North Bound"}))))
+
+
 
 
 (test/deftest should-get-inflight-vehicles
@@ -88,13 +109,30 @@
                                                           :ln "51451.0"
                                                           :pid "1971"})))
 
-;; (defn ignore []
-;;      (test/deftest should-fetch-vehicles-before-stop
-;;        (expect
-;;         [stop-pdist (returns 19452.0)]
-;;         (test/is
-;;          (=
-;;           (list 1 2 3)
-;;           (list 1 2 3))))))
+
+
+
+
+(test/deftest should-fetch-vehicles-before-stop
+  (expect (fetch-vehicles-before-stop "56" "North Bound" "15847") =>
+          (list
+           {:pdist "23449",
+            :rt "56",
+            :pid "1970",
+            :vid "1219"}
+           {:pdist "37076",
+            :rt "56",
+            :pid "1970",
+            :vid "6789"})
+          (fake (stop-pdist "56" "North Bound" "15847") => 40000)
+          (fake (in-flight-vehicles "56" "North Bound") => (list
+                                             {:pdist "23449",
+                                              :rt "56",
+                                              :pid "1970",
+                                              :vid "1219"}
+                                             {:pdist "37076",
+                                              :rt "56",
+                                              :pid "1970",
+                                              :vid "6789"}))))
 
 

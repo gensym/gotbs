@@ -1,7 +1,6 @@
 (ns gotbs.busdata
   (:use gotbs.bustracker))
 
-;; TODO - test this. It probably does not work
 (defn stop-pdist [route dir stop-id]
   (Float/parseFloat
    (:pdist
@@ -9,6 +8,9 @@
      (filter
       #(= stop-id (:stpid %))
       (fetch-pattern-data-for-route route dir))))))
+
+
+
 
 (defn in-flight-vehicles [route dir]
   (filter
@@ -22,9 +24,6 @@
   (:rtdir (fetch-pattern-data-by-id
            (:pid vehicle))))
 
-;; TODO - fetch-vehicles-on-route-data needs to take a direction so we
-;; don't get vehicles moving in the wrong direction
-
 (let
     [compare-stop
      (fn [comparer route dir stop-id]
@@ -32,7 +31,7 @@
 	#(comparer
 	  (Float/parseFloat (:pdist %))
 	  (stop-pdist route dir stop-id))
-	(fetch-vehicles-on-route-data route)))]
+	(in-flight-vehicles route dir)))]
   
   (defn fetch-vehicles-past-stop [route dir stop-id]
     (compare-stop > route dir stop-id))
