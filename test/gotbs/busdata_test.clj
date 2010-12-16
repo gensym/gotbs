@@ -109,10 +109,6 @@
                                                           :ln "51451.0"
                                                           :pid "1971"})))
 
-
-
-
-
 (test/deftest should-fetch-vehicles-before-stop
   (expect (fetch-vehicles-before-stop "56" "North Bound" "15847") =>
           (list
@@ -134,5 +130,23 @@
                                               :rt "56",
                                               :pid "1970",
                                               :vid "6789"}))))
+
+(test/deftest should-fetch-vehicles-past-stop
+  (expect (fetch-vehicles-past-stop "56" "North Bound" "15847") =>
+          (list
+           {:pdist "37076"
+            :rt "56"
+            :pid "1970"
+            :vid "6789"})
+          (fake (stop-pdist "56" "North Bound" "15847") => 30000)
+          (fake (in-flight-vehicles "56" "North Bound") => (list
+                                                            {:pdist "23449",
+                                                             :rt "56",
+                                                             :pid "1970",
+                                                             :vid "1219"}
+                                                            {:pdist "37076",
+                                                             :rt "56"
+                                                             :pid "1970"
+                                                             :vid "6789"}))))
 
 
