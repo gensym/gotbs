@@ -1,4 +1,5 @@
 (ns gotbs.busdata
+  (:use clojure.set)
   (:use gotbs.bustracker))
 
 (defn stop-pdist [route dir stop-id]
@@ -39,16 +40,14 @@
   (defn fetch-vehicles-before-stop [route dir stop-id]
     (compare-stop < route dir stop-id)))
 
+ 
 (defn fetch-vehicles-between-stops [route dir begin-stop-id end-stop-id]
-  (let [start-dist (stop-pdist route dir begin-stop-id)
-        end-dist (stop-pdist route dir end-stop-id)]
-    (filter (fn [x]
-              (let [dist (Float/parseFloat (:pdist x))]
-                (and
-                 (< dist end-dist)
-                 (> dist start-dist))))
-            (fetch-vehicles-on-route-data route))))
-  
+  (seq
+   (intersection
+    (set (fetch-vehicles-past-stop route dir begin-stop-id))
+    (set (fetch-vehicles-before-stop route dir end-stop-id)))))
+
+
 (defn extract-vehicles [predictions]
   (map :vid predictions))
 

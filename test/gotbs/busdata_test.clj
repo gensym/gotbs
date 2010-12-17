@@ -149,4 +149,33 @@
                                                              :pid "1970"
                                                              :vid "6789"}))))
 
-
+(test/deftest should-fetch-vehicles-between-stops
+  (expect (fetch-vehicles-between-stops "56" "North Bound" "stop-1" "stop-2") =>
+          (list
+           {:pdist "37067"
+            :rt "56"
+            :pid "1970"
+            :vid "6789"}
+           {:pdist "25427"
+            :rt "56"
+            :pid "1970"
+            :vid "3425"})
+          (fake (stop-pdist "56" "North Bound" "stop-1") => 25000)
+          (fake (stop-pdist "56" "North Bound" "stop-2") => 38000)
+          (fake (in-flight-vehicles "56" "North Bound") => (list
+                                                            {:pdist "40000"
+                                                             :rt "56"
+                                                             :pid "1970"
+                                                             :vid "6789"}
+                                                            {:pdist "37067"
+                                                             :rt "56"
+                                                             :pid "1970"
+                                                             :vid "6789"}
+                                                            {:pdist "25427"
+                                                             :rt "56"
+                                                             :pid "1970"
+                                                             :vid "3425"}
+                                                            {:pdist "20000"
+                                                             :rt "56"
+                                                             :pid "1970"
+                                                             :vid "9999"}))))
