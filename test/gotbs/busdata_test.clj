@@ -4,17 +4,6 @@
   (:require [clojure [test :as test]]
             [gotbs [bustracker :as bustracker]]))
 
-(declare  another-fake)
-
-(defn function-under-test-3 []
-  (+ (bustracker/fetch-pattern-data-by-id 1) (bustracker/fetch-pattern-data-by-id 2 2) (another-fake)))
-
-(test/deftest example-of-multiple-faked-functions
-  (expect (function-under-test-3) => 111
-     (fake (bustracker/fetch-pattern-data-by-id 1) => 1)
-     (fake (bustracker/fetch-pattern-data-by-id 2 2) => 10)
-     (fake (another-fake) => 100)))
-
 (test/deftest should-fetch-stop-pdist
   (expect (stop-pdist "56" "North Bound" "15847") => 19452
           (fake (bustracker/fetch-pattern-data-for-route "56" "North Bound") =>
@@ -40,9 +29,6 @@
     (expect
      (vehicle-direction vehicle) => "North Bound"
      (fake (bustracker/fetch-pattern-data-by-id "1970") => {:rtdir "North Bound"}))))
-
-
-
 
 (test/deftest should-get-inflight-vehicles
   (expect

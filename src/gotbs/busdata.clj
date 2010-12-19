@@ -10,9 +10,6 @@
       #(= stop-id (:stpid %))
       (fetch-pattern-data-for-route route dir))))))
 
-
-
-
 (defn in-flight-vehicles [route dir]
   (filter
    (fn [veh]
