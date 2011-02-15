@@ -13,7 +13,6 @@
   [:.prediction-time] (content eta))
 
 (def north-route "72")
-
 (def armitage-route "73")
 (def damen-milwaukee-western "945")
 (def milwaukee-and-armitage "14564")
