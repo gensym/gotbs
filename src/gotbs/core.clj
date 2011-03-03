@@ -1,5 +1,7 @@
 (ns gotbs.core
-  (:use gotbs.web.locations)
+  (:use gotbs.web.locations (locations))
+  (:use gotbs.web.routes (routes))
+  (:use ring.middleware.reload (wrap-reload))
   (:use ring.middleware.file)
   (:use ring.middleware.file-info))
 
@@ -14,6 +16,9 @@
       "/locations" {:status 200
 		    :headers {"Content-Type" "text/html"}
 		    :body (apply str (locations req))}
+      "/routes"    {:status 200
+                    :headers {"Content-Type" "text/html"}
+                    :body (apply str (routes req))}
       {:status 200
        :headers {"Content-Type" "text/html"}
        :body (str "Welcome")}))
@@ -23,6 +28,7 @@
 
 (def app (-> #'handler
 	     (wrap-file "resources/web")
-	     (wrap-file-info)))
+	     (wrap-file-info)
+             (wrap-reload ['gotbs.web.routes])))
 	     
 
