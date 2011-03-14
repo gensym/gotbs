@@ -1,4 +1,3 @@
-
 function max(list) {
   if (list.length == 0) {
     return null;
@@ -25,20 +24,6 @@ function min(list) {
   return ret;
 }
 
-
-
-var canvas = $('#map')[0];
-var width = canvas.width;
-var height = canvas.height;
-
-var lats = $.map(data, function (x) { return x['lat']; });                    
-var max_lat = max(lats);
-var min_lat = min(lats);
-
-var lons = $.map(data, function (x) { return x['lon']; });                    
-var max_lon = max(lons);
-var min_lon = min(lons);
-
 function partial(fn) {
   var args = Array.prototype.slice.call(arguments);
   args.shift();
@@ -48,7 +33,7 @@ function partial(fn) {
   }
 }
 
-// I think floating point errors are killing us here
+
 function normalize(min_width, min_height, max_width, max_height, width, height, waypoint) {
   var datum = {};
   datum['lon'] = (waypoint['lon'] - min_width) / (max_width - min_width) * width;
@@ -56,15 +41,30 @@ function normalize(min_width, min_height, max_width, max_height, width, height, 
   return datum;
 }
 
-var normalizer = partial(normalize, min_lon, min_lat, max_lon, max_lat, width, height);
-var normalized_data = $.map(data, normalizer);
+function plot_waypoints(canvas_id, waypoints) {
+  var canvas = $(canvas_id)[0];
+  var width = canvas.width;
+  var height = canvas.height;
+  
+  var lats = $.map(waypoints, function (x) { return x['lat']; });                    
+  var max_lat = max(lats);
+  var min_lat = min(lats);
 
-if (canvas.getContext && normalized_data.length > 0) {
-  var ctx = canvas.getContext('2d');
-  ctx.beginPath();
-  ctx.moveTo(normalized_data[0]['lon'], normalized_data[0]['lat']);
-  for (var i = 1; i < normalized_data.length; i++) {
-    ctx.lineTo(normalized_data[i]['lon'], normalized_data[i]['lat']);
-  }
-  ctx.stroke();
-}    
+  var lons = $.map(waypoints, function (x) { return x['lon']; });                    
+  var max_lon = max(lons);
+  var min_lon = min(lons);
+
+  var normalizer = partial(normalize, min_lon, min_lat, max_lon, max_lat, width, height);
+  var normalized_waypoints = $.map(waypoints, normalizer);
+
+  if (canvas.getContext && normalized_waypoints.length > 0) {
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(normalized_waypoints[0]['lon'], normalized_waypoints[0]['lat']);
+    for (var i = 1; i < normalized_waypoints.length; i++) {
+      ctx.lineTo(normalized_waypoints[i]['lon'], normalized_waypoints[i]['lat']);
+    }
+    ctx.stroke();
+  }    
+}
+
