@@ -1,18 +1,28 @@
 (ns gotbs.web.routes
+  (:require [clojure.contrib.json :as json])
+  (:require [gotbs.bustracker :as bustracker])
   (:use net.cgrand.enlive-html))
+
+(defn stops []
+  (bustracker/fetch-stop-data 56 bustracker/north-bound))
+
+
+(defn pattern-points []
+  (bustracker/fetch-pattern-data-for-route 56 bustracker/north-bound))
+
+(defn waypoints []
+  (json/json-str
+   (map (fn [point] {:lat (Float/parseFloat (:lat point)) :lon (Float/parseFloat (:lon point))})
+        (pattern-points))))
 
 (defsnippet routes-content "web/routes.html"
   [:div#routes]
   [req]
-  [:script#data] (content "var data = 
-    [{ lat: 41.882114939198, lon: -87.625998258591 },
-     { lat: 41.882039054742, lon: -87.629334926605 },
-     { lat: 41.882019085133, lon: -87.630681395531 } ];"))
-
+  [:script#data] (content (str "var data = " (waypoints) ";")))
 
 (deftemplate routestemplate "web/index.html"
   [req]
-  [:div#main] (content (routes-content req)))
+  [:div#main] (substitute (routes-content req)))
 
 (defn routes [req]
   (routestemplate req))
