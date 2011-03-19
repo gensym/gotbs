@@ -1,26 +1,81 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html> <head>
-<title>Canvas time</title>
-</head>
+<html>
+  <head>
+    <title>Canvas time</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+  </head>
+  
+  <body>
 
-<body>
+    <div id="routes">
+      <canvas id="map" width="600" height="600" style="border:1px
+                                                       dotted;float:left"></canvas>
+      <script id="data">
+        var data = 
+        [
+        { lat: 41.882114939198, lon: -87.625998258591 },
+        { lat: 41.882039054742, lon: -87.629334926605 },
+        { lat: 41.882019085133, lon: -87.639472720493 } ];
+        
+      </script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+      <script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')
+      </script>
+        
+      <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+      <script>!window.jQuery.ui &&
+        document.write('<script src="js/jquery-ui.min.js"><\/script>')</script>
+      <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
+           rel="stylesheet" type="text/css"/>
 
-<div id="routes">
-  <canvas id="map" width="600" height="600" style="border:1px
-  dotted;float:left"></canvas>
-  <script id="data">
-var data = 
-  [
-    { lat: 41.882114939198, lon: -87.625998258591 },
-    { lat: 41.882039054742, lon: -87.629334926605 },
-    { lat: 41.882019085133, lon: -87.630681395531 } ];
+      <script type='text/javascript' src="js/autocomplete_routes.js"></script>
+      <script type='text/javascript' src="js/cta_route_map.js"></script>
+      <script type='text/javascript'>plot_waypoints('#map', data);</script>
+    </div>
+    
+    <form id="route-selection">
 
-  </script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')</script>
-  <script type='text/javascript' src="js/cta_route_map.js"></script>
-  <script type-'text/javascript'>plot_waypoints('#map', data);</script>
-</div>
-
-</body> 
+      <li class="     ">
+        <label class="desc" id="route-name-title" for="route-text">
+          Route
+        </label>
+        <div>
+          <input id="route-text" name="route-name" type="text" class="field text medium" value="" maxlength="255" tabindex="1" onkeyup="handleInput(this); " onchange="handleInput(this);" />
+        </div>
+      </li>
+      
+      <li>
+        <label class="desc" id="route-direction-title" for="route-direction">
+          Direction
+        </label>
+        <div>
+          <input id="route-direction" name="route-direction" type="hidden" value="" />
+          <div>
+            <input id="route-direction-n" name="route-direction" type="radio" class="field radio" value="Northbound" tabindex="3" onchange="handleInput(this);" onmouseup="handleInput(this);"  checked="checked" />
+            <label class="choice" for="route-direction-n" >Northbound</label>
+          </div>
+          <div>
+            <input id="route-direction-s" name="route-direction" type="radio" class="field radio" value="Southbound" tabindex="4" onchange="handleInput(this);" onmouseup="handleInput(this);"  checked="checked" />
+            <label class="choice" for="route-direction-s" >Southbound</label>
+          </div>
+          <div>
+            <input id="route-direction-e" name="route-direction" type="radio" class="field radio" value="Eastbound" tabindex="5" onchange="handleInput(this);" onmouseup="handleInput(this);"  checked="checked" />
+            <label class="choice" for="route-direction-e" >Eastbound</label>
+          </div>
+          <div>
+            <input id="route-direction-w" name="route-direction" type="radio" class="field radio" value="Westbound" tabindex="6" onchange="handleInput(this);" onmouseup="handleInput(this);"  checked="checked" />
+            <label class="choice" for="route-direction-w" >Westbound</label>
+          </div>
+        </div>
+      </li>
+      
+      <li class="buttons ">
+        <div>
+          <input id="saveForm" name="saveForm" class="btTxt submit"
+                 type="submit" value="Submit" onmousedown="doSubmitEvents();" />
+        </div>
+      </li>
+    </form>
+    
+  </body> 
 </html>
