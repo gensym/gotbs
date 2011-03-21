@@ -1,0 +1,697 @@
+<?xml version="1.0"?>
+
+		<bustime-response>	
+
+			<route>
+				<rt>1</rt>
+				<rtnm>Indiana/Hyde Park</rtnm>
+			</route>		
+
+			<route>
+				<rt>2</rt>
+				<rtnm>Hyde Park Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>3</rt>
+				<rtnm>King Drive</rtnm>
+			</route>		
+
+			<route>
+				<rt>4</rt>
+				<rtnm>Cottage Grove</rtnm>
+			</route>		
+
+			<route>
+				<rt>5</rt>
+				<rtnm>South Shore Night Bus</rtnm>
+			</route>		
+
+			<route>
+				<rt>6</rt>
+				<rtnm>Jackson Park Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>7</rt>
+				<rtnm>Harrison</rtnm>
+			</route>		
+
+			<route>
+				<rt>8</rt>
+				<rtnm>Halsted</rtnm>
+			</route>		
+
+			<route>
+				<rt>8A</rt>
+				<rtnm>South Halsted</rtnm>
+			</route>		
+
+			<route>
+				<rt>9</rt>
+				<rtnm>Ashland</rtnm>
+			</route>		
+
+			<route>
+				<rt>10</rt>
+				<rtnm>Museum of S &amp; I</rtnm>
+			</route>		
+
+			<route>
+				<rt>11</rt>
+				<rtnm>Lincoln/Sedgwick</rtnm>
+			</route>		
+
+			<route>
+				<rt>12</rt>
+				<rtnm>Roosevelt</rtnm>
+			</route>		
+
+			<route>
+				<rt>14</rt>
+				<rtnm>Jeffery Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>15</rt>
+				<rtnm>Jeffery Local</rtnm>
+			</route>		
+
+			<route>
+				<rt>17</rt>
+				<rtnm>Westchester</rtnm>
+			</route>		
+
+			<route>
+				<rt>18</rt>
+				<rtnm>16th/18th</rtnm>
+			</route>		
+
+			<route>
+				<rt>19</rt>
+				<rtnm>United Center Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>20</rt>
+				<rtnm>Madison</rtnm>
+			</route>		
+
+			<route>
+				<rt>21</rt>
+				<rtnm>Cermak</rtnm>
+			</route>		
+
+			<route>
+				<rt>22</rt>
+				<rtnm>Clark</rtnm>
+			</route>		
+
+			<route>
+				<rt>24</rt>
+				<rtnm>Wentworth</rtnm>
+			</route>		
+
+			<route>
+				<rt>26</rt>
+				<rtnm>South Shore Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>28</rt>
+				<rtnm>Stony Island</rtnm>
+			</route>		
+
+			<route>
+				<rt>X28</rt>
+				<rtnm>Stony Island Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>29</rt>
+				<rtnm>State</rtnm>
+			</route>		
+
+			<route>
+				<rt>30</rt>
+				<rtnm>South Chicago</rtnm>
+			</route>		
+
+			<route>
+				<rt>33</rt>
+				<rtnm>Mag Mile Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>34</rt>
+				<rtnm>South Michigan</rtnm>
+			</route>		
+
+			<route>
+				<rt>35</rt>
+				<rtnm>35th</rtnm>
+			</route>		
+
+			<route>
+				<rt>36</rt>
+				<rtnm>Broadway</rtnm>
+			</route>		
+
+			<route>
+				<rt>39</rt>
+				<rtnm>Pershing</rtnm>
+			</route>		
+
+			<route>
+				<rt>43</rt>
+				<rtnm>43rd</rtnm>
+			</route>		
+
+			<route>
+				<rt>44</rt>
+				<rtnm>Wallace-Racine</rtnm>
+			</route>		
+
+			<route>
+				<rt>47</rt>
+				<rtnm>47th</rtnm>
+			</route>		
+
+			<route>
+				<rt>48</rt>
+				<rtnm>South Damen</rtnm>
+			</route>		
+
+			<route>
+				<rt>49</rt>
+				<rtnm>Western</rtnm>
+			</route>		
+
+			<route>
+				<rt>49A</rt>
+				<rtnm>South Western</rtnm>
+			</route>		
+
+			<route>
+				<rt>49B</rt>
+				<rtnm>North Western</rtnm>
+			</route>		
+
+			<route>
+				<rt>50</rt>
+				<rtnm>Damen</rtnm>
+			</route>		
+
+			<route>
+				<rt>51</rt>
+				<rtnm>51st</rtnm>
+			</route>		
+
+			<route>
+				<rt>52</rt>
+				<rtnm>Kedzie/California</rtnm>
+			</route>		
+
+			<route>
+				<rt>52A</rt>
+				<rtnm>South Kedzie</rtnm>
+			</route>		
+
+			<route>
+				<rt>53</rt>
+				<rtnm>Pulaski</rtnm>
+			</route>		
+
+			<route>
+				<rt>53A</rt>
+				<rtnm>South Pulaski</rtnm>
+			</route>		
+
+			<route>
+				<rt>54</rt>
+				<rtnm>Cicero</rtnm>
+			</route>		
+
+			<route>
+				<rt>54A</rt>
+				<rtnm>North Cicero/Skokie Blvd.</rtnm>
+			</route>		
+
+			<route>
+				<rt>54B</rt>
+				<rtnm>South Cicero</rtnm>
+			</route>		
+
+			<route>
+				<rt>55</rt>
+				<rtnm>Garfield</rtnm>
+			</route>		
+
+			<route>
+				<rt>55A</rt>
+				<rtnm>55th/Austin</rtnm>
+			</route>		
+
+			<route>
+				<rt>55N</rt>
+				<rtnm>55th/Narragansett</rtnm>
+			</route>		
+
+			<route>
+				<rt>56</rt>
+				<rtnm>Milwaukee</rtnm>
+			</route>		
+
+			<route>
+				<rt>56A</rt>
+				<rtnm>North Milwaukee</rtnm>
+			</route>		
+
+			<route>
+				<rt>57</rt>
+				<rtnm>Laramie</rtnm>
+			</route>		
+
+			<route>
+				<rt>59</rt>
+				<rtnm>59th/61st</rtnm>
+			</route>		
+
+			<route>
+				<rt>60</rt>
+				<rtnm>Blue Island/26th</rtnm>
+			</route>		
+
+			<route>
+				<rt>62</rt>
+				<rtnm>Archer</rtnm>
+			</route>		
+
+			<route>
+				<rt>62H</rt>
+				<rtnm>Archer/Harlem</rtnm>
+			</route>		
+
+			<route>
+				<rt>63</rt>
+				<rtnm>63rd</rtnm>
+			</route>		
+
+			<route>
+				<rt>63W</rt>
+				<rtnm>West 63rd</rtnm>
+			</route>		
+
+			<route>
+				<rt>64</rt>
+				<rtnm>Foster-Canfield</rtnm>
+			</route>		
+
+			<route>
+				<rt>65</rt>
+				<rtnm>Grand</rtnm>
+			</route>		
+
+			<route>
+				<rt>66</rt>
+				<rtnm>Chicago</rtnm>
+			</route>		
+
+			<route>
+				<rt>67</rt>
+				<rtnm>67th-69th-71st</rtnm>
+			</route>		
+
+			<route>
+				<rt>68</rt>
+				<rtnm>Northwest Highway</rtnm>
+			</route>		
+
+			<route>
+				<rt>69</rt>
+				<rtnm>Cumberland/East River</rtnm>
+			</route>		
+
+			<route>
+				<rt>70</rt>
+				<rtnm>Division</rtnm>
+			</route>		
+
+			<route>
+				<rt>71</rt>
+				<rtnm>71st/South Shore</rtnm>
+			</route>		
+
+			<route>
+				<rt>72</rt>
+				<rtnm>North</rtnm>
+			</route>		
+
+			<route>
+				<rt>73</rt>
+				<rtnm>Armitage</rtnm>
+			</route>		
+
+			<route>
+				<rt>74</rt>
+				<rtnm>Fullerton</rtnm>
+			</route>		
+
+			<route>
+				<rt>75</rt>
+				<rtnm>74th-75th</rtnm>
+			</route>		
+
+			<route>
+				<rt>76</rt>
+				<rtnm>Diversey</rtnm>
+			</route>		
+
+			<route>
+				<rt>77</rt>
+				<rtnm>Belmont</rtnm>
+			</route>		
+
+			<route>
+				<rt>78</rt>
+				<rtnm>Montrose</rtnm>
+			</route>		
+
+			<route>
+				<rt>79</rt>
+				<rtnm>79th</rtnm>
+			</route>		
+
+			<route>
+				<rt>80</rt>
+				<rtnm>Irving Park</rtnm>
+			</route>		
+
+			<route>
+				<rt>81</rt>
+				<rtnm>Lawrence</rtnm>
+			</route>		
+
+			<route>
+				<rt>81W</rt>
+				<rtnm>West Lawrence</rtnm>
+			</route>		
+
+			<route>
+				<rt>82</rt>
+				<rtnm>Kimball-Homan</rtnm>
+			</route>		
+
+			<route>
+				<rt>84</rt>
+				<rtnm>Peterson</rtnm>
+			</route>		
+
+			<route>
+				<rt>85</rt>
+				<rtnm>Central</rtnm>
+			</route>		
+
+			<route>
+				<rt>85A</rt>
+				<rtnm>North Central</rtnm>
+			</route>		
+
+			<route>
+				<rt>86</rt>
+				<rtnm>Narragansett/Ridgeland</rtnm>
+			</route>		
+
+			<route>
+				<rt>87</rt>
+				<rtnm>87th</rtnm>
+			</route>		
+
+			<route>
+				<rt>88</rt>
+				<rtnm>Higgins</rtnm>
+			</route>		
+
+			<route>
+				<rt>90</rt>
+				<rtnm>Harlem</rtnm>
+			</route>		
+
+			<route>
+				<rt>90N</rt>
+				<rtnm>North Harlem</rtnm>
+			</route>		
+
+			<route>
+				<rt>91</rt>
+				<rtnm>Austin</rtnm>
+			</route>		
+
+			<route>
+				<rt>92</rt>
+				<rtnm>Foster</rtnm>
+			</route>		
+
+			<route>
+				<rt>93</rt>
+				<rtnm>California/Dodge</rtnm>
+			</route>		
+
+			<route>
+				<rt>94</rt>
+				<rtnm>South California</rtnm>
+			</route>		
+
+			<route>
+				<rt>95E</rt>
+				<rtnm>93rd-95th</rtnm>
+			</route>		
+
+			<route>
+				<rt>95W</rt>
+				<rtnm>West 95th</rtnm>
+			</route>		
+
+			<route>
+				<rt>96</rt>
+				<rtnm>Lunt</rtnm>
+			</route>		
+
+			<route>
+				<rt>97</rt>
+				<rtnm>Skokie</rtnm>
+			</route>		
+
+			<route>
+				<rt>X98</rt>
+				<rtnm>Avon Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>100</rt>
+				<rtnm>Jeffery Manor Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>103</rt>
+				<rtnm>West 103rd</rtnm>
+			</route>		
+
+			<route>
+				<rt>106</rt>
+				<rtnm>East 103rd</rtnm>
+			</route>		
+
+			<route>
+				<rt>108</rt>
+				<rtnm>Halsted/95th</rtnm>
+			</route>		
+
+			<route>
+				<rt>111</rt>
+				<rtnm>Pullman/111th/115th</rtnm>
+			</route>		
+
+			<route>
+				<rt>112</rt>
+				<rtnm>Vincennes/111th</rtnm>
+			</route>		
+
+			<route>
+				<rt>119</rt>
+				<rtnm>Michigan/119th</rtnm>
+			</route>		
+
+			<route>
+				<rt>120</rt>
+				<rtnm>Ogilvie/Wacker Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>121</rt>
+				<rtnm>Union/Wacker Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>122</rt>
+				<rtnm>Illinois Center/Ogilvie Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>123</rt>
+				<rtnm>Illinois Center/Union Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>124</rt>
+				<rtnm>Navy Pier</rtnm>
+			</route>		
+
+			<route>
+				<rt>125</rt>
+				<rtnm>Water Tower Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>126</rt>
+				<rtnm>Jackson</rtnm>
+			</route>		
+
+			<route>
+				<rt>129</rt>
+				<rtnm>West Loop/South Loop</rtnm>
+			</route>		
+
+			<route>
+				<rt>130</rt>
+				<rtnm>Museum Campus</rtnm>
+			</route>		
+
+			<route>
+				<rt>132</rt>
+				<rtnm>Goose Island Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>134</rt>
+				<rtnm>Stockton/LaSalle Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>135</rt>
+				<rtnm>Clarendon/LaSalle Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>136</rt>
+				<rtnm>Sheridan/LaSalle Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>143</rt>
+				<rtnm>Stockton/Michigan Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>144</rt>
+				<rtnm>Marine/Michigan Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>145</rt>
+				<rtnm>Wilson/Michigan Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>146</rt>
+				<rtnm>Inner Drive/Michigan Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>147</rt>
+				<rtnm>Outer Drive Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>148</rt>
+				<rtnm>Clarendon/Michigan Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>151</rt>
+				<rtnm>Sheridan</rtnm>
+			</route>		
+
+			<route>
+				<rt>152</rt>
+				<rtnm>Addison</rtnm>
+			</route>		
+
+			<route>
+				<rt>155</rt>
+				<rtnm>Devon</rtnm>
+			</route>		
+
+			<route>
+				<rt>156</rt>
+				<rtnm>LaSalle</rtnm>
+			</route>		
+
+			<route>
+				<rt>157</rt>
+				<rtnm>Streeterville/Taylor</rtnm>
+			</route>		
+
+			<route>
+				<rt>165</rt>
+				<rtnm>West 65th</rtnm>
+			</route>		
+
+			<route>
+				<rt>169</rt>
+				<rtnm>69th-UPS Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>170</rt>
+				<rtnm>U. of Chicago/Midway</rtnm>
+			</route>		
+
+			<route>
+				<rt>171</rt>
+				<rtnm>U. of Chicago/Hyde Park</rtnm>
+			</route>		
+
+			<route>
+				<rt>172</rt>
+				<rtnm>U. of Chicago/Kenwood</rtnm>
+			</route>		
+
+			<route>
+				<rt>192</rt>
+				<rtnm>U. of Chicago Hospitals Express</rtnm>
+			</route>		
+
+			<route>
+				<rt>201</rt>
+				<rtnm>Central/Ridge</rtnm>
+			</route>		
+
+			<route>
+				<rt>N201</rt>
+				<rtnm>Central/Sherman</rtnm>
+			</route>		
+
+			<route>
+				<rt>205</rt>
+				<rtnm>Chicago/Golf</rtnm>
+			</route>		
+
+			<route>
+				<rt>206</rt>
+				<rtnm>Evanston Circulator</rtnm>
+			</route>		
+	
+		</bustime-response>
+
+		

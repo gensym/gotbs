@@ -31,6 +31,10 @@
       (let [buf (BufferedReader. (InputStreamReader. stream))]
 	(apply str (line-seq buf))))))
 
+(defn fetch-routes-data-xml []
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=" api-key)))
+
 (defn fetch-location-data-xml [route]
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
@@ -152,6 +156,17 @@
 	 :ptr
 	 (:content
 	  (parse (StringBufferInputStream. (fetch-pattern-data-for-route-xml route))))))))))))
+
+(defn fetch-routes []
+  (map
+   content-xml-to-map
+   (map
+    :content
+    (filter-tag
+     :route
+     (:content
+      (parse (StringBufferInputStream. 
+              (fetch-routes-data-xml))))))))
 
 (defn destination [route dir]
   (:stpnm (last (fetch-pattern-data-for-route route dir))))

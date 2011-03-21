@@ -16,6 +16,17 @@
       :lon "-87.644065618515"}
      (first (fetch-stop-data "56" "North Bound"))))))
 
+(test/deftest should-fetch-all-routes
+  (expect
+   [fetch-routes-data-xml
+    (has-args []
+              (returns (slurp "resources/test-data/routes.xml")))]
+   (test/is
+    (=
+     {:rtnm "Indiana/Hyde Park"
+      :rt "1"})
+    (first (fetch-routes)))))
+
 (test/deftest should-fetch-pattern-data-for-route
   (expect
    [fetch-pattern-data-by-id-xml
