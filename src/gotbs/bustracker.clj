@@ -124,7 +124,6 @@
   (defn fetch-vehicles-data [& vehicle_ids]
     (construct-vehicle-data (fetch-vehicles-data-xml vehicle_ids))))
 
-
 ;; Milwaukee PIDs - 1970, 1971
 
 (defn fetch-pattern-data-by-id [pattern-id]

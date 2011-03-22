@@ -1,14 +1,13 @@
 (ns gotbs.web.routes
   (:require [clojure.contrib.json :as json])
   (:require [gotbs.bustracker :as bustracker])
+  (:require [gotbs.route-data :as routes])
   (:require [clojure.contrib.str-utils2 :as s])
   (:use net.cgrand.enlive-html))
 
 (defn stops []
   (bustracker/fetch-stop-data 56 bustracker/north-bound))
 
-(defn add-display-name [route]
-  (assoc route :display (str (:rt route) " - " (:rtnm route))))
 
 (defn contains-ignore-case? [str substring]
   (s/contains? (s/upper-case str) (s/upper-case substring)))
@@ -16,11 +15,8 @@
 (defn matching-routes [query]
   (filter
    (fn [route] (contains-ignore-case? route query))
-   (map
-    :display
-    (map
-     add-display-name
-     (bustracker/fetch-routes)))))
+   (routes/display-names)
+   ))
 
 (defn available-routes [{term "term"}]
   (json/json-str (matching-routes term)))
