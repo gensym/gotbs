@@ -24,6 +24,9 @@
       "/routes/available.json" {:status 200
                                 :headers {"Content-Type" "application/json" }
                                 :body (apply str (available-routes (:params req))) }
+      "routes/directions.json" {:status 200
+                                :headers {"Content-Type" "application/json"}
+                                :body (apply str (route-directions (:params req))) }
       {:status 200
        :headers {"Content-Type" "text/html"}
        :body (str "Welcome")}))

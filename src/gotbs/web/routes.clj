@@ -21,6 +21,9 @@
 (defn available-routes [{term "term"}]
   (json/json-str (matching-routes term)))
 
+(defn route-directions [{term "term"}]
+  (json/json-str (routes/route-direction term)))
+
 (defn pattern-points []
   (bustracker/fetch-pattern-data-for-route 56 bustracker/north-bound))
 

@@ -17,4 +17,11 @@ $(document).ready(function() {
       })
     }
   });
+
+  $("input#route-text").change(function() {
+    $('input[name="route-direction"]').parent().hide();
+    alert(this.value);
+    // TODO - make an Ajax request for route directions for the given
+    // route, and show the appropriate direction inputs
+  });
 });
