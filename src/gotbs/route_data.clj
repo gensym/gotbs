@@ -22,6 +22,11 @@
    :display
    (routes-with-display-names)))
 
+(defn route-direction [route-display-name]
+  (bustracker/fetch-route-direction (:rt (route-descriptor route-display-name))))
+
+
+
 
 
 

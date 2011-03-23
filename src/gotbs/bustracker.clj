@@ -35,6 +35,10 @@
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=" api-key)))
 
+(defn fetch-route-direction-xml [route]
+  (fetch-url
+   (str "http://www.ctabustracker.com/bustime/api/v1/getdirections?key=" api-key "&rt=" route)))
+
 (defn fetch-location-data-xml [route]
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
@@ -166,6 +170,15 @@
      (:content
       (parse (StringBufferInputStream. 
               (fetch-routes-data-xml))))))))
+
+(defn fetch-route-direction [route]
+  (flatten
+   (map
+    :content
+    (filter-tag
+     :dir
+     (:content
+      (parse (StringBufferInputStream. (fetch-route-direction-xml route))))))))
 
 (defn destination [route dir]
   (:stpnm (last (fetch-pattern-data-for-route route dir))))

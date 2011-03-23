@@ -27,6 +27,15 @@
       :rt "1"})
     (first (fetch-routes)))))
 
+(test/deftest should-fetch-route-direction
+  (expect
+   [fetch-route-direction-xml
+    (has-args ["56"]
+              (returns (slurp "resources/test-data/route-direction-56.xml")))]
+   (test/is
+    (= ["North Bound" "South Bound"]
+         (fetch-route-direction "56")))))
+
 (test/deftest should-fetch-pattern-data-for-route
   (expect
    [fetch-pattern-data-by-id-xml
