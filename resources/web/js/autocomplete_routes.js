@@ -1,12 +1,3 @@
-function suggest(something) {
-  return [
-    "50 - Damen",
-    "56 - Milwaukee", 
-    "72 - Armitage",
-    "70 - North",
-  ];
-}
-
 
 $(document).ready(function() {
   $("input#route-text").autocomplete({
@@ -19,9 +10,16 @@ $(document).ready(function() {
   });
 
   $("input#route-text").change(function() {
-    $('input[name="route-direction"]').parent().hide();
-    alert(this.value);
-    // TODO - make an Ajax request for route directions for the given
-    // route, and show the appropriate direction inputs
+    var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
+    $(".available-direction").remove();
+    $.ajax({
+      url:"/routes/directions.json",
+      data: {term: this.value},
+      success: function(directions) { 
+        $.each(directions,  function(i, direction){ 
+
+          $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
+        });
+      }});
   });
 });

@@ -27,6 +27,10 @@
         document.write('<script src="js/jquery-ui.min.js"><\/script>')</script>
       <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
            rel="stylesheet" type="text/css"/>
+      
+      <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+      <script>!window.jQuery.tmpl &&
+        document.write('<script src="js/jquery.tmpl.min.js"><\/script>')</script>
 
       <script type='text/javascript' src="js/autocomplete_routes.js"></script>
       <script type='text/javascript' src="js/cta_route_map.js"></script>
@@ -48,24 +52,8 @@
         <label class="desc" id="route-direction-title" for="route-direction">
           Direction
         </label>
-        <div>
-          <input id="route-direction" name="route-direction" type="hidden" value="" />
-          <div>
-            <input id="route-direction-n" name="route-direction" type="radio" class="field radio" value="Northbound" tabindex="3"  checked="checked" />
-            <label class="choice" for="route-direction-n" >Northbound</label>
-          </div>
-          <div>
-            <input id="route-direction-s" name="route-direction" type="radio" class="field radio" value="Southbound" tabindex="4" checked="checked" />
-            <label class="choice" for="route-direction-s" >Southbound</label>
-          </div>
-          <div>
-            <input id="route-direction-e" name="route-direction" type="radio" class="field radio" value="Eastbound" tabindex="5"  checked="checked" />
-            <label class="choice" for="route-direction-e" >Eastbound</label>
-          </div>
-          <div>
-            <input id="route-direction-w" name="route-direction" type="radio" class="field radio" value="Westbound" tabindex="6"   checked="checked" />
-            <label class="choice" for="route-direction-w" >Westbound</label>
-          </div>
+        <div id="available-route-directions">
+          <input id="route-direction" name="route-direction" type="hidden" value="" checked="checked"/>
         </div>
       </li>
       
