@@ -37,7 +37,7 @@
       <script type='text/javascript'>plot_waypoints('#map', data);</script>
     </div>
     
-    <form id="route-selection">
+    <form id="route-selection" onSubmit="return false;">
 
       <li class="     ">
         <label class="desc" id="route-name-title" for="route-text">
@@ -57,7 +57,7 @@
         </div>
       </li>
       
-      <li class="buttons ">
+      <li class="buttons" id="add-route-button">
         <div>
           <input id="saveForm" name="saveForm" class="btTxt submit"
                  type="submit" value="Submit" onmousedown="doSubmitEvents();" />
