@@ -26,7 +26,7 @@
   (bustracker/fetch-route-direction (:rt (route-descriptor route-display-name))))
 
 
-
-
-
-
+(defn route-pattern-points [route-display-name direction]
+  (vec
+   (map (fn [point] {:lat (Double/parseDouble (:lat point)) :lon (Double/parseDouble (:lon point))})
+        (bustracker/fetch-pattern-data-for-route (:rt (route-descriptor route-display-name)) direction))))

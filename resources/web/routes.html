@@ -10,34 +10,8 @@
     <div id="routes">
       <canvas id="map" width="600" height="600" style="border:1px
                                                        dotted;float:left"></canvas>
-      <script id="data">
-        var data = 
-        [
-        { lat: 41.882114939198, lon: -87.625998258591 },
-        { lat: 41.882039054742, lon: -87.629334926605 },
-        { lat: 41.882019085133, lon: -87.639472720493 } ];
-        
-      </script>
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-      <script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')
-      </script>
-        
-      <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-      <script>!window.jQuery.ui &&
-        document.write('<script src="js/jquery-ui.min.js"><\/script>')</script>
-      <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
-           rel="stylesheet" type="text/css"/>
-      
-      <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
-      <script>!window.jQuery.tmpl &&
-        document.write('<script src="js/jquery.tmpl.min.js"><\/script>')</script>
-
-      <script type='text/javascript' src="js/autocomplete_routes.js"></script>
-      <script type='text/javascript' src="js/cta_route_map.js"></script>
-      <script type='text/javascript'>plot_waypoints('#map', data);</script>
     </div>
-    
-    <form id="route-selection" onSubmit="return false;">
+    <form id="route-selection">
 
       <li class="     ">
         <label class="desc" id="route-name-title" for="route-text">
@@ -60,10 +34,37 @@
       <li class="buttons" id="add-route-button">
         <div>
           <input id="saveForm" name="saveForm" class="btTxt submit"
-                 type="submit" value="Submit" onmousedown="doSubmitEvents();" />
+                 type="submit" value="Submit" />
         </div>
       </li>
     </form>
     
   </body> 
+  <script src="js/common.js"></script>
+  <!-- Javascript at the bottom for fast page loading -->
+  <script id="pagespecific_scripts">
+    load_cdn_script(
+      "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js",
+      "js/jquery-1.4.2.min.js", function() { return window.jQuery }, 
+      function() {
+        load_cdn_script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js",
+          "js/jquery-ui.min.js", function() { return window.jQuery.ui },
+          "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css",
+          function () {
+              load_cdn_script("http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js",
+             "js/jquery.tmpl.min.js", function() { return window.jQuery.tmpl },
+             function() { 
+               load_script("js/autocomplete_routes.js", 
+                 function() {
+                   load_script("js/cta_route_map.js", function() { });});});});});
+  </script>
+  <script id="sample-script">
+    var data = 
+    [
+    { lat: 41.882114939198, lon: -87.625998258591 },
+    { lat: 41.882039054742, lon: -87.629334926605 },
+    { lat: 41.882019085133, lon: -87.639472720493 } ];
+    //plot_waypoints('#map', data);
+  </script>
+
 </html>

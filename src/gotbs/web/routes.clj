@@ -8,7 +8,6 @@
 (defn stops []
   (bustracker/fetch-stop-data 56 bustracker/north-bound))
 
-
 (defn contains-ignore-case? [str substring]
   (s/contains? (s/upper-case str) (s/upper-case substring)))
 
@@ -27,24 +26,18 @@
 (defn pattern-points []
   (bustracker/fetch-pattern-data-for-route 56 bustracker/north-bound))
 
-(defn waypoints []
-  (json/json-str
-   (map (fn [point] {:lat (Float/parseFloat (:lat point)) :lon (Float/parseFloat (:lon point))})
-        (pattern-points))))
+(defn route-waypoints [{route "route", direction "direction"}]
+  (json/json-str routes/route-pattern-points route direction))
 
-(defsnippet routes-js-data "web/routes.html"
-  [:div#routes]
-  [req]
-  [:script#data] (content (str "var data = " (waypoints) ";")))
+(defsnippet route-display-div "web/routes.html"
+  [:div#routes] [])
 
 (defsnippet route-selection-form "web/routes.html"
-  [:form#route-selection]
-  [req])
-
+  [:form#route-selection] [])
 
 (deftemplate routestemplate "web/index.html"
   [req]
-  [:div#main] (substitute (routes-js-data req) (route-selection-form req)))
+  [:div#main] (substitute (route-display-div) (route-selection-form)))
 
 (defn routes [req]
   (routestemplate req))
