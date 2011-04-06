@@ -6,6 +6,12 @@
   (:use ring.middleware.file)
   (:use ring.middleware.file-info))
 
+(defn- json-response [content-fn req]
+  {:status 200
+   :headers {"Content-Type" "application/json" }
+   :body (apply str (content-fn (:params req))) }
+  )
+
 (defn router [req]
   (condp = (:uri req)
       "/error"    {:status 404
@@ -21,12 +27,9 @@
       "/routes"    {:status 200
                     :headers {"Content-Type" "text/html"}
                     :body (apply str (routes req))}
-      "/routes/available.json" {:status 200
-                                :headers {"Content-Type" "application/json" }
-                                :body (apply str (available-routes (:params req))) }
-      "/routes/directions.json" {:status 200
-                                :headers {"Content-Type" "application/json"}
-                                :body (apply str (route-directions (:params req))) }
+      "/routes/available.json" (json-response available-routes req) 
+      "/routes/directions.json" (json-response route-directions req)
+      "/routes/waypoints.json" (json-response route-waypoints req)
       {:status 200
        :headers {"Content-Type" "text/html"}
        :body (str "Welcome")}))

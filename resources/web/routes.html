@@ -26,7 +26,6 @@
             Direction
           </label>
           <div id="available-route-directions">
-            <input id="route-direction" name="route-direction" type="hidden" value="" checked="checked"/>
           </div>
         </li>
         
@@ -39,15 +38,6 @@
       </form>
     </div>
     
-
-    <script id="data">
-      var data = 
-      [
-      { lat: 41.882114939198, lon: -87.625998258591 },
-      { lat: 41.882039054742, lon: -87.629334926605 },
-      { lat: 41.882019085133, lon: -87.639472720493 } ];
-      
-    </script>
 
     <div id="page-specific-scripts">
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -66,8 +56,15 @@
 
       <script type='text/javascript' src="js/autocomplete_routes.js"></script>
       <script type='text/javascript' src="js/cta_route_map.js"></script>
-      <script type='text/javascript'>plot_waypoints('#map', data);</script>
-
     </div>
+    <script id="data">
+      var data = 
+      [
+      { lat: 41.882114939198, lon: -87.625998258591 },
+      { lat: 41.882039054742, lon: -87.629334926605 },
+      { lat: 41.882019085133, lon: -87.639472720493 } ];
+      plot_waypoints('#map', data);
+    </script>
+
   </body> 
 </html>

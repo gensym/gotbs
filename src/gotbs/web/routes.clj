@@ -2,20 +2,13 @@
   (:require [clojure.contrib.json :as json])
   (:require [gotbs.bustracker :as bustracker])
   (:require [gotbs.route-data :as routes])
-  (:require [clojure.contrib.str-utils2 :as s])
   (:use net.cgrand.enlive-html))
 
-(defn- contains-ignore-case? [str substring]
-  (s/contains? (s/upper-case str) (s/upper-case substring)))
-
-(defn- matching-routes [query]
-  (filter
-   (fn [route] (contains-ignore-case? route query))
-   (routes/display-names)
-   ))
+(defn route-waypoints [{route "route" direction "direction"}]
+  (json/json-str ["this" "that"]))
 
 (defn available-routes [{term "term"}]
-  (json/json-str (matching-routes term)))
+  (json/json-str (routes/matching-routes term)))
 
 (defn route-directions [{term "term"}]
   (json/json-str (routes/route-direction term)))
