@@ -32,5 +32,11 @@
    (display-names)
    ))
 
+(defn waypoints [route-display-name direction]
+  (map (fn [point] {
+                   :lat (Double/parseDouble (:lat point))
+                   :lon (Double/parseDouble (:lon point))})
+       (bustracker/fetch-pattern-data-for-route (:rt (route-descriptor route-display-name)) direction)))
+
 (defn route-direction [route-display-name]
   (bustracker/fetch-route-direction (:rt (route-descriptor route-display-name))))

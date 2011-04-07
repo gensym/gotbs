@@ -144,6 +144,7 @@
         (parse (StringBufferInputStream. (fetch-pattern-data-by-id-xml pattern-id))))))))))
 
 (defn fetch-pattern-data-for-route [route dir]
+  "Fetch the pattern data (including waypoints) by the route and direction"
   (map
    content-xml-to-map
    (map

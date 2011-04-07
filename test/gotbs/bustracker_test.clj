@@ -36,6 +36,36 @@
     (= ["North Bound" "South Bound"]
          (fetch-route-direction "56")))))
 
+(test/deftest should-fetch-pattern-data-by-route
+  (expect
+   [fetch-pattern-data-for-route-xml
+    (has-args ["56"]
+              (returns (slurp "resources/test-data/pattern-data-for-route-56.xml")))]
+   (test/is
+    (=
+     (list
+      {:seq "1"
+       :lat "41.882130914862"
+       :lon "-87.625998258591"
+       :typ "S"
+       :stpid "450"
+       :stpnm "Madison & Wabash"
+       :pdist "0.0"
+       },
+      {:seq "2"
+       :lat "41.882118933114",
+       :lon "-87.62768805027"
+       :typ "S"
+       :stpid "4729",
+       :stpnm "Madison & State"
+       :pdist "654.0"},
+      {:seq "3"
+       :lat "41.882063018264",
+       :lon "-87.629334926605",
+       :typ "W"})
+     (take 3
+           (fetch-pattern-data-for-route "56" "North Bound"))))))
+
 (test/deftest should-fetch-pattern-data-for-route
   (expect
    [fetch-pattern-data-by-id-xml
