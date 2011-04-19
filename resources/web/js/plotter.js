@@ -55,4 +55,21 @@ function make_normalizer(coordinates) {
   };
 }
 
+function compose(g, f) { 
+  return function(x) { 
+    return g(f(x));
+  }
+}
+
+function scale_coordinate(width, height, normalized_point) {
+  return [normalized_point[0] * width, normalized_point[1] * height];
+}
+
+function plot_waypoints(canvas_id, waypoints) { 
+  var canvas = $(canvas_id)[0];
+  var points = $.map(waypoints, function(x) { return [x['lat'],x['lon']]});
+
+}
+
+
 

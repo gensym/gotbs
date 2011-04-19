@@ -1,8 +1,70 @@
 
 // documentation on writing tests here: http://docs.jquery.com/QUnit
+module("plotter tests");
 
+test('max([1,2,3] == 3', function() { equals(3, max([1,2,3]))});
+
+test('min([1,2,3]) == 1', function() { equals(1, min([1,2,3]))});
+
+test('should compose functions', function() {
+  var plus1 = function(x) { return x + 1 };
+  var times2 = function(x) { return x * 2};
+  var both = compose(times2, plus1);
+  equals(12, both(5), "(5 + 1) * 2 == 12");
+});
+
+test('should partially apply functions', function() {
+  var func = function(a, b, c) { return a + b + c};
+  var most = partial(func,1,2);
+  equals(6, most(3), "1 + 2 + 3 == 6")
+});
+
+test('should normalize horizontal points', function() { 
+  data = [[5, 2], [6, 2], [7, 2], [8, 2]];
+  var normalizer = make_normalizer(data);
+
+  equals(QUnit.equiv(normalizer([5, 2]), [0, 0.5]), true, "5,2");
+  equals(QUnit.equiv(normalizer([8, 2]), [1, 0.5]), true, "6,2");
+  equals(QUnit.equiv(normalizer([6, 2]), [1/3, 0.5]), true, "7,2");
+  equals(QUnit.equiv(normalizer([7, 2]), [2/3, 0.5]), true, "8,2");
+});
+
+test('should normalize nearly horizontal points', function() {
+  data = [[5, 1], [6, 3], [7, 1], [8, 1]];
+  var normalizer = make_normalizer(data);
+
+  equals(QUnit.equiv(normalizer([5, 1]), [0, 0.5 - 1/3]), true, "5,1");
+  equals(QUnit.equiv(normalizer([8, 3]), [1, 0.5 + 1/3]), true, "8,3");
+  equals(QUnit.equiv(normalizer([6, 1]), [1/3, 0.5 - 1/3]), true, "6,1");
+  equals(QUnit.equiv(normalizer([7, 1]), [2/3, 0.5 - 1/3]), true, "7,1");
+});
+
+test('should normalize vertical points', function() {
+  data = [[2, 5], [2, 6], [2, 7], [2, 8]];
+  var normalizer = make_normalizer(data);
+
+  equals(QUnit.equiv(normalizer([2, 5]), [0.5, 0]), true, "2,5");
+  equals(QUnit.equiv(normalizer([2, 8]), [0.5, 1]), true, "2,6");
+  equals(QUnit.equiv(normalizer([2, 6]), [0.5, 1/3]), true, "2,7");
+  equals(QUnit.equiv(normalizer([2, 7]), [0.5, 2/3]), true, "2,8");
+});
+
+test('should normalize nearly vertical points', function() {
+  data = [[1, 5], [3, 6], [1, 7], [1, 8]];
+  var normalizer = make_normalizer(data);
+
+  equals(QUnit.equiv(normalizer([1, 5]), [0.5 - 1/3, 0]), true, "1,5");
+  equals(QUnit.equiv(normalizer([3, 8]), [0.5 + 1/3, 1]), true, "3,8");
+  equals(QUnit.equiv(normalizer([1, 6]), [0.5 - 1/3, 1/3]), true, "1,6");
+  equals(QUnit.equiv(normalizer([1, 7]), [0.5 - 1/3, 2/3]), true, "1,7");
+});
+
+test('should scale points', function() { 
+  equals(QUnit.equiv(scale_coordinate(50, 100, [.2, .3]), [10, 30]), true, "scaled points");
+});
 
 module("example tests");
+
 test('HTML5 Boilerplate is sweet',function(){
   expect(1);
   equals('boilerplate'.replace('boilerplate','sweet'),'sweet','Yes. HTML5 Boilerplate is, in fact, sweet');
