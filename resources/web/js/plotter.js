@@ -34,8 +34,8 @@ function partial(fn) {
 }
 
 function make_normalizer(coordinates) {
-  var x_s = $.map(coordinates, function(x) { return x[0]});
-  var y_s = $.map(coordinates, function(x) { return x[1]});
+  var x_s = coordinates.map(function(x) { return x[0]});
+  var y_s = coordinates.map(function(x) { return x[1]});
 
   var min_x = min(x_s);
   var min_y = min(y_s);
@@ -51,7 +51,7 @@ function make_normalizer(coordinates) {
   return function(point) { 
     var x = (point[0] - min_x) / scale + x_shift;
     var y = (point[1] - min_y) / scale + y_shift;
-    return [x,y];
+    return [x, 1 - y];
   };
 }
 
@@ -64,12 +64,3 @@ function compose(g, f) {
 function scale_coordinate(width, height, normalized_point) {
   return [normalized_point[0] * width, normalized_point[1] * height];
 }
-
-function plot_waypoints(canvas_id, waypoints) { 
-  var canvas = $(canvas_id)[0];
-  var points = $.map(waypoints, function(x) { return [x['lat'],x['lon']]});
-
-}
-
-
-

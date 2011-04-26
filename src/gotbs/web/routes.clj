@@ -5,7 +5,7 @@
   (:use net.cgrand.enlive-html))
 
 (defn route-waypoints [{route "route" direction "direction"}]
-  (json/json-str ["this" "that"]))
+  (json/json-str (routes/waypoints route direction)))
 
 (defn available-routes [{term "term"}]
   (json/json-str (routes/matching-routes term)))

@@ -20,7 +20,7 @@ $(document).ready(function() {
     } else {
       $.get('/routes/waypoints.json', {"route": route, "direction": direction}, 
             function(data) {
-              alert(data);
+              plot_waypoints('#map', data);
             });
     }
   }
