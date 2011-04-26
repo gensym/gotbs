@@ -33,30 +33,30 @@ test('should normalize nearly horizontal points', function() {
   data = [[5, 1], [6, 3], [7, 1], [8, 1]];
   var normalizer = make_normalizer(data);
 
-  equals(QUnit.equiv(normalizer([5, 1]), [0, 0.5 - 1/3]), true, "5,1");
-  equals(QUnit.equiv(normalizer([8, 3]), [1, 0.5 + 1/3]), true, "8,3");
-  equals(QUnit.equiv(normalizer([6, 1]), [1/3, 0.5 - 1/3]), true, "6,1");
-  equals(QUnit.equiv(normalizer([7, 1]), [2/3, 0.5 - 1/3]), true, "7,1");
+  equals(QUnit.equiv(normalizer([5, 1]), [0, 0.5 + 1/3]), true, "5,1");
+  equals(QUnit.equiv(normalizer([8, 3]), [1, 1 - (0.5 + 1/3)]), true, "8,3");
+  equals(QUnit.equiv(normalizer([6, 1]), [1/3, 0.5 + 1/3]), true, "6,1");
+  equals(QUnit.equiv(normalizer([7, 1]), [2/3, 0.5 + 1/3]), true, "7,1");
 });
 
 test('should normalize vertical points', function() {
   data = [[2, 5], [2, 6], [2, 7], [2, 8]];
   var normalizer = make_normalizer(data);
 
-  equals(QUnit.equiv(normalizer([2, 5]), [0.5, 0]), true, "2,5");
-  equals(QUnit.equiv(normalizer([2, 8]), [0.5, 1]), true, "2,6");
-  equals(QUnit.equiv(normalizer([2, 6]), [0.5, 1/3]), true, "2,7");
-  equals(QUnit.equiv(normalizer([2, 7]), [0.5, 2/3]), true, "2,8");
+  equals(QUnit.equiv(normalizer([2, 5]), [0.5, 1]), true, "2,5");
+  equals(QUnit.equiv(normalizer([2, 8]), [0.5, 0]), true, "2,6");
+  equals(QUnit.equiv(normalizer([2, 6]), [0.5, 1 - 1/3]), true, "2,7");
+  equals(QUnit.equiv(normalizer([2, 7]), [0.5, 1 - 2/3]), true, "2,8");
 });
 
 test('should normalize nearly vertical points', function() {
   data = [[1, 5], [3, 6], [1, 7], [1, 8]];
   var normalizer = make_normalizer(data);
 
-  equals(QUnit.equiv(normalizer([1, 5]), [0.5 - 1/3, 0]), true, "1,5");
-  equals(QUnit.equiv(normalizer([3, 8]), [0.5 + 1/3, 1]), true, "3,8");
-  equals(QUnit.equiv(normalizer([1, 6]), [0.5 - 1/3, 1/3]), true, "1,6");
-  equals(QUnit.equiv(normalizer([1, 7]), [0.5 - 1/3, 2/3]), true, "1,7");
+  equals(QUnit.equiv(normalizer([1, 5]), [0.5 - 1/3, 1]), true, "1,5");
+  equals(QUnit.equiv(normalizer([3, 8]), [0.5 + 1/3, 0]), true, "3,8");
+  equals(QUnit.equiv(normalizer([1, 6]), [0.5 - 1/3, 1 - 1/3]), true, "1,6");
+  equals(QUnit.equiv(normalizer([1, 7]), [0.5 - 1/3, 1 - 2/3]), true, "1,7");
 });
 
 test('should scale points', function() { 
