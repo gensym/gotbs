@@ -33,34 +33,14 @@ function partial(fn) {
   }
 }
 
-function make_normalizer(coordinates) {
-  var x_s = coordinates.map(function(x) { return x[0]});
-  var y_s = coordinates.map(function(x) { return x[1]});
-
-  var min_x = min(x_s);
-  var min_y = min(y_s);
-
-  var width = max(x_s) - min_x;
-  var height = max(y_s) - min_y;
-
-  var scale = max([width, height]);
-
-  var x_shift = height > width ? 0.5 - width / height / 2 : 0;
-  var y_shift = width > height ? 0.5 - height / width / 2 : 0;
-
-  return function(point) { 
-    var x = (point[0] - min_x) / scale + x_shift;
-    var y = (point[1] - min_y) / scale + y_shift;
-    return [x, 1 - y];
-  };
+function flatten(nested_arrays) {
+  return nested_arrays.reduce(function(a, b) { 
+    return a.concat(b); 
+  });
 }
 
 function compose(g, f) { 
   return function(x) { 
     return g(f(x));
   }
-}
-
-function scale_coordinate(width, height, normalized_point) {
-  return [normalized_point[0] * width, normalized_point[1] * height];
 }

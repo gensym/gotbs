@@ -21,7 +21,7 @@
           </div>
         </li>
         
-        <li>
+        <li id="route-direction-selection">
           <label class="desc" id="route-direction-title" for="route-direction">
             Direction
           </label>
@@ -61,9 +61,16 @@
     <script id="data">
       var data = 
       [
-      { lat: 41.862114939198, lon: -87.625998258591 },
+      //{ lat: 41.862114939198, lon: -87.625998258591 },
       { lat: 41.882039054742, lon: -87.629334926605 },
       { lat: 41.982019085133, lon: -87.639472720493 } ];
+
+      var data2 = 
+      [
+      { lat: 0, lon: 10 },
+      { lat: 300, lon: 30 },
+      { lat: 400, lon: 60 } ];
+
       plot_waypoints('#map', data);
     </script>
 
