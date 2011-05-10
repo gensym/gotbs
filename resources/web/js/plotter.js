@@ -33,6 +33,13 @@ function partial(fn) {
   }
 }
 
+function flatten(nested_arrays) {
+  return nested_arrays.reduce(function(a, b) { 
+    return a.concat(b); 
+  });
+}
+
+
 function make_normalizer(coordinates) {
   var x_s = coordinates.map(function(x) { return x[0]});
   var y_s = coordinates.map(function(x) { return x[1]});

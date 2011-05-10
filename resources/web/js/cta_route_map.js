@@ -23,11 +23,18 @@ function route_canvas(canvas_id) {
       this.routes = this.routes.concat([route]);
     };
 
+    var scaler = partial(scale_coordinate, canvas.width, canvas.height);
+    var to_point = function(x) { return [x['lon'],x['lat']]};
+
     canvas.redraw = function() {
       var ctx = this.getContext('2d');
+
+      var points = flatten(this.routes).map(to_point);
+      var translater = compose(scaler, compose(make_normalizer(points), to_point));
+
       ctx.clearRect(0, 0, this.width, this.height);
       for (var i = 0; i < this.routes.length; i++) {
-        drawPath(this.routes[i]);
+        drawPath(this.routes[i].map(translater));
       }
     };
   }
@@ -42,12 +49,6 @@ function plot_waypoints(canvas_id, waypoints) {
     return;
   }
 
-  var points = waypoints.map(function(x) { return [x['lon'],x['lat']]});
-
-  var scaler = partial(scale_coordinate, canvas.width, canvas.height);
-  var translater = compose(scaler, make_normalizer(points));
-  var to_plot = points.map(translater);
-
-  canvas.addRoute(to_plot);
+  canvas.addRoute(waypoints);
   canvas.redraw();
 }
