@@ -1,17 +1,53 @@
-function plot_waypoints(canvas_id, waypoints) { 
+function route_canvas(canvas_id) {
   var canvas = $(canvas_id)[0];
+  if (!canvas || !canvas.getContext) { 
+    return;
+  }
+
+  if (!canvas.routes) {
+    canvas.routes = [];
+
+    var drawPath = function(coordinates) {
+      var ctx = canvas.getContext('2d');
+      if (coordinates.length > 0) {
+        ctx.beginPath();
+        ctx.moveTo(coordinates[0][0], coordinates[0][1]);
+        for (var i = 1; i < coordinates.length; i++) {
+          ctx.lineTo(coordinates[i][0], coordinates[i][1]);
+        }
+        ctx.stroke();
+      }
+    };
+
+    canvas.addRoute = function(route) {
+      this.routes = this.routes.concat([route]);
+    };
+
+    canvas.redraw = function() {
+      var ctx = this.getContext('2d');
+      ctx.clearRect(0, 0, this.width, this.height);
+      for (var i = 0; i < this.routes.length; i++) {
+        drawPath(this.routes[i]);
+      }
+    };
+  }
+  return canvas;
+}
+
+
+function plot_waypoints(canvas_id, waypoints) { 
+ var canvas = route_canvas(canvas_id);
+
+  if (!canvas) {
+    return;
+  }
+
   var points = waypoints.map(function(x) { return [x['lon'],x['lat']]});
+
   var scaler = partial(scale_coordinate, canvas.width, canvas.height);
   var translater = compose(scaler, make_normalizer(points));
-
   var to_plot = points.map(translater);
-  if (canvas.getContext && to_plot.length > 0) {
-    var ctx = canvas.getContext('2d');
-    ctx.beginPath();
-    ctx.moveTo(to_plot[0][0], to_plot[0][1]);
-    for (var i = 1; i <  to_plot.length; i++) {
-      ctx.lineTo(to_plot[i][0], to_plot[i][1]);
-    }
-    ctx.stroke();
-  }
+
+  canvas.addRoute(to_plot);
+  canvas.redraw();
 }
