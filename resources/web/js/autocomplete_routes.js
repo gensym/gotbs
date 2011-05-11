@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+  $('#route-direction-selection').hide();
   $('#add-route-button').hide();
   $("input#route-text").autocomplete({
     source: 
@@ -16,11 +17,15 @@ $(document).ready(function() {
     if (!route) {
       alert("Please select a route.")
     } else if (!direction) {
-      alert("Please select a direction.");
+      // waiting for direction. An alert here is annoying
     } else {
       $.get('/routes/waypoints.json', {"route": route, "direction": direction}, 
             function(data) {
               plot_waypoints('#map', data);
+              $('#route-selection')[0].reset();
+              $('#add-route-button').hide();
+              $('#route-direction-selection .available-direction').remove();
+              $('#route-direction-selection').hide();
             });
     }
   }
@@ -30,6 +35,7 @@ $(document).ready(function() {
     $.each(directions,  function(i, direction){ 
       $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
     });
+    $('#route-direction-selection').show();
     $('.direction-radio').first().focus();
     $('#add-route-button').show();
     $('#route-selection').submit(get_route_data);
