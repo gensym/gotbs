@@ -26,6 +26,7 @@ $(document).ready(function() {
               $('#add-route-button').hide();
               $('#route-direction-selection .available-direction').remove();
               $('#route-direction-selection').hide();
+              $("input#route-text").focus();
             });
     }
   }
@@ -37,6 +38,7 @@ $(document).ready(function() {
     });
     $('#route-direction-selection').show();
     $('.direction-radio').first().focus();
+    $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
     $('#add-route-button').show();
     $('#route-selection').submit(get_route_data);
   }
@@ -47,4 +49,6 @@ $(document).ready(function() {
   }
 
   $("input#route-text").change(get_available_directions);
+  $("input#route-text").focus();
+  
 });
