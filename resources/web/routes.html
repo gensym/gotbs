@@ -10,7 +10,14 @@
     <div id="routes">
       <canvas id="map" width="600" height="600" style="border:1px
                                                        dotted;float:left"></canvas>
+      <div>
+        <h2>Routes</h2>
+        <ul id="displayed-routes">
+        </ul>
+      </div>
+
       <form id="route-selection" onSubmit="return false;">
+        <h2>Add Route</h2>
         
         <li class="     ">
           <label class="desc" id="route-name-title" for="route-text">
@@ -36,6 +43,7 @@
           </div>
         </li>
       </form>
+
     </div>
     
 

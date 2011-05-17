@@ -1,7 +1,9 @@
 $(document).ready(function() {
 
   $('#route-direction-selection').hide();
+  
   $('#add-route-button').hide();
+  $('#route-selection').submit(get_route_data);
   $("input#route-text").autocomplete({
     source: 
     function(request, response) {
@@ -10,6 +12,11 @@ $(document).ready(function() {
       })
     }
   });
+
+  function add_route(name, data) {
+    plot_waypoints('#map', data);
+    $.tmpl("<li>${name}</li>", {"name": name}).appendTo("#displayed-routes");
+  }
 
   function get_route_data() {
     var route = $("input[name='route-name']").val();
@@ -21,7 +28,7 @@ $(document).ready(function() {
     } else {
       $.get('/routes/waypoints.json', {"route": route, "direction": direction}, 
             function(data) {
-              plot_waypoints('#map', data);
+              add_route(route, data);
               $('#route-selection')[0].reset();
               $('#add-route-button').hide();
               $('#route-direction-selection .available-direction').remove();
@@ -40,7 +47,6 @@ $(document).ready(function() {
     $('.direction-radio').first().focus();
     $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
     $('#add-route-button').show();
-    $('#route-selection').submit(get_route_data);
   }
 
   function get_available_directions() {
