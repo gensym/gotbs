@@ -14,7 +14,7 @@ $(document).ready(function() {
   });
 
   function add_route(name, data) {
-    plot_waypoints('#map', data);
+    plot_waypoints('#map', name, data);
     $.tmpl("<li>${name}</li>", {"name": name}).appendTo("#displayed-routes");
   }
 
