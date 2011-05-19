@@ -10,6 +10,7 @@ function route_canvas(canvas_id) {
     var drawPath = function(coordinates) {
       var ctx = canvas.getContext('2d');
       if (coordinates.length > 0) {
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(coordinates[0][0], coordinates[0][1]);
         for (var i = 1; i < coordinates.length; i++) {
