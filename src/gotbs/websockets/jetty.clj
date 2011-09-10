@@ -28,13 +28,15 @@
 (defn- make-websocket []
   (proxy [WebSocket] []
     (onClose [closeCode message])
-    (onOpen [connection])))
+    (onOpen [connection]
+            (println "connected"))))
 
 (defn- proxy-websocket-handler [handler]
   (doto 
       (proxy [WebSocketHandler] []
         (doWebSocketConnect
          [^HttpServletRequest request ^String protocol]
+         (println protocol)
          (make-websocket)))
     (.setHandler handler)))
 
@@ -42,7 +44,7 @@
 (defn ^Server run-jetty-websockets [handler port]
   (let [^Server s (create-server port)]
     (doto s
-      (.setHandler (proxy-http-handler handler))
+      (.setHandler (proxy-websocket-handler (proxy-http-handler handler)))
       (.start)
       (.join))
     s))

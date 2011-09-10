@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [midje "0.8.0"]
-                 [org.signaut/ring-jetty7-adapter "0.3.8"]
+                 [org.webbitserver/webbit "0.2.0"]
                  [org.eclipse.jetty/jetty-servlet "7.4.2.v20110526"]
                  [ring/ring-jetty-async-adapter "0.3.3-SNAPSHOT"]
 		 [ring/ring-core "0.3.8"]
