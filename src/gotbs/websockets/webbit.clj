@@ -12,7 +12,7 @@
   (doto (WebServers/createWebServer port)
     (.add "/topics"
           (proxy [WebSocketHandler] []
-            (onOpen [c]  (println "opened" c))
+            (onOpen [c]  (ws-conn/open connection-set c))
             (onClose [c] (ws-conn/close connection-set c))
             (onMessage [c j] (on-message connection-set c j))))
     (.start)))

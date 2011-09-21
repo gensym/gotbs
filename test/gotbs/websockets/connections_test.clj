@@ -15,8 +15,8 @@
     (subscribe cs conn2 topic)
     (expect 
      (broadcast cs topic "some data") => 2
-     (fake (send-data conn1 "some data") => nil)
-     (fake (send-data conn2 "some data") => nil))))
+     (fake (send-data cs conn1 "some data") => nil)
+     (fake (send-data cs conn2 "some data") => nil))))
 
 (test/deftest should-unsubscribe-when-connection-closed
   (let [cs (connection-set)
@@ -28,4 +28,4 @@
     (close cs conn1)
     (expect 
      (broadcast cs topic "some data") => 1
-     (fake (send-data conn2 "some data") => nil))))
+     (fake (send-data cs conn2 "some data") => nil))))
