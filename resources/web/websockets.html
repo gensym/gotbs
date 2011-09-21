@@ -20,12 +20,12 @@
       <script src="http://jquery-websocket.googlecode.com/files/jquery.websocket-0.0.1.js"></script>
       <script>
         $(document).ready(function() {
-          var ws = $.websocket("ws://127.0.0.1:8888/websocket", {
+          var ws = $.websocket("ws://127.0.0.1:8888/topics", {
             events: { 
-              upcased: function(e) { $("#content").html(e.message); }}});
+              broadcasted: function(e) { $("#content").html(e.message); }}});
 
           $('#message').change(function(){
-            ws.send('message', {type: "downcase", message: $("#message").val()});});
+            ws.send('subscribe', {topic: $("#message").val()});});
         });
       </script>
     </div>

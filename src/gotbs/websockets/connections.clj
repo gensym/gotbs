@@ -29,12 +29,13 @@
                  (:connections-by-topic connection-set)
                  (partial remove-connection connection topic)))
      (get @(:topics-by-connection connection-set) connection)))
-   (alter (:topics-by-connection connection-set) (fn [m] (dissoc m connection)))
-   ))
+   (alter (:topics-by-connection connection-set) (fn [m] (dissoc m connection)))))
 
 (defn send-data [connection data]
-  (io!
-   (.send connection data)))
+  (do
+    (println "Sending to connection:" connection " data:" data)
+    (io!
+     (.send connection data))))
 
 (defn broadcast [connection-set topic data]
   "Return the number of messages sent"
