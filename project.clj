@@ -9,7 +9,6 @@
 		 [ring/ring-core "0.3.8"]
 		 [ring/ring-devel "0.3.8"]
 		 [enlive "1.0.0-SNAPSHOT"]]
-  :dev-dependencies [[swank-clojure "1.2.1"]
-		     [lein-run "1.0.0-SNAPSHOT"]]
+  :dev-dependencies [[swank-clojure "1.2.1"]]
 
 )
