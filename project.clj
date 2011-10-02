@@ -11,4 +11,6 @@
 		 [enlive "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[swank-clojure "1.2.1"]]
 
+
+  :main gotbs.run
 )

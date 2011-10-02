@@ -14,3 +14,9 @@
 
 (defn cq-mark-processed [cq n]
   (make-carousel (drop n (:items cq))))
+
+(defn cq-conj
+  ([cq x]
+     (make-carousel (concat (:items cq) (list x))))
+  ([cq x & xs]
+     (make-carousel (concat (:items cq) (list x) xs))))
