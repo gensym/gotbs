@@ -1,22 +1,13 @@
 (ns gotbs.util.carousel)
 
+(deftype Carousel [items]
+  clojure.lang.IPersistentStack
+  (cons [this item] (Carousel. (concat items (list item))))
+  (peek [this] (first items))
+  (pop [this] (Carousel. (rest items)))
+
+  clojure.lang.Seqable
+  (seq [this] items))
+
 (defn make-carousel [items]
-  {:items items})
-
-(defn cq-peek [cq]
-  (first (:items cq)))
-
-(defn cq-take [cq n]
-  (take n (:items cq)))
-
-(defn cq-process [cq f n]
-  (map f (cq-take cq n)))
-
-(defn cq-mark-processed [cq n]
-  (make-carousel (drop n (:items cq))))
-
-(defn cq-conj
-  ([cq x]
-     (make-carousel (concat (:items cq) (list x))))
-  ([cq x & xs]
-     (make-carousel (concat (:items cq) (list x) xs))))
+     (Carousel. items))
