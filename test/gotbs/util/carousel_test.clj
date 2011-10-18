@@ -25,7 +25,7 @@
         cq2 (conj cq 10 11)]
     (expect (take 7 cq2) => '(0 1 2 3 4 10 11))))
 
-(test/deftest should-drop-items
+(test/deftest should-pop-items
   (let [cq (make-carousel (range 5))
         cq2 (poptimes 3 cq)]
     (expect (take 5 cq2) => '(3 4))))
@@ -48,15 +48,6 @@
   (let [cq (make-carousel (range 0))]
     (expect (empty? cq) => true)
     (expect (take 10 cq) => '())))
-
-(defn ignore []
-  (test/deftest should-drop-items-after-passing-through
-    (let [cq1 (make-carousel (range 3))
-          cq2 (pop cq1)
-          cq3 (poptimes 2 cq2)
-          cq4 (poptimes 3 cq3)]
-      (expect (take 3 cq1) => '(0 1 2)))))
-
 
 (test/deftest should-drop-items-after-passing-through
   (let [cq1 (make-carousel (range 3))
