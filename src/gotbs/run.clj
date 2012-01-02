@@ -5,7 +5,7 @@
   (require [gotbs.core]
            [clojure.contrib.json :as json]
            [gotbs.util.scheduler :as scheduler]
-           [gotbs.vehcles-on-routes :as routes]
+           [gotbs.vehicles-on-routes :as routes]
            [gotbs.websockets.connections :as ws-connections]))
 
 (defn -main []
