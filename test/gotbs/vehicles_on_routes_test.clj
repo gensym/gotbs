@@ -14,7 +14,7 @@
 ;; than failing, as it should). One way to remedy that drawback is to
 ;; add a timeout on the deref, so that we fail the test if the agent
 ;; has not processed within a period of time. We're not doing that
-;; yet, though.
+;; yet, though. Once we upgrade to clojure 1.3, we should do so. 
 (test/deftest should-process-in-batches-of-ten
   (let [p (promise)
         do-process (fn [val] (deliver p val))]
