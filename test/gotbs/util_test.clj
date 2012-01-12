@@ -12,3 +12,10 @@
     (chunk-func 2 + [1 2 3 4 5]))))
 
 
+(deftest should-wrap-with-input
+  (is
+   (=
+    '(21 42)
+    ((wrap-with-input #(* % 2)) 21))))
+
+

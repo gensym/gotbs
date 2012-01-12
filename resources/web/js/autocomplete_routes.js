@@ -4,13 +4,20 @@ $(document).ready(function() {
   
   $('#add-route-button').hide();
   $('#route-selection').submit(get_route_data);
+
+  function get_available_directions() {
+    $(".available-direction").remove();
+    $.get("/routes/directions.json", {term: this.value}, accept_direction);
+  }
+
   $("input#route-text").autocomplete({
     source: 
     function(request, response) {
       $.getJSON('/routes/available.json', request, function(data) {
         response(data);
       })
-    }
+    },
+    change: get_available_directions
   });
 
   function add_route(name, data) {
@@ -49,12 +56,9 @@ $(document).ready(function() {
     $('#add-route-button').show();
   }
 
-  function get_available_directions() {
-    $(".available-direction").remove();
-    $.get("/routes/directions.json", {term: this.value}, accept_direction);
-  }
 
-  $("input#route-text").change(get_available_directions);
+
+  //$("input#route-text").change(get_available_directions);
   $("input#route-text").focus();
   
 });

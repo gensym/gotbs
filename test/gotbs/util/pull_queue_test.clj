@@ -1,4 +1,4 @@
-(ns gotbs.pull-queue-test
+(ns gotbs.util.pull-queue-test
   (:use [gotbs.util.pull-queue] :reload-all
         [midje.semi-sweet])
   (:require [clojure [test :as test]])
@@ -21,3 +21,15 @@
               (.await counter 5 TimeUnit/MILLISECONDS)) => true ;; False means we timed out
               (fake (worker (range 10)) => nil)
               (fake (worker (drop 10 (range 15))) => nil))))
+
+(test/deftest should-process-in-batchsize-1
+  (let [counter (CountDownLatch. 3)
+        do-process (fn [val] (.countDown counter))]
+    (expect (let [queue (make-pull-queue worker do-process 1)]
+              (dorun
+               (map #(push-work-item queue %) (range 3)))
+              (process-all-items queue)
+              (.await counter 5 TimeUnit/MILLISECONDS)) => true ;; False means we timed out
+              (fake (worker '(0)) => nil)
+              (fake (worker '(1)) => nil)
+              (fake (worker '(2)) => nil))))

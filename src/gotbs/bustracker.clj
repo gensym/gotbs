@@ -4,6 +4,7 @@
    (java.io BufferedReader InputStreamReader StringBufferInputStream))
   (:use
    clojure.xml (parse)
+   [clojure.contrib [logging :as log]] 
    clojure.java.io (input-stream)
    clojure.contrib.str-utils (re-gsub)))
 
@@ -27,9 +28,11 @@
   "Returns the contents at a URL as a string"
   [address]
   (let [url (URL. address)]
+    (log/info (str "Requesting " url))
     (with-open [stream (. url openStream)]
       (let [buf (BufferedReader. (InputStreamReader. stream))]
-	(apply str (line-seq buf))))))
+        (spy
+         (apply str (line-seq buf)))))))
 
 (defn fetch-routes-data-xml []
   (fetch-url
