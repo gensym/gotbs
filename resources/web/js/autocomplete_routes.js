@@ -1,11 +1,22 @@
 $(document).ready(function() {
 
   $('#route-direction-selection').hide();
-  
   $('#add-route-button').hide();
   $('#route-selection').submit(get_route_data);
 
+  function accept_direction(directions) {
+    var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio direction-radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
+    $.each(directions,  function(i, direction){ 
+      $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
+    });
+    $('#route-direction-selection').show();
+    $('.direction-radio').first().focus();
+    $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
+    $('#add-route-button').show();
+  }
+
   function get_available_directions() {
+    // TODO - show a spinner here
     $(".available-direction").remove();
     $.get("/routes/directions.json", {term: this.value}, accept_direction);
   }
@@ -20,9 +31,11 @@ $(document).ready(function() {
     change: get_available_directions
   });
 
-  function add_route(name, data) {
+  function add_route(name, direction, data) {
     plot_waypoints('#map', name, data);
-    $.tmpl("<li>${name}</li>", {"name": name}).appendTo("#displayed-routes");
+    $.tmpl("<li>${name} - ${direction}</li>", 
+           {"name": name, "direction": direction}
+          ).appendTo("#displayed-routes");
   }
 
   function get_route_data() {
@@ -35,7 +48,7 @@ $(document).ready(function() {
     } else {
       $.get('/routes/waypoints.json', {"route": route, "direction": direction}, 
             function(data) {
-              add_route(route, data);
+              add_route(route, direction, data);
               $('#route-selection')[0].reset();
               $('#add-route-button').hide();
               $('#route-direction-selection .available-direction').remove();
@@ -45,20 +58,5 @@ $(document).ready(function() {
     }
   }
 
-  function accept_direction(directions) {
-    var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio direction-radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
-    $.each(directions,  function(i, direction){ 
-      $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
-    });
-    $('#route-direction-selection').show();
-    $('.direction-radio').first().focus();
-    $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
-    $('#add-route-button').show();
-  }
-
-
-
-  //$("input#route-text").change(get_available_directions);
   $("input#route-text").focus();
-  
 });
