@@ -7,3 +7,5 @@
 (defn wrap-with-input [func]
   "Return a function. That function with then take a single item of input and return a 2-item seq with the first item being the input and the second being the result of applying func to that input"
   (fn [x] (list x (func x))))
+
+

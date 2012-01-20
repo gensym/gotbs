@@ -1,8 +1,8 @@
 (ns gotbs.busdata-test
   (:use [gotbs.busdata] :reload-all
         [midje.semi-sweet])
-  (:require [clojure [test :as test]]
-            [gotbs [bustracker :as bustracker]]))
+  (:require [clojure.test :as test]
+            [gotbs.bustracker :as bustracker]))
 
 
 (test/deftest should-fetch-stop-pdist

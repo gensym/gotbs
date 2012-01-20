@@ -75,7 +75,6 @@
   (fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&pid=" pattern-id)))
 
-
 (defn content-xml-to-map [xml]
   "Takes a seq in the form of [{:tag :a :content [\"something\"]} {:tag b :content [\"else\"]}] and turns it into a map, with the value of the :tag as the keys and the values of :content as values. If the value of :content is a list, takes the first item off of that list."
   (let [
@@ -208,4 +207,3 @@
   (map
    make-prediction
    (fetch-prediction-data route stop-id)))
-
