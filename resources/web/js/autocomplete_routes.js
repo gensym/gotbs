@@ -3,7 +3,7 @@ $(document).ready(function() {
   $('#route-direction-selection').hide();
   $('#add-route-button').hide();
   $('#route-selection').submit(get_route_data);
-
+  
   function accept_direction(directions) {
     var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio direction-radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
     $.each(directions,  function(i, direction){ 
@@ -31,11 +31,22 @@ $(document).ready(function() {
     change: get_available_directions
   });
 
+  var ws = $.websocket("ws://127.0.0.1:8888/topics", {
+    events: {
+      updated: function(e) { alert(e.message)}
+    }
+  });
+  var routes = {}
   function add_route(name, direction, data) {
-    plot_waypoints('#map', name, data);
-    $.tmpl("<li>${name} - ${direction}</li>", 
-           {"name": name, "direction": direction}
-          ).appendTo("#displayed-routes");
+    var key = [name, direction]
+    if (!routes.hasOwnProperty(key)) {
+      routes[key] = true;
+      ws.send('subscribe', {topic: key});
+      plot_waypoints('#map', name, data);
+      $.tmpl("<li>${name} - ${direction}</li>", 
+             {"name": name, "direction": direction}
+            ).appendTo("#displayed-routes");
+    }
   }
 
   function get_route_data() {

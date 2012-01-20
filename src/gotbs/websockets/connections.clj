@@ -52,3 +52,4 @@
   "Return the number of messages sent"
   (let [connections (get @(:connections-by-topic connection-set) topic)]
     (count (map (fn [conn] (send-data connection-set conn data)) connections))))
+
