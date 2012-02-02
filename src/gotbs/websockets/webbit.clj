@@ -8,11 +8,16 @@
   (let [topic (-> json-message json/read-json (get-in [:data :topic]))]
     (ws-conn/subscribe connection-set connection topic)))
 
-(defn run-webbit-websockets [port connection-set]
+(defn make-webbit-websockets [port connection-set]
   (doto (WebServers/createWebServer port)
     (.add "/topics"
           (proxy [WebSocketHandler] []
             (onOpen [c]  (ws-conn/open connection-set c))
             (onClose [c] (ws-conn/close connection-set c))
-            (onMessage [c j] (on-message connection-set c j))))
-    (.start)))
+            (onMessage [c j] (on-message connection-set c j))))))
+
+(defn start [webbit]
+  (.start webbit))
+
+(defn stop [webbit]
+  (.stop webbit))

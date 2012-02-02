@@ -37,7 +37,7 @@
   (nth (iterate pop coll) n))
 
 (defn make-carousel 
-  "Create a Carousel - a data structure that functions as a circular queue.
+  "Create a Carousel - a peristent data structure that functions as a circular queue.
 
     When items are popped and then readded to the queue, their original order is preserved, regardless of the order in which they are readded. However, when the queue has been cycled through without readding the item, the item gets dropped, and if it is then readded, it is placed on the end. Adding an item that is already on the queue has no effect. 
 

@@ -40,6 +40,10 @@
          (make-websocket)))
     (.setHandler handler)))
 
+(defn ^Server make-jetty-server [handler port]
+  (let [^Server s (create-server port)]
+    (.setHandler s (proxy-websocket-handler (proxy-http-handler handler)))
+    s))
 
 (defn ^Server run-jetty-server [handler port]
   (let [^Server s (create-server port)]
