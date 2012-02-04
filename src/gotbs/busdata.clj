@@ -1,7 +1,7 @@
 (ns gotbs.busdata
   (:use clojure.set)
   (:use gotbs.bustracker)
-  (:use [clojure.contrib.str-utils :only [str-join]]))
+  (:require [clojure [string :as string]]))
 
 (defn stop-pdist [route dir stop-id]
   (Float/parseFloat
@@ -12,7 +12,7 @@
       (fetch-pattern-data-for-route route dir))))))
 
 (defn in-flight-vehicles [routes]
-  (fetch-vehicles-on-route-data (str-join "," routes)))
+  (fetch-vehicles-on-route-data (string/join "," routes)))
 
 (defn vehicle-direction [vehicle]
   (:rtdir (fetch-pattern-data-by-id

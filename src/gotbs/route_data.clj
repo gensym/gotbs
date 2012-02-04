@@ -1,7 +1,9 @@
 (ns gotbs.route-data
   (:require [gotbs.bustracker :as bustracker])
-  (:require [clojure.contrib.str-utils2 :as s])
-  (:use [clojure.contrib.seq-utils :only (find-first)]))
+  (:require [clojure [string :as s]]))
+
+(defn- str-contains? [s substring]
+  (not (== -1 (.indexOf s substring))))
 
 (defn- add-display-name [route]
   (assoc route :display (str (:rt route) " - " (:rtnm route))))
@@ -12,13 +14,13 @@
      (bustracker/fetch-routes)))
 
 (defn- contains-ignore-case? [str substring]
-  (s/contains? (s/upper-case str) (s/upper-case substring)))
+  (str-contains? (s/upper-case str) (s/upper-case substring)))
 
 (defn route-descriptor [display-name]
-  (dissoc 
-   (find-first
-    #(= display-name (:display %))
-    (routes-with-display-names))
+  (dissoc
+   (first (filter 
+           #(= display-name (:display %))
+           (routes-with-display-names)))
    :display))
 
 (defn display-names []
@@ -29,8 +31,7 @@
 (defn matching-routes [query]
   (filter
    (fn [route] (contains-ignore-case? route query))
-   (display-names)
-   ))
+   (display-names)))
 
 (defn waypoints [route-display-name direction]
   (map (fn [point] {

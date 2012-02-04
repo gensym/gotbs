@@ -1,4 +1,4 @@
-(ns gotbs.busdata-test
+?(ns gotbs.busdata-test
   (:use [gotbs.busdata] :reload-all
         [midje.semi-sweet])
   (:require [clojure.test :as test]

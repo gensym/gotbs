@@ -1,12 +1,10 @@
 (ns gotbs.bustracker
-  (:import
-   (java.net URL)
-   (java.io BufferedReader InputStreamReader StringBufferInputStream))
   (:use
    clojure.xml (parse)
-   [clojure.contrib [logging :as log]] 
-   clojure.java.io (input-stream)
-   clojure.contrib.str-utils (re-gsub)))
+   [clojure.tools [logging :as log]]
+   clojure.java.io (input-stream))
+  (:require [clojure [string :as string]]
+            [gotbs.util.http-utils :as http]))
 
 ;; BEGIN HARDCODING
 (def api-key (System/getenv "CTA_BUSTRACKER_API_KEY"))
@@ -24,55 +22,45 @@
 (def destination "Jefferson Park Blue Line")
 ;; END HARDCODING
 
-(defn fetch-url
-  "Returns the contents at a URL as a string"
-  [address]
-  (let [url (URL. address)]
-    (log/info (str "Requesting " url))
-    (with-open [stream (. url openStream)]
-      (let [buf (BufferedReader. (InputStreamReader. stream))]
-        (spy
-         (apply str (line-seq buf)))))))
-
 (defn fetch-routes-data-xml []
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=" api-key)))
 
 (defn fetch-route-direction-xml [route]
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getdirections?key=" api-key "&rt=" route)))
 
 (defn fetch-location-data-xml [route]
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
 
 (defn fetch-prediction-data-xml [route stop-id]
-  (fetch-url
+  (http/fetch-url
    (str
     "http://www.ctabustracker.com/bustime/api/v1/getpredictions?key=" api-key
     "&rt=" route
     "&stpid=" stop-id)))
 
 (defn fetch-stop-data-xml [route direction]
-  (let [dir (re-gsub #"\s" "+" direction)]
-    (fetch-url
+  (let [dir (string/replace #"\s" "+" direction)]
+    (http/fetch-url
      (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" dir))))
 
 (defn fetch-vehicles-on-route-data-xml [route]
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
 
 (defn fetch-vehicles-data-xml [vehicles]
   "Takes a sequence of vehicles (limit 10) and gets their information"
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&vid=" (reduce #(str %1 "," %2) vehicles))))
 
 (defn fetch-pattern-data-for-route-xml [route]
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&rt=" route)))
 
 (defn fetch-pattern-data-by-id-xml [pattern-id]
-  (fetch-url
+  (http/fetch-url
    (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&pid=" pattern-id)))
 
 (defn content-xml-to-map [xml]

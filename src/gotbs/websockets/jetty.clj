@@ -3,7 +3,6 @@
            (org.eclipse.jetty.server Server Request Response)
            (org.eclipse.jetty.server.nio SelectChannelConnector)
            (org.eclipse.jetty.servlet ServletContextHandler)
-           (org.eclipse.jetty.websocket WebSocket WebSocketHandler)
            (javax.servlet.http HttpServletRequest HttpServletResponse))
   (:require [ring.util.servlet :as servlet]))
 
@@ -25,30 +24,7 @@
                  (.setSendDateHeader true))]
     server))
 
-(defn- make-websocket []
-  (proxy [WebSocket] []
-    (onClose [closeCode message])
-    (onOpen [connection]
-            (println "connected"))))
-
-(defn- proxy-websocket-handler [handler]
-  (doto 
-      (proxy [WebSocketHandler] []
-        (doWebSocketConnect
-         [^HttpServletRequest request ^String protocol]
-         (println protocol)
-         (make-websocket)))
-    (.setHandler handler)))
-
 (defn ^Server make-jetty-server [handler port]
   (let [^Server s (create-server port)]
-    (.setHandler s (proxy-websocket-handler (proxy-http-handler handler)))
-    s))
-
-(defn ^Server run-jetty-server [handler port]
-  (let [^Server s (create-server port)]
-    (doto s
-      (.setHandler (proxy-websocket-handler (proxy-http-handler handler)))
-      (.start)
-      (.join))
+    (.setHandler s  (proxy-http-handler handler))
     s))

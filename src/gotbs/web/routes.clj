@@ -1,5 +1,5 @@
 (ns gotbs.web.routes
-  (:require [clojure.contrib.json :as json])
+  (:require [clojure.data.json :as json])
   (:require [gotbs.bustracker :as bustracker])
   (:require [gotbs.route-data :as routes])
   (:use net.cgrand.enlive-html))
