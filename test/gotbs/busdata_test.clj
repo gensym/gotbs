@@ -1,4 +1,4 @@
-?(ns gotbs.busdata-test
+(ns gotbs.busdata-test
   (:use [gotbs.busdata] :reload-all
         [midje.semi-sweet])
   (:require [clojure.test :as test]
@@ -6,7 +6,7 @@
 
 
 (test/deftest should-fetch-stop-pdist
-  (expect (stop-pdist "56" "North Bound" "15847") => 19452
+  (expect (stop-pdist "56" "North Bound" "15847") => 19452.0
           (fake (bustracker/fetch-pattern-data-for-route "56" "North Bound") =>
                 (list
                  {:pdist "19452.0",

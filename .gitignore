@@ -4,3 +4,4 @@ lib
 classes
 notes.txt
 .lein-failures
+.lein-deps-sum

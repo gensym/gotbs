@@ -1,13 +1,14 @@
 (ns gotbs.bustracker
   (:use
-   clojure.xml (parse)
-   [clojure.tools [logging :as log]]
+   gotbs.cta.bustracker-api
+   [clojure.tools.logging :as log]
    clojure.java.io (input-stream))
-  (:require [clojure [string :as string]]
+  (:require
             [gotbs.util.http-utils :as http]))
 
 ;; BEGIN HARDCODING
-(def api-key (System/getenv "CTA_BUSTRACKER_API_KEY"))
+
+(def http-api (make-bustracker (System/getenv "CTA_BUSTRACKER_API_KEY")))
 
 (def west-bound "West Bound")
 
@@ -21,47 +22,6 @@
 
 (def destination "Jefferson Park Blue Line")
 ;; END HARDCODING
-
-(defn fetch-routes-data-xml []
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=" api-key)))
-
-(defn fetch-route-direction-xml [route]
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getdirections?key=" api-key "&rt=" route)))
-
-(defn fetch-location-data-xml [route]
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
-
-(defn fetch-prediction-data-xml [route stop-id]
-  (http/fetch-url
-   (str
-    "http://www.ctabustracker.com/bustime/api/v1/getpredictions?key=" api-key
-    "&rt=" route
-    "&stpid=" stop-id)))
-
-(defn fetch-stop-data-xml [route direction]
-  (let [dir (string/replace #"\s" "+" direction)]
-    (http/fetch-url
-     (str "http://www.ctabustracker.com/bustime/api/v1/getstops?key=" api-key "&rt=" route "&dir=" dir))))
-
-(defn fetch-vehicles-on-route-data-xml [route]
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&rt=" route)))
-
-(defn fetch-vehicles-data-xml [vehicles]
-  "Takes a sequence of vehicles (limit 10) and gets their information"
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getvehicles?key=" api-key "&vid=" (reduce #(str %1 "," %2) vehicles))))
-
-(defn fetch-pattern-data-for-route-xml [route]
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&rt=" route)))
-
-(defn fetch-pattern-data-by-id-xml [pattern-id]
-  (http/fetch-url
-   (str "http://www.ctabustracker.com/bustime/api/v1/getpatterns?key=" api-key "&pid=" pattern-id)))
 
 (defn content-xml-to-map [xml]
   "Takes a seq in the form of [{:tag :a :content [\"something\"]} {:tag b :content [\"else\"]}] and turns it into a map, with the value of the :tag as the keys and the values of :content as values. If the value of :content is a list, takes the first item off of that list."
@@ -92,9 +52,7 @@
     (filter-tag
      :stop
      (:content
-      (parse
-       (StringBufferInputStream.
-	(fetch-stop-data-xml route direction))))))))
+      (stops http-api route direction))))))
 
 (defn stop-id [route direction stop-name]
   (first (map :stpid (filter #(= (:stpnm %1) stop-name) (fetch-stop-data route direction)))))
@@ -111,12 +69,14 @@
 	  (filter-tag
 	   :vehicle
 	   (:content
-	    (parse (StringBufferInputStream. vehicle-data-xml)))))))]
+            vehicle-data-xml)))))]
+  
   (defn fetch-vehicles-on-route-data [route]
-    (construct-vehicle-data (fetch-vehicles-on-route-data-xml route)))
+    (construct-vehicle-data (vehicles-on-route http-api route)))
 
   (defn fetch-vehicles-data [& vehicle_ids]
-    (construct-vehicle-data (fetch-vehicles-data-xml vehicle_ids))))
+    (let [vids  (reduce #(str %1 "," %2) vehicle_ids)]
+      (construct-vehicle-data (vehicle-by-id http-api vids)))))
 
 (defn fetch-pattern-data-by-id [pattern-id]
   "Fetch data about the pattern by the pattern ID. Excludes waypoints"
@@ -129,7 +89,7 @@
       (filter-tag
        :ptr
        (:content
-        (parse (StringBufferInputStream. (fetch-pattern-data-by-id-xml pattern-id))))))))))
+        (pattern-by-id http-api pattern-id))))))))
 
 (defn fetch-pattern-data-for-route [route dir]
   "Fetch the pattern data (including waypoints) by the route and direction"
@@ -147,7 +107,7 @@
 	(filter-tag
 	 :ptr
 	 (:content
-	  (parse (StringBufferInputStream. (fetch-pattern-data-for-route-xml route))))))))))))
+          (patterns-for-route http-api route))))))))))
 
 (defn fetch-routes []
   (map
@@ -157,8 +117,7 @@
     (filter-tag
      :route
      (:content
-      (parse (StringBufferInputStream. 
-              (fetch-routes-data-xml))))))))
+      (all-routes http-api))))))
 
 (defn fetch-route-direction [route]
   (flatten
@@ -167,7 +126,7 @@
     (filter-tag
      :dir
      (:content
-      (parse (StringBufferInputStream. (fetch-route-direction-xml route))))))))
+      (directions http-api route))))))
 
 (defn destination [route dir]
   (:stpnm (last (fetch-pattern-data-for-route route dir))))
@@ -180,7 +139,7 @@
     (filter-tag
      :prd
      (:content
-      (parse (StringBufferInputStream. (fetch-prediction-data-xml route stop-id))))))))
+      (predictions http-api route stop-id))))))
 
 (defstruct prediction :route :direction :eta)
 
