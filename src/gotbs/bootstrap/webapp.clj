@@ -3,7 +3,7 @@
         [gotbs.web.route-subscriber :only (location-subscriber)])
   (:require gotbs.core
             [gotbs.websockets.webbit :as webbit]
-            [clojure.contrib.json :as json]
+            [clojure.data.json :as json]
             [gotbs.util.scheduler :as scheduler]
             [gotbs.busdata :as busdata]
             [gotbs.util :as util]

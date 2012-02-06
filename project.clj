@@ -9,6 +9,7 @@
                  ;; TODO - ring-jetty-async-adapter is probably not needed
                  ;[ring/ring-jetty-async-adapter "0.3.3-SNAPSHOT"] ;;
 		 [ring/ring-core "1.0.1"]
+                 [ring/ring-jetty-adapter "1.0.1"]
 		 [ring/ring-devel "1.0.1"]
 		 [enlive "1.0.0-SNAPSHOT"]
                  ]

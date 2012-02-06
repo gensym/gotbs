@@ -1,5 +1,5 @@
 (ns gotbs.websockets.webbit
-  (:require [clojure.contrib.json :as json]
+  (:require [clojure.data.json :as json]
             [clojure.string :as s]
             [gotbs.websockets.connection-subscriber :as ws-conn])
   (:import [org.webbitserver WebServer WebServers WebSocketHandler]))

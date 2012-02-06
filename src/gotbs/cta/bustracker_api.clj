@@ -9,8 +9,8 @@
    (java.net URL)
    (java.io BufferedReader InputStreamReader StringBufferInputStream)))
 
-(defn- to-url-params [params]
-  (let [h (zipmap (keys params) (map (partial string/replace #"\s" "+" ) (vals params)))]
+(defn to-url-params [params]
+  (let [h (zipmap (keys params) (map #(string/replace % #"\s" "+" ) (vals params)))]
     (s/join "&" (map (partial s/join "=") (seq h)))))
 
 (defn- apply-all [fns val] ((apply comp (reverse fns)) val))
