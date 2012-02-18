@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/data.json "0.1.2"]
-                 [org.clojure/core.cache "0.5.0"]
+                 [org.clojure/core.memoize "0.5.1"]
                  [midje "1.3.2-SNAPSHOT"]
                  [org.webbitserver/webbit "0.2.0"]
                  [org.eclipse.jetty/jetty-servlet "7.4.2.v20110526"]
@@ -14,6 +14,7 @@
 		 [ring/ring-devel "1.0.1"]
                  [clj-time "0.3.5"]
 		 [enlive "1.0.0-SNAPSHOT"]]
-  :dev-dependencies [[swank-clojure "1.4.0"]]
+  :dev-dependencies [[swank-clojure "1.4.0"]
+                     [org.gensym/tools.trace "0.1"]]
 
   :main gotbs.run)

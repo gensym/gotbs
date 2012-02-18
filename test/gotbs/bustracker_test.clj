@@ -20,7 +20,7 @@
   (let [fake-url (Object.)]
     (expect (first (fetch-routes)) => {:rtnm "Indiana/Hyde Park"
                                        :rt "1"}
-            (fake (bt/bustracker-url "routes" anything) => fake-url)
+            (fake (bt/bustracker-url "routes" anything {}) => fake-url)
             (fake (bt/fetch-url fake-url) =>  (slurp "resources/test-data/routes.xml")))))
 
 (test/deftest should-fetch-route-direction
