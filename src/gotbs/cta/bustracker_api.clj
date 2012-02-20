@@ -3,7 +3,8 @@
             [clojure.tools.logging :as log])
   (:use
    clojure.xml (parse)
-   clojure.java.io (input-stream))
+   clojure.java.io (input-stream)
+   clojure.core.memoize (memo-ttl))
   (:require  [clojure.string :as string])
   (:import
    (java.net URL)
@@ -31,12 +32,18 @@
     (str "http://www.ctabustracker.com/bustime/api/v1/get" rpc-name "?" url-params)))
 
 (defn- cta-bustracker-get
-  ([cache-ttl api-key rpc-name]
-     (cta-bustracker-get cache-ttl api-key rpc-name {}))
-  ([cache-ttl api-key rpc-name rpc-args]
+  ([api-key rpc-name]
+     (cta-bustracker-get api-key rpc-name {}))
+  ([api-key rpc-name rpc-args]
      (-> (bustracker-url rpc-name api-key rpc-args)
          (fetch-url)
          (parse-xml))))
+
+(def cta-bustracker-get-day
+     (memo-ttl cta-bustracker-get (* 1000 60 60 24)))
+
+(def cta-bustracker-get-minute
+     (memo-ttl cta-bustracker-get (* 1000 60)))
 
 (defprotocol BusTrackerProtocol
   (all-routes [_])
@@ -50,14 +57,14 @@
 
 (deftype BustrackerApi [api-key]
   BusTrackerProtocol
-  (all-routes [_] (cta-bustracker-get :day api-key "routes"))
-  (directions [_ route] (cta-bustracker-get :day api-key "directions" {"rt" route}))
-  (vehicles-on-route [_ route] (cta-bustracker-get :minute api-key "vehicles"  {"rt" route}))
-  (vehicle-by-id [_ vehicle-id] (cta-bustracker-get :minute api-key "vehicles" {"vid" vehicle-id}))
-  (patterns-for-route [_ route] (cta-bustracker-get :day api-key  "patterns"  {"rt" route}))
-  (pattern-by-id [_ pattern-id] (cta-bustracker-get :day api-key "patterns" {"pid" pattern-id}))
-  (predictions [_ route stop-id] (cta-bustracker-get :minute api-key  "predictions" {"rt" route "stpid" stop-id}))
-  (stops [_ route direction] (cta-bustracker-get :day api-key "stops" {"rt" route "dir" direction})))
+  (all-routes [_] (cta-bustracker-get-day api-key "routes"))
+  (directions [_ route] (cta-bustracker-get-day api-key "directions" {"rt" route}))
+  (vehicles-on-route [_ route] (cta-bustracker-get-minute api-key "vehicles"  {"rt" route}))
+  (vehicle-by-id [_ vehicle-id] (cta-bustracker-get-minute api-key "vehicles" {"vid" vehicle-id}))
+  (patterns-for-route [_ route] (cta-bustracker-get-day api-key  "patterns"  {"rt" route}))
+  (pattern-by-id [_ pattern-id] (cta-bustracker-get-day api-key "patterns" {"pid" pattern-id}))
+  (predictions [_ route stop-id] (cta-bustracker-get-minute api-key  "predictions" {"rt" route "stpid" stop-id}))
+  (stops [_ route direction] (cta-bustracker-get-day api-key "stops" {"rt" route "dir" direction})))
 
 (defn make-bustracker [api-key]
   (BustrackerApi. api-key) )
