@@ -4,7 +4,7 @@
    [clojure.tools.logging :as log]
    clojure.java.io (input-stream))
   (:require
-            [gotbs.util.http-utils :as http]))
+   [gotbs.util.http-utils :as http]))
 
 ;; BEGIN HARDCODING
 

@@ -39,6 +39,11 @@
     (expect (take 10 cq3) => '(2 3 4 1))
     (expect (take 10 cq4) => '(2 3 4 0 1))))
 
+(test/deftest should-not-contain-duplicates
+  (let [cq1 (make-carousel (range 5))
+        cq2 (apply conj cq1 (range 5))]
+    (expect (take 6 cq2) => '(0 1 2 3 4))))
+
 (test/deftest should-make-empty-carousel
   (let [cq (make-carousel)]
     (expect (empty? cq) => true)
