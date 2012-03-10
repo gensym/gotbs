@@ -22,7 +22,6 @@
 (defn put [worker f]
   (.add (:mailbox worker) f))
 
-
 (defn stop [worker]
   (swap! (:done worker) (fn [_] true))
   (.interrupt (:thread worker)))
