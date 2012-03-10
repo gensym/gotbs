@@ -5,17 +5,19 @@
    [gotbs.util.scheduler :as scheduler]
    [gotbs.busdata :as busdata]))
 
+
 (defn make-subscriptions []
      {:carousel (ref (make-carousel))
-      :subscription-fns (ref {})
+      :subscriptions (ref {})
       :worker (worker-thread/make-worker)})
+
 
 (defn- get-route [subscription-key]  subscription-key)
 
 (defn- pop-with-actions [subscriptions]
    (dosync
     (let [key (peek @(:carousel subscriptions))
-          funs (get @(:subscription-fns subscriptions) key)]
+          funs (get @(:subscriptions subscriptions) key)]
       (alter (:carousel subscriptions) pop)
       [key funs])))
 
@@ -30,21 +32,29 @@
 (defn- schedule-action [subscriptions]
   (worker-thread/put (:worker subscriptions) #(act subscriptions)))
 
+(defn- unsubscribe [subscriptions rt subscription-fn]
+  (dosync
+   (alter (:subscriptions subscriptions)
+          (fn [m]
+            (let [with (get m rt [])
+                  without (remove (partial = subscription-fn) with)]
+              (if (empty? without)
+                (dissoc m rt)
+                (assoc m rt without)))))))
+
 (defn subscribe [subscriptions rt subscription-fn]
+  "Returns the function to unsubscribe"
   (dosync
    (alter (:carousel subscriptions) (fn [c] (conj c rt)))
-   (alter (:subscription-fns subscriptions) (fn [m]
+   (alter (:subscriptions subscriptions) (fn [m]
                                            (let [val (get m rt [])]
                                              (assoc m rt (conj val subscription-fn))))))
-  (schedule-action subscriptions))
-
-
-
-;; TODO - unsubscribe
+  (schedule-action subscriptions)
+  #(unsubscribe subscriptions rt subscription-fn))
 
 (defn schedule [subscriptions]
   (dosync
-   (let [to-add (keys @(:subscription-fns subscriptions))]
+   (if-let [to-add (keys @(:subscriptions subscriptions))]
      (alter (:carousel subscriptions) (fn [c] (apply conj c to-add)))))
   (schedule-action subscriptions))
 
