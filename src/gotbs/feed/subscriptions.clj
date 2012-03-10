@@ -5,12 +5,10 @@
    [gotbs.util.scheduler :as scheduler]
    [gotbs.busdata :as busdata]))
 
-
 (defn make-subscriptions []
      {:carousel (ref (make-carousel))
       :subscriptions (ref {})
       :worker (worker-thread/make-worker)})
-
 
 (defn- get-route [subscription-key]  subscription-key)
 
@@ -32,7 +30,7 @@
 (defn- schedule-action [subscriptions]
   (worker-thread/put (:worker subscriptions) #(act subscriptions)))
 
-(defn- unsubscribe [subscriptions rt subscription-fn]
+(defn unsubscribe [subscriptions rt subscription-fn]
   (dosync
    (alter (:subscriptions subscriptions)
           (fn [m]
