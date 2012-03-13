@@ -3,6 +3,7 @@
   (:use [gotbs.util.combinators]))
 
 (defn connection-subscriber [connection-set on-subscribe]
+  "on-subscribe is a fn that takes a single argument - the topic being subscribed-to"
   {:connection-set connection-set
    :subscribe_callback on-subscribe})
 

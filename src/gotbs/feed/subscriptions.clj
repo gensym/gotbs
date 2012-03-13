@@ -24,7 +24,7 @@
     (if (not (empty? funs))
       (let [vehicles (busdata/in-flight-vehicles [(get-route key)])]
         (dorun
-         (map #(% vehicles) funs))
+         (map #(% key vehicles) funs))
         (recur (pop-with-actions subscriptions))))))
 
 (defn- schedule-action [subscriptions]
@@ -41,7 +41,7 @@
                 (assoc m rt without)))))))
 
 (defn subscribe [subscriptions rt subscription-fn]
-  "Returns the function to unsubscribe"
+  "Returns the function to unsubscribe. subscription-fn takes the rt and the message"
   (dosync
    (alter (:carousel subscriptions) (fn [c] (conj c rt)))
    (alter (:subscriptions subscriptions) (fn [m]

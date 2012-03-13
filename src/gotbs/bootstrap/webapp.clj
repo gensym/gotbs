@@ -1,43 +1,35 @@
 (ns gotbs.bootstrap.webapp
-  (:use [gotbs.websockets.jetty :only (make-jetty-server)]
-        [gotbs.web.route-subscriber :only (location-subscriber)])
+  (:use [gotbs.websockets.jetty :only (make-jetty-server)])
   (:require gotbs.core
+            [gotbs.web.route-subscriptions :as subscriber]
             [gotbs.websockets.webbit :as webbit]
             [clojure.data.json :as json]
-            [gotbs.util.scheduler :as scheduler]
-            [gotbs.busdata :as busdata]
-            [gotbs.util :as util]
-            [gotbs.util.pull-queue :as pull-queue]
-            [gotbs.websockets.connections :as ws-connections]
-            [gotbs.websockets.connection-subscriber :as ws-subscriber]))
-
-(def connection-set (ws-connections/connection-set))
-
-(defn publisher  [[route vehicles]]
-  (ws-connections/broadcast connection-set route (json/json-str vehicles)))
+            [gotbs.util.scheduler :as scheduler]))
 
 (defn- start-jetty [handler port]
   (let [server (make-jetty-server handler port)]
     (.start server)
     (fn [] (.stop server))))
 
-(defn- start-webbit [port connection-subscriber]
-  (let [webbit-server (webbit/make-webbit-websockets port connection-subscriber)]
+(defn- send-ws [connection topic message]
+  (.send connection (json/json-str message)))
+
+(defn start-webbit [port route-subscriptions]
+  (let [on-open (partial subscriber/add-subscriber route-subscriptions send-ws)
+        on-close (partial subscriber/drop-subscriber route-subscriptions)
+        on-subscribe (partial subscriber/subscribe route-subscriptions)
+        webbit-server (webbit/make-webbit-websockets port on-open on-close on-subscribe)]
     (webbit/start webbit-server)
     (fn [] (webbit/stop webbit-server))))
-
-;; todo - fill out location subscriber
-(defn start-webbit-connection-subscriber []
-  (start-webbit
-   8888
-   (ws-subscriber/connection-subscriber connection-set location-subscriber)))
 
 (defn start-jetty-core-app []
   (start-jetty #'gotbs.core/app 8080))
 
 (defn start-all []
   "Return a function that, when invoked, shuts down"
-  (let [stoppables
-        [(start-webbit-connection-subscriber)
-         (start-jetty-core-app)]]
+  (let [location-subscriber (subscriber/make-subscriptions)
+        stoppables
+        [(start-webbit 8888 location-subscriber)
+         (start-jetty-core-app)
+         #(subscriber/stop location-subscriber)]]
     (fn [] (dorun (map #(%) stoppables)))))
