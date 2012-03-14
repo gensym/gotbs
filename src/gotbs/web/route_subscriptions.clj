@@ -1,12 +1,11 @@
 (ns gotbs.web.route-subscriptions
-  "Handles subscriptions on a route level. When subscribing to new location information
-for a route, it establishes a feed for that information if one does not already exist"
+  "Handles subscriptions by subscriber. Each subscriber (e.g., a websocket connection) may have several subscriptions. When a subscriber is dropped, this cancels all of its associated subscriptions. "
   (:require [clojure.tools.logging :as log]
             [gotbs.feed.subscriptions :as feed])
   (:use [gotbs.route-data :only (route-descriptor)]))
 
-(defn make-subscriptions []
-  {:subscriptions (feed/make-subscriptions)
+(defn make-subscriptions [feed-subscriptions]
+  {:subscriptions feed-subscriptions
    :subscriber-fns (ref {})
    :routes-by-subscriber (ref {})
    :subscribers-by-route (ref {})})

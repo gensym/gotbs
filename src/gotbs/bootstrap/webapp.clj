@@ -1,6 +1,8 @@
 (ns gotbs.bootstrap.webapp
   (:use [gotbs.websockets.jetty :only (make-jetty-server)])
   (:require gotbs.core
+            [clojure.tools.logging :as log]
+            [gotbs.feed.subscriptions :as feed]
             [gotbs.web.route-subscriptions :as subscriber]
             [gotbs.websockets.webbit :as webbit]
             [clojure.data.json :as json]
@@ -12,7 +14,9 @@
     (fn [] (.stop server))))
 
 (defn- send-ws [connection topic message]
-  (.send connection (json/json-str message)))
+  (let [jsonified  (json/json-str {:type "updated" :message message})]
+    (log/info "Sending to topic [" topic "] message: " jsonified)
+    (.send connection jsonified)))
 
 (defn start-webbit [port route-subscriptions]
   (let [on-open (partial subscriber/add-subscriber route-subscriptions send-ws)
@@ -27,7 +31,7 @@
 
 (defn start-all []
   "Return a function that, when invoked, shuts down"
-  (let [location-subscriber (subscriber/make-subscriptions)
+  (let [location-subscriber (subscriber/make-subscriptions (feed/make-subscriptions))
         stoppables
         [(start-webbit 8888 location-subscriber)
          (start-jetty-core-app)

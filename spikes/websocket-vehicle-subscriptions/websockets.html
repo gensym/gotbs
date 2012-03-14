@@ -2,14 +2,15 @@
 <html>
   <head>
     <title>Canvas time</title>
-    <link rel="stylesheet" href="css/style.css?v=1">
   </head>
   
   <body>
     
     <div id="main">
       Here is stuff
-      <input id="message" type="text"/>
+      <input id="name" type="text" value="56 - Milwaukee"/>
+      <input id="direction" type="text" value = "North Bound"/>
+      <button id="go">Do it</button>
       <section id="content"></section>
     </div>
     
@@ -22,10 +23,14 @@
         $(document).ready(function() {
           var ws = $.websocket("ws://127.0.0.1:8888/topics", {
             events: { 
-              broadcasted: function(e) { $("#content").html(e.message); }}});
+              updated: function(e) { alert(e.message); $("#content").html(e.message); }}});
 
-          $('#message').change(function(){
-            ws.send('subscribe', {topic: $("#message").val()});});
+          $('#go').click(function(){
+        var name = $("#name").val();
+        var direction =  $("#direction").val();
+            var key = [name, direction];
+            ws.send('subscribe', {"topic" :key });
+        });
         });
       </script>
     </div>
