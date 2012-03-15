@@ -33,7 +33,7 @@ $(document).ready(function() {
 
   var ws = $.websocket("ws://127.0.0.1:8888/topics", {
     events: {
-      updated: function(e) { alert(e.message)}
+             updated: function(e) { alert($.toJSON(e.message))}
     }
   });
   var routes = {}
