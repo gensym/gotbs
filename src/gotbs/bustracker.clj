@@ -7,7 +7,6 @@
    [gotbs.cta.bustracker-data-parser :as parser]
    [gotbs.util.http-utils :as http]))
 
-
 (def http-api (make-bustracker (System/getenv "CTA_BUSTRACKER_API_KEY")))
 
 ;; BEGIN HARDCODING

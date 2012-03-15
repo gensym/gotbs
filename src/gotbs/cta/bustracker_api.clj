@@ -2,19 +2,16 @@
   (:require [clojure.string :as s]
             [clojure.tools.logging :as log])
   (:use
-   clojure.xml (parse)
    clojure.java.io (input-stream)
    clojure.core.memoize (memo-ttl))
   (:require  [clojure.string :as string])
   (:import
    (java.net URL)
-   (java.io BufferedReader InputStreamReader StringBufferInputStream)))
+   (java.io BufferedReader InputStreamReader)))
 
 (defn- to-url-params [params]
   (let [h (zipmap (keys params) (map #(string/replace % #"\s" "+" ) (vals params)))]
     (s/join "&" (map (partial s/join "=") (seq h)))))
-
-(defn parse-xml [s] (parse (StringBufferInputStream. s)))
 
 (defn fetch-url
   "Returns the contents at a URL as a string"
@@ -36,8 +33,7 @@
      (cta-bustracker-get api-key rpc-name {}))
   ([api-key rpc-name rpc-args]
      (-> (bustracker-url rpc-name api-key rpc-args)
-         (fetch-url)
-         (parse-xml))))
+         (fetch-url))))
 
 (def cta-bustracker-get-day
      (memo-ttl cta-bustracker-get (* 1000 60 60 24)))
