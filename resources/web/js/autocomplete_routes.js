@@ -33,7 +33,11 @@ $(document).ready(function() {
 
   var ws = $.websocket("ws://127.0.0.1:8888/topics", {
     events: {
-             updated: function(e) { alert($.toJSON(e.message))}
+             updated: function(e) { 
+               $.each(e.message, function(idx, vehicle_snapshot) {
+                 plot_vehicle('#map', vehicle_snapshot["vid"], vehicle_snapshot["lat"], vehicle_snapshot["lon"]);
+               });
+             }
     }
   });
   var routes = {}

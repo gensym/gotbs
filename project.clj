@@ -10,7 +10,7 @@
 		 [ring/ring-core "1.0.1"]
                  [ring/ring-jetty-adapter "1.0.1"]
 		 [ring/ring-devel "1.0.1"]
-                 [clj-time "0.3.5"]
+                 [clj-time/clj-time "0.3.7"]
 		 [enlive "1.0.0-SNAPSHOT"]]
   :dev-dependencies [[swank-clojure "1.4.0"]
                      [midje "1.3.2-SNAPSHOT"]

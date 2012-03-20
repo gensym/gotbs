@@ -28,12 +28,12 @@ function route_canvas(canvas_id) {
     var drawPoint = function(point) {
       var ctx = canvas.getContext('2d');
       ctx.save();
-      ctx.strokeStyle = "rgb(255,165,0)";
+      ctx.strokeStyle = "rgb(176,216,244)";
       ctx.beginPath();
       ctx.arc(point[0], point[1], 5.0, 0, Math.PI*2);
       ctx.closePath();
       ctx.stroke();
-      ctx.resore();
+      ctx.restore();
     }
 
     canvas.addRoute = function(name, coordinates) {
@@ -58,9 +58,11 @@ function route_canvas(canvas_id) {
         drawPath(this.routes[i].coordinates.map(translater));
       }
 
-      $.each(this.vehicles, function(vid, veh)) {
+      $.each(this.vehicles, function(vid, veh) {
         drawPoint(translater(veh));
-      };
+      });
+
+
     };
   }
   return canvas;
