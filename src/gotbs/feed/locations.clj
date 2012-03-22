@@ -7,12 +7,9 @@
    (org.jboss.netty.buffer BigEndianHeapChannelBuffer ChannelBufferInputStream)))
 
 
-
-
 (def api-key "kv6yHNkUrkZJkjA8u7V5sxNTq")
 
 (def url "http://www.ctabustracker.com/bustime/api/v1/getvehicles")
-
 
 (def client (http/http-client {:url "http://www.ctabustracker.com/bustime/api/v1/getvehicles"}))
 
@@ -27,6 +24,3 @@
   (ChannelBufferInputStream. (:body @res-channel)))
 
 ;; Next step - figure out how to put the result channel into a pipeline
-
-
-

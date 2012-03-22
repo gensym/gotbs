@@ -18,6 +18,10 @@
     (log/info "Sending to topic [" topic "] message: " jsonified)
     (.send connection jsonified)))
 
+(defn- start-feed-scheduler [feed-subscriptions]
+  (let [s (scheduler/make-scheduler #(feed/schedule feed-subscriptions) 60000 60000 )]
+    #(scheduler/shutdown s)))
+
 (defn start-webbit [port route-subscriptions]
   (let [on-open (partial subscriber/add-subscriber route-subscriptions send-ws)
         on-close (partial subscriber/drop-subscriber route-subscriptions)
@@ -31,9 +35,11 @@
 
 (defn start-all []
   "Return a function that, when invoked, shuts down"
-  (let [location-subscriber (subscriber/make-subscriptions (feed/make-subscriptions))
+  (let [subscriptions  (feed/make-subscriptions)
+        location-subscriber (subscriber/make-subscriptions subscriptions)
         stoppables
         [(start-webbit 8888 location-subscriber)
          (start-jetty-core-app)
+         (start-feed-scheduler subscriptions)
          #(subscriber/stop location-subscriber)]]
     (fn [] (dorun (map #(%) stoppables)))))
