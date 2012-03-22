@@ -262,3 +262,63 @@ button {  width: auto; overflow: visible; }
   html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; } 
 }
 
+
+
+.routes-map {
+   margin: 10px;
+   position:absolute;
+}
+
+header {
+   display:none;
+}
+
+footer {
+   display:none;
+}
+   
+.routes-map canvas {border:1px dotted; }
+
+ul.routes-for-map { list-style-type:none; }
+
+.route-selection  { 
+   margin: 10px;
+   position:absolute;
+   left: 650;
+}
+
+.route-selection>div {
+   padding: 5px;
+}
+
+.route-picker {
+   border-style: solid;
+   border-color:black;
+   border-width:1px;
+   height:130px;
+   background-color:rgb(240,240,240)
+}
+
+.route-picker label#route-name-title {
+   display:none;
+}
+
+.route-listing {
+   margin-top: 10px;
+   border-style: solid;
+   border-color:black;
+   border-width:1 
+}
+
+.route-listing li {
+
+   padding: 2px;
+   border-color:grey;
+   border-width:1px;
+   border-style:solid;
+}
+
+.route-selection ul { 
+   list-style-type:none; 
+   margin-left: 0px; 
+}
