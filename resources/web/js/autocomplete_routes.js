@@ -40,6 +40,15 @@ $(document).ready(function() {
              }
     }
   });
+
+  function highlight_route(route_item) {
+    route_item.addClass('highlighted-route');
+  }
+
+  function unhighlight_route(route_item) {
+    route_item.removeClass('highlighted-route');
+  }
+
   var routes = {}
   function add_route(name, direction, data) {
     var key = [name, direction]
@@ -47,9 +56,15 @@ $(document).ready(function() {
       routes[key] = true;
       ws.send('subscribe', {topic: key});
       plot_waypoints('#map', name, data);
-      $.tmpl("<li>${name} - ${direction}</li>", 
-             {"name": name, "direction": direction}
-            ).appendTo("#displayed-routes");
+      var item = $.tmpl("<li id=\"${elem_id}\">${name} - ${direction}</li>", 
+                        {"name": name, "direction": direction });
+
+      item.route_name = name;
+      item.route_direction = direction;
+     
+      item.mouseover(partial(highlight_route, item));
+      item.mouseout(partial(unhighlight_route, item));
+      item.appendTo("#displayed-routes");
     }
   }
 
