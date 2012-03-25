@@ -4,7 +4,6 @@
   (:require [clojure.test :as test]
             [gotbs.bustracker :as bustracker]))
 
-
 (test/deftest should-fetch-stop-pdist
   (expect (stop-pdist "56" "North Bound" "15847") => 19452.0
           (fake (bustracker/fetch-pattern-data-for-route "56" "North Bound") =>

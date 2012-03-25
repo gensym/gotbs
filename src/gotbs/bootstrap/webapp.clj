@@ -36,9 +36,9 @@
   (start-jetty #'gotbs.core/app 8080))
 
 (defn- action-fn [[route-display-name direction]]
-  (let  [route (:rt (route-descriptor route-display-name))]
-    (log/info "infoking action-fn for " route)
-    (busdata/in-flight-vehicles [route])))
+  (let  [route (:rt (route-descriptor route-display-name))
+         vehicles (busdata/in-flight-vehicles [route])]
+    (filter #(= direction (busdata/vehicle-direction %)) vehicles)))
 
 (defn start-all []
   "Return a function that, when invoked, shuts down"
