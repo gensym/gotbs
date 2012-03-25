@@ -1,10 +1,12 @@
 (ns gotbs.bootstrap.webapp
-  (:use [gotbs.websockets.jetty :only (make-jetty-server)])
+  (:use [gotbs.websockets.jetty :only (make-jetty-server)]
+         [gotbs.route-data :only (route-descriptor)])
   (:require gotbs.core
             [clojure.tools.logging :as log]
             [gotbs.feed.subscriptions :as feed]
             [gotbs.web.route-subscriptions :as subscriber]
             [gotbs.websockets.webbit :as webbit]
+            [gotbs.busdata :as busdata]
             [clojure.data.json :as json]
             [gotbs.util.scheduler :as scheduler]))
 
@@ -33,9 +35,14 @@
 (defn start-jetty-core-app []
   (start-jetty #'gotbs.core/app 8080))
 
+(defn- action-fn [[route-display-name direction]]
+  (let  [route (:rt (route-descriptor route-display-name))]
+    (log/info "infoking action-fn for " route)
+    (busdata/in-flight-vehicles [route])))
+
 (defn start-all []
   "Return a function that, when invoked, shuts down"
-  (let [subscriptions  (feed/make-subscriptions)
+  (let [subscriptions  (feed/make-subscriptions action-fn)
         location-subscriber (subscriber/make-subscriptions subscriptions)
         stoppables
         [(start-webbit 8888 location-subscriber)

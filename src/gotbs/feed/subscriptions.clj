@@ -3,15 +3,14 @@
   (:require
    [clojure.tools.logging :as log]
    [gotbs.util.worker-thread :as worker-thread]
-   [gotbs.util.scheduler :as scheduler]
-   [gotbs.busdata :as busdata]))
+   [gotbs.util.scheduler :as scheduler]))
 
-(defn make-subscriptions []
+(defn make-subscriptions [action-fn]
+  "action-fn takes a single key - whatever the key used to subscribe was"
      {:carousel (ref (make-carousel))
       :subscriptions (ref {})
+      :action-fn action-fn
       :worker (worker-thread/make-worker)})
-
-(defn- get-route [subscription-key]  subscription-key)
 
 (defn- pop-with-actions [subscriptions]
   (let [[k f]
@@ -28,35 +27,35 @@
   (loop [[key funs] (pop-with-actions subscriptions)]
     (log/info (str "[feed.subscriptions] Invoking " (count funs) " callback functions"))
     (if (not (empty? funs))
-      (let [vehicles (busdata/in-flight-vehicles [(get-route key)])]
+      (let [results ((:action-fn subscriptions) key)]
         (dorun
-         (map #(% key vehicles) funs))
+         (map #(% key results) funs))
         (recur (pop-with-actions subscriptions))))))
 
 (defn- schedule-action [subscriptions]
   (worker-thread/put (:worker subscriptions) #(act subscriptions)))
 
-(defn unsubscribe [subscriptions rt subscription-fn]
+(defn unsubscribe [subscriptions key subscription-fn]
   (dosync
    (alter (:subscriptions subscriptions)
           (fn [m]
-            (let [with (get m rt [])
+            (let [with (get m key [])
                   without (remove (partial = subscription-fn) with)]
               (if (empty? without)
-                (dissoc m rt)
-                (assoc m rt without)))))))
+                (dissoc m key)
+                (assoc m key without)))))))
 
-(defn subscribe [subscriptions rt subscription-fn]
-  "Returns the function to unsubscribe. subscription-fn takes the rt and the message"
-  (if (nil? rt) (throw (NullPointerException. "rt")))
-  (log/info "[feed.subscriptions] Subscribing to route " rt)
+(defn subscribe [subscriptions key subscription-fn]
+  "Returns the function to unsubscribe. subscription-fn takes the key and the message"
+  (if (nil? key) (throw (NullPointerException. "key")))
+  (log/info "[feed.subscriptions] Subscribing to key " key)
   (dosync
-   (alter (:carousel subscriptions) (fn [c] (conj c rt)))
+   (alter (:carousel subscriptions) (fn [c] (conj c key)))
    (alter (:subscriptions subscriptions) (fn [m]
-                                           (let [val (get m rt [])]
-                                             (assoc m rt (conj val subscription-fn))))))
+                                           (let [val (get m key [])]
+                                             (assoc m key (conj val subscription-fn))))))
   (schedule-action subscriptions)
-  #(unsubscribe subscriptions rt subscription-fn))
+  #(unsubscribe subscriptions key subscription-fn))
 
 (defn schedule [subscriptions]
   (log/info "[feed.subscriptions] scheduling...")
