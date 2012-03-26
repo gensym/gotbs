@@ -262,8 +262,6 @@ button {  width: auto; overflow: visible; }
   html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; } 
 }
 
-
-
 .routes-map {
    margin: 10px;
    position:absolute;
@@ -296,7 +294,19 @@ ul.routes-for-map { list-style-type:none; }
    border-color:black;
    border-width:1px;
    height:130px;
+   width: 180px;
    background-color:rgb(240,240,240)
+}
+
+.route-picker .loader {
+   position:absolute;
+   left:162px;
+}
+
+
+.route-picker .route-form {
+   position:absolute;
+   top: 10px;
 }
 
 .route-picker label#route-name-title {

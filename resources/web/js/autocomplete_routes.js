@@ -1,14 +1,16 @@
 $(document).ready(function() {
 
+  $('.route-picker .loader').hide();
   $('#route-direction-selection').hide();
   $('#add-route-button').hide();
   $('#route-selection').submit(get_route_data);
-  
+
   function accept_direction(directions) {
     var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio direction-radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
     $.each(directions,  function(i, direction){ 
       $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
     });
+    $('.route-picker .loader').hide();
     $('#route-direction-selection').show();
     $('.direction-radio').first().focus();
     $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
@@ -18,6 +20,7 @@ $(document).ready(function() {
   function get_available_directions() {
     // TODO - show a spinner here
     $(".available-direction").remove();
+    $('.route-picker .loader').show();
     $.get("/routes/directions.json", {term: this.value}, accept_direction);
   }
 
@@ -76,10 +79,13 @@ $(document).ready(function() {
     } else if (!direction) {
       // waiting for direction. An alert here is annoying
     } else {
+      $('.route-picker .loader').show();
+
       $.get('/routes/waypoints.json', {"route": route, "direction": direction}, 
             function(data) {
               add_route(route, direction, data);
               $('#route-selection')[0].reset();
+              $('.route-picker .loader').hide();
               $('#add-route-button').hide();
               $('#route-direction-selection .available-direction').remove();
               $('#route-direction-selection').hide();

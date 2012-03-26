@@ -12,37 +12,40 @@
         <canvas id="map" width="600" height="600"></canvas>
       </div>
       <div class="route-selection">
-
         <div class="route-picker">
-          <form  id="route-selection" onSubmit="return false;">
+          <div class="loader">
+            <img src="images/ajax-loader.gif"/>
+          </div>
+          <div class="route-form">
             <h2>Add Route</h2>
-            
-            <ul>
-            <li>
-              <label class="desc" id="route-name-title" for="route-text">
-                Route
-              </label>
-              <div>
-                <input id="route-text" name="route-name" type="text" class="field text medium" value="" maxlength="255" tabindex="1"/>
-              </div>
-            </li>
-            
-            <li id="route-direction-selection">
-              <label class="desc" id="route-direction-title" for="route-direction">
-                Direction
-              </label>
-              <div id="available-route-directions">
-              </div>
-            </li>
-            
-            <li class="buttons" id="add-route-button">
-              <div>
-                <input id="saveForm" name="saveForm" class="btTxt submit"
-                       type="submit" value="Submit" onmousedown="doSubmitEvents();" />
-              </div>
-            </li>
-            </ul>
-          </form>
+            <form  id="route-selection" onSubmit="return false;">
+              <ul>
+                <li>
+                  <label class="desc" id="route-name-title" for="route-text">
+                    Route
+                  </label>
+                  <div>
+                    <input id="route-text" name="route-name" type="text" class="field text medium" value="" maxlength="255" tabindex="1"/>
+                  </div>
+                </li>
+                
+                <li id="route-direction-selection">
+                  <label class="desc" id="route-direction-title" for="route-direction">
+                    Direction
+                  </label>
+                  <div id="available-route-directions">
+                  </div>
+                </li>
+                
+                <li class="buttons" id="add-route-button">
+                  <div>
+                    <input id="saveForm" name="saveForm" class="btTxt submit"
+                           type="submit" value="Submit" onmousedown="doSubmitEvents();" />
+                  </div>
+                </li>
+              </ul>
+            </form>
+          </div>
         </div>
 
         <div class="route-listing">
