@@ -1,15 +1,13 @@
 # gotbs
 
-FIXME: write description
+Tools for viewing and analyizing CTA bus data.
 
 ## Usage
 
-FIXME: write
+Use leinengen 2. 
+A "lein run" will bring up the server on port 8080. 
 
-## Installation
-
-FIXME: write
 
 ## License
 
-FIXME: write
+Same as Clojure
