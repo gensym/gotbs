@@ -80,7 +80,7 @@ function plot_waypoints(canvas_id, route_name, waypoints) {
   canvas.redraw();
 }
 
-function plot_vehicle(canvas_id, vid, lat, lon) {
+function plot_vehicle(canvas_id, rt, vid, lat, lon) {
   var canvas = route_canvas(canvas_id);
 
   if (!canvas) {

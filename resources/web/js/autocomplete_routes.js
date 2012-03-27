@@ -38,7 +38,7 @@ $(document).ready(function() {
     events: {
              updated: function(e) { 
                $.each(e.message, function(idx, vehicle_snapshot) {
-                 plot_vehicle('#map', vehicle_snapshot["vid"], vehicle_snapshot["lat"], vehicle_snapshot["lon"]);
+                 plot_vehicle('#map', vehicle_snapshot["rt"], vehicle_snapshot["vid"], vehicle_snapshot["lat"], vehicle_snapshot["lon"]);
                });
              }
     }
