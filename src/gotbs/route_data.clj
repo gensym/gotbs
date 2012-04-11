@@ -33,11 +33,11 @@
    (fn [route] (contains-ignore-case? route query))
    (display-names)))
 
-(defn waypoints [route-display-name direction]
+(defn waypoints [rtid direction]
   (map (fn [point] {
                    :lat (Double/parseDouble (:lat point))
                    :lon (Double/parseDouble (:lon point))})
-       (bustracker/fetch-pattern-data-for-route (:rt (route-descriptor route-display-name)) direction)))
+       (bustracker/fetch-pattern-data-for-route rtid direction)))
 
-(defn route-direction [route-display-name]
-  (bustracker/fetch-route-direction (:rt (route-descriptor route-display-name))))
+(defn route-direction [rtid]
+  (bustracker/fetch-route-direction rtid))

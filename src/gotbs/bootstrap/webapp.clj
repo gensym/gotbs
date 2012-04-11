@@ -35,9 +35,8 @@
 (defn start-jetty-core-app []
   (start-jetty #'gotbs.core/app 8080))
 
-(defn- action-fn [[route-display-name direction]]
-  (let  [route (:rt (route-descriptor route-display-name))
-         vehicles (busdata/in-flight-vehicles [route])]
+(defn- action-fn [[rtid direction]]
+  (let  [vehicles (busdata/in-flight-vehicles [rtid])]
     (filter #(= direction (busdata/vehicle-direction %)) vehicles)))
 
 (defn start-all []

@@ -1,5 +1,5 @@
 function make_route(name, coordinates) {
-  return {name: name, coordinates: coordinates};
+  return {name: name, coordinates: coordinates, vehicles :{}};
 }
 
 function route_canvas(canvas_id) {
@@ -9,8 +9,7 @@ function route_canvas(canvas_id) {
   }
 
   if (!canvas.routes) {
-    canvas.routes = [];
-    canvas.vehicles = {};
+    canvas.routes = {};
 
     var drawPath = function(coordinates) {
       var ctx = canvas.getContext('2d');
@@ -36,32 +35,35 @@ function route_canvas(canvas_id) {
       ctx.restore();
     }
 
-    canvas.addRoute = function(name, coordinates) {
-      this.routes = this.routes.concat(make_route(name, coordinates));
+    canvas.addRoute = function(rtid, coordinates) {
+      this.routes[rtid] = make_route(rtid, coordinates);
     };
 
-    canvas.updateVehicle = function(vid, lat, lon) {
-      this.vehicles[vid] = {'lat' : lat, 'lon': lon};
+    canvas.updateVehicle = function(rtid, vid, lat, lon) {
+      this.routes[rtid].vehicles[vid] =  {'lat' : lat, 'lon': lon};
+    }
+
+    canvas.highlightRoute = function(rt) {
     }
 
     var scaler = partial(scale_coordinate, canvas.width, canvas.height);
     var to_point = function(x) { return [x['lon'],x['lat']]};
+    var coordinates = function(route) { return route.coordinates; }
 
     canvas.redraw = function() {
       var ctx = this.getContext('2d');
 
-      var pattern_points = flatten(this.routes.map(function(route) { return route.coordinates })).map(to_point);
+
+      var pattern_points = _.map(flatten(_.map(_.values(this.routes), coordinates)), to_point);
       var translater = compose(scaler, compose(make_normalizer(pattern_points), to_point));
 
       ctx.clearRect(0, 0, this.width, this.height);
-      for (var i = 0; i < this.routes.length; i++) {
-        drawPath(this.routes[i].coordinates.map(translater));
-      }
-
-      $.each(this.vehicles, function(vid, veh) {
-        drawPoint(translater(veh));
-      });
-
+      $.each(this.routes, function(rtid, route) {
+        drawPath(route.coordinates.map(translater));
+        $.each(route.vehicles, function(vid, veh) {
+          drawPoint(translater(veh));
+        });
+      })
 
     };
   }
@@ -80,6 +82,17 @@ function plot_waypoints(canvas_id, route_name, waypoints) {
   canvas.redraw();
 }
 
+function highlight_route(canvas_id, rt) {
+  var canvas = route_canvas(canvas_id);
+  if (!canvas) {
+    return;
+  }
+  canvas.highlightRoute(rt);
+  canvas.redraw();
+
+  
+}
+
 function plot_vehicle(canvas_id, rt, vid, lat, lon) {
   var canvas = route_canvas(canvas_id);
 
@@ -87,6 +100,6 @@ function plot_vehicle(canvas_id, rt, vid, lat, lon) {
     return;
   }
 
-  canvas.updateVehicle(vid, lat, lon);
+  canvas.updateVehicle(rt, vid, lat, lon);
   canvas.redraw();
 }

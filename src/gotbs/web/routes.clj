@@ -4,6 +4,9 @@
   (:require [gotbs.route-data :as routes])
   (:use net.cgrand.enlive-html))
 
+(defn route-descriptor [{term "term"}]
+  (json/json-str (routes/route-descriptor term)))
+
 (defn route-waypoints [{route "route" direction "direction"}]
   (json/json-str (routes/waypoints route direction)))
 

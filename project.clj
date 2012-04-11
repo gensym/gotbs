@@ -2,7 +2,6 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/data.json "0.1.2"]
-                 [aleph "0.2.1-alpha2-SNAPSHOT"]
                  [org.clojure/core.memoize "0.5.1"]
                  [org.webbitserver/webbit "0.2.0"]
                  [org.eclipse.jetty/jetty-servlet "7.4.2.v20110526"]

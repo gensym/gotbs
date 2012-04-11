@@ -1,6 +1,6 @@
 (ns gotbs.core
   (:use gotbs.web.locations (locations))
-  (:use gotbs.web.routes ([routes available-routes]))
+  (:use gotbs.web.routes)
   (:use ring.middleware.reload (wrap-reload))
   (:use ring.middleware.params (wrap-params))
   (:use ring.middleware.file)
@@ -29,6 +29,7 @@
                     :body (apply str (routes req))}
       "/routes/available.json" (json-response available-routes req) 
       "/routes/directions.json" (json-response route-directions req)
+      "/routes/route-descriptor.json" (json-response route-descriptor req)
       "/routes/waypoints.json" (json-response route-waypoints req)
       {:status 200
        :headers {"Content-Type" "text/html"}

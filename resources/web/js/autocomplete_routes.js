@@ -5,7 +5,7 @@ $(document).ready(function() {
   $('#add-route-button').hide();
   $('#route-selection').submit(get_route_data);
 
-  function accept_direction(directions) {
+  function accept_direction(rtid, directions) {
     var direction_input = '<div class="available-direction"><input id="route-direction-${i}" name="route-direction" type="radio" class="field radio direction-radio" value="${direction}" tabindex="${i + 1}" /><label class="choice" for="route-direction-${i}" >${direction}</label></div>';
     $.each(directions,  function(i, direction){ 
       $.tmpl(direction_input, {"direction": direction, "i": i}).appendTo('#available-route-directions');
@@ -14,14 +14,25 @@ $(document).ready(function() {
     $('#route-direction-selection').show();
     $('.direction-radio').first().focus();
     $('.direction-radio').first().each(function(i,r) { r.checked = "checked" });
-    $('#add-route-button').show();
-  }
+    $('#route-selection').data('rt', rtid);
+    $('#add-route-button').show();}
 
-  function get_available_directions() {
+  function get_available_directions(rtid) {
     // TODO - show a spinner here
     $(".available-direction").remove();
     $('.route-picker .loader').show();
-    $.get("/routes/directions.json", {term: this.value}, accept_direction);
+    $.get("/routes/directions.json", {term: rtid}, 
+          function(directions) {
+            accept_direction(rtid, directions);
+          });
+  }
+
+  function get_route_id(route_name, rt_fn) {
+    $.getJSON('/routes/route-descriptor.json',
+              {term: route_name},
+              function(route) {
+                rt_fn(route["rt"]);
+              });
   }
 
   $("input#route-text").autocomplete({
@@ -31,7 +42,11 @@ $(document).ready(function() {
         response(data);
       })
     },
-    change: get_available_directions
+    change: function() {
+      get_route_id(this.value, function(rtid) {
+        get_available_directions(rtid);
+      });
+    }
   });
 
   var ws = $.websocket("ws://127.0.0.1:8888/topics", {
@@ -72,7 +87,7 @@ $(document).ready(function() {
   }
 
   function get_route_data() {
-    var route = $("input[name='route-name']").val();
+    var route = $('#route-selection').data('rt');
     var direction = $("input[name='route-direction']:checked").val();
     if (!route) {
       alert("Please select a route.")
