@@ -9,7 +9,8 @@
                  [ring/ring-jetty-adapter "1.0.1"]
                  [ring/ring-devel "1.0.1"]
                  [clj-time/clj-time "0.3.7"]
-                 [enlive "1.0.0-SNAPSHOT"]]
+                 [enlive "1.0.0-SNAPSHOT"]
+                 [com.datomic/datomic "0.1.2753"]]
   :profiles {:dev
              {:dependencies
               [[midje "1.3.2-SNAPSHOT"]

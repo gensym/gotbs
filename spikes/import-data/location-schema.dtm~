@@ -1,0 +1,24 @@
+[ {:db/id #db/id[:db.part/db]
+  :db/ident :bustracker/response
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "A response document retrived from the bustracker API"
+   :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :bustracker/retrieval-time
+   :db/valueType :db.type/string
+   :db/cardinality :db.cardinality/one
+   :db/fulltext true
+   :db/doc "The time a response document was retrieved"
+   :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :bustracker/vehicle-id
+   :db/valueType :db.type/string
+   :db/cardinality :db.cardinality/one
+   :db/fulltext true
+   :db/doc "A community's name"
+   :db.install/_attribute :db.part/db}
+
+  ]
