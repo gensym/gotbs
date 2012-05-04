@@ -1,82 +1,88 @@
-[ {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/response
+[ 
+
+  ;; document
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :document/retrieval-time
+   :db/valueType :db.type/instant
+   :db/cardinality :db.cardinality/one
+   :db/doc "The time a response document was retrieved"
+   :db.install/_attribute :db.part/db}
+
+  ;; snapshot
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :snapshot/response
    :db/valueType :db.type/ref
    :db/cardinality :db.cardinality/one
    :db/doc "A response document retrived from the bustracker API"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/retrieval-time
-   :db/valueType :db.type/string
-   :db/cardinality :db.cardinality/one
-   :db/doc "The time a response document was retrieved"
-   :db.install/_attribute :db.part/db}
-
-  {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/vehicle-id
+   :db/ident :snapshot/vehicle-id
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "An alphanumeric string repsenting a vehicle"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/update-time
+   :db/ident :snapshot/update-time
    :db/valueType :db.type/instant
    :db/cardinality :db.cardinality/one
    :db/doc "Time of the positional update of a vehicle"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/latitude
+   :db/ident :snapshot/latitude
    :db/valueType :db.type/double
    :db/cardinality :db.cardinality/one
    :db/doc "A WGS 84 latitude"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/longitude
+   :db/ident :snapshot/longitude
    :db/valueType :db.type/double
    :db/cardinality :db.cardinality/one
    :db/doc "A WGS 84 longitude"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/heading
+   :db/ident :snapshot/heading
    :db/valueType :db.type/float
    :db/cardinality :db.cardinality/one
    :db/doc "Degrees from North"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/pattern-id
+   :db/ident :snapshot/pattern-id
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "A bustracker pattern ID"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/travelled-distance
+   :db/ident :snapshot/travelled-distance
    :db/valueType :db.type/float
    :db/cardinality :db.cardinality/one
    :db/doc "Linear distance in feet from the beginning of a pattern"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/route-id
+   :db/ident :snapshot/route-id
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "ID of a CTA bus route"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/destination
+   :db/ident :snapshot/destination
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "A CTA bus route destination"
    :db.install/_attribute :db.part/db}  
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :bustracker/delayed
+   :db/ident :snapshot/delayed
    :db/valueType :db.type/boolean
    :db/cardinality :db.cardinality/one
    :db/doc "Whether a CTA bus has been delayed"

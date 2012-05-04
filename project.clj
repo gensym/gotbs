@@ -1,7 +1,8 @@
 (defproject gotbs "0.0.1" 
   :dependencies [
-                 [org.clojure/clojure "1.4.0-beta4"]
-                 [org.clojure/tools.logging "0.2.3" :exclusions [org.clojure/clojure]]
+                 [org.clojure/clojure "1.4.0"]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
+                 [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
                  [org.clojure/core.memoize "0.5.1" :exclusions [org.clojure/clojure]]
                  [org.webbitserver/webbit "0.2.0" :exclusions [org.clojure/clojure]]
@@ -11,14 +12,17 @@
                  [ring/ring-devel "1.0.1" :exclusions [org.clojure/clojure]]
                  [clj-time/clj-time "0.3.7" :exclusions [org.clojure/clojure]]
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
-                 [com.datomic/datomic "0.1.2753"]]
+                 [com.datomic/datomic "0.1.3065" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]
  
    :profiles {:dev
              {:dependencies
               [[midje "1.3.2-SNAPSHOT" :exclusions [org.clojure/clojure]]
                [org.gensym/tools.trace "0.1" :exclusions [org.clojure/clojure]]
                ]}}
-  :main gotbs.run
-  :min-lein-version "2.0.0"
-  :plugins [[lein-swank "1.4.1"]]
-  :description "CTA Bus Tracker predictions for multi-leg commutes")
+   :main gotbs.run
+   :license {:name "Eclipse Public License"
+             :url "http://www.eclipse.org/legal/epl-v10.html"}
+   :jvm-opts ["-Xmx2g"]
+   :min-lein-version "2.0.0"
+   :plugins [[lein-swank "1.4.1"]]
+   :description "CTA Bus Tracker predictions for multi-leg commutes")
