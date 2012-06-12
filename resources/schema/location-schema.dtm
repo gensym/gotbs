@@ -1,7 +1,5 @@
 [ 
-
   ;; document
-
   {:db/id #db/id[:db.part/db]
    :db/ident :document/retrieval-time
    :db/valueType :db.type/instant
@@ -10,12 +8,18 @@
    :db.install/_attribute :db.part/db}
 
   ;; snapshot
-
   {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/response
    :db/valueType :db.type/ref
    :db/cardinality :db.cardinality/one
    :db/doc "A response document retrived from the bustracker API"
+   :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :snapshot/run
+   :db/valueType :db.type/ref
+   :db/cardinality :db.cardinality/one
+   :db/doc "A single run of a vehicle"
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]

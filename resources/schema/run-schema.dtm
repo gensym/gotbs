@@ -1,0 +1,85 @@
+[
+ ;; route
+ {:db/id #db/id[:db.part/db]
+  :db/ident :route/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The route's full name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :route/cta_id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The route's ID as used by the CTA"
+  :db.install/_attribute :db.part/db}
+
+ ;; destination
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :destination/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The destination name"
+  :db.install/_attribute :db.part/db}
+
+ ;; vehicle
+ {:db/id #db/id[:db.part/db]
+  :db/ident :vehicle/cta_id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The vehicle's ID as used by the CTA"
+  :db.install/_attribute :db.part/db}
+ 
+ ;; run
+ {:db/id #db/id[:db.part/db]
+  :db/ident :run/route
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The route on which a single run took place"
+  :db.install/_attribute :db.part/db  }
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :run/vehicle
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The vehicle for a specific run"
+  :db.install/_attribute :db.part/db}
+
+
+ ;; runpoint
+ 
+ {:db/id #db/id[:db.part/db]
+  :db/ident :runpoint/run
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The run for a specific runpoint"
+  :db.install/_attribute :db.part/db}
+ 
+ {:db/id #db/id[:db.part/db]
+  :db/ident :runpoint/longitude
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "A WGS 84 longitude"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :runpoint/latitude
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "A WGS 84 latitude"
+  :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+  :db/ident :runpoint/travelled-distance
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Linear distance in feet from the beginning of the run's pattern"
+  :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :runpoint/time
+   :db/valueType :db.type/instant
+   :db/cardinality :db.cardinality/one
+   :db/doc "The time of the runpoint"
+   :db.install/_attribute :db.part/db} ]
