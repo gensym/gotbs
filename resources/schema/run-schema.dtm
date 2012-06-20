@@ -9,6 +9,7 @@
 
  {:db/id #db/id[:db.part/db]
   :db/ident :route/cta_id
+  :db/unique :db.unique/identity
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The route's ID as used by the CTA"
@@ -26,6 +27,7 @@
  ;; vehicle
  {:db/id #db/id[:db.part/db]
   :db/ident :vehicle/cta_id
+  :db/unique :db.unique/identity
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The vehicle's ID as used by the CTA"
