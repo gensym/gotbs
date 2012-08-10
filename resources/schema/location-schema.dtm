@@ -16,14 +16,8 @@
    :db.install/_attribute :db.part/db}
 
   {:db/id #db/id[:db.part/db]
-   :db/ident :snapshot/run
-   :db/valueType :db.type/ref
-   :db/cardinality :db.cardinality/one
-   :db/doc "A single run of a vehicle"
-   :db.install/_attribute :db.part/db}
-
-  {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/vehicle-id
+   :db/index true
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "An alphanumeric string repsenting a vehicle"
@@ -59,6 +53,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/pattern-id
+   :db/index true
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "A bustracker pattern ID"
@@ -66,6 +61,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/travelled-distance
+   :db/index true
    :db/valueType :db.type/float
    :db/cardinality :db.cardinality/one
    :db/doc "Linear distance in feet from the beginning of a pattern"
@@ -73,6 +69,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/route-id
+   :db/index true
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "ID of a CTA bus route"
@@ -80,6 +77,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :snapshot/destination
+   :db/index true
    :db/valueType :db.type/string
    :db/cardinality :db.cardinality/one
    :db/doc "A CTA bus route destination"

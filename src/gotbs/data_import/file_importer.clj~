@@ -1,0 +1,2 @@
+(gotbs.data-import.create-db
+ (:use [datomic.api :only [db q] :as d]))

@@ -2,6 +2,7 @@
  ;; route
  {:db/id #db/id[:db.part/db]
   :db/ident :route/name
+  :db/index true
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The route's full name"
@@ -9,6 +10,7 @@
 
  {:db/id #db/id[:db.part/db]
   :db/ident :route/cta_id
+  :db/index true
   :db/unique :db.unique/identity
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
@@ -19,6 +21,7 @@
 
  {:db/id #db/id[:db.part/db]
   :db/ident :destination/name
+  :db/index true
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The destination name"
@@ -27,6 +30,7 @@
  ;; vehicle
  {:db/id #db/id[:db.part/db]
   :db/ident :vehicle/cta_id
+  :db/index true
   :db/unique :db.unique/identity
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
@@ -36,6 +40,7 @@
  ;; run
  {:db/id #db/id[:db.part/db]
   :db/ident :run/route
+  :db/index true
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
   :db/doc "The route on which a single run took place"
@@ -53,6 +58,7 @@
  
  {:db/id #db/id[:db.part/db]
   :db/ident :runpoint/run
+  :db/index true
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
   :db/doc "The run for a specific runpoint"
@@ -74,6 +80,7 @@
 
   {:db/id #db/id[:db.part/db]
   :db/ident :runpoint/travelled-distance
+  :db/index true
   :db/valueType :db.type/double
   :db/cardinality :db.cardinality/one
   :db/doc "Linear distance in feet from the beginning of the run's pattern"
@@ -81,6 +88,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :runpoint/time
+   :db/index true
    :db/valueType :db.type/instant
    :db/cardinality :db.cardinality/one
    :db/doc "The time of the runpoint"

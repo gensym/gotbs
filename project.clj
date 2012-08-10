@@ -20,9 +20,9 @@
                [org.gensym/tools.trace "0.1" :exclusions [org.clojure/clojure]]
                ]}}
    :main gotbs.run
-   :run-aliases {:createdb gotbs.data-import.create-db
-                 :importdata gotbs.data-import.import-data
-                 :inout gotbs.data-import.inout}
+   :aliases {
+             "createdb" ["run" "-m" "gotbs.data-import.create-db" "datomic:dev://localhost:4334/bus-data"]
+             }
    :license {:name "Eclipse Public License"
              :url "http://www.eclipse.org/legal/epl-v10.html"}
    :jvm-opts ["-Xmx2g"]
