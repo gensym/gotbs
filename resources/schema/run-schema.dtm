@@ -47,12 +47,19 @@
   :db.install/_attribute :db.part/db  }
 
  {:db/id #db/id[:db.part/db]
+  :db/ident :run/destination
+  :db/index true
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The destination to which a single run took place"
+  :db.install/_attribute :db.part/db  }
+ 
+ {:db/id #db/id[:db.part/db]
   :db/ident :run/vehicle
   :db/valueType :db.type/ref
   :db/cardinality :db.cardinality/one
   :db/doc "The vehicle for a specific run"
   :db.install/_attribute :db.part/db}
-
 
  ;; runpoint
  
