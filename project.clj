@@ -1,6 +1,7 @@
 (defproject gotbs "0.0.1" 
   :dependencies [
                  [org.clojure/clojure "1.4.0"]
+                 [org.clojure/tools.nrepl "0.2.0-beta10"]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/data.json "0.1.2" :exclusions [org.clojure/clojure]]
@@ -12,10 +13,9 @@
                  [ring/ring-devel "1.0.1" :exclusions [org.clojure/clojure]]
                  [clj-time/clj-time "0.3.7" :exclusions [org.clojure/clojure]]
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
+                 [com.datomic/datomic-free "0.8.3397"  :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]
 
-                   [com.datomic/datomic-free "0.8.3397"  :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]
 
-;;                 [com.datomic/datomic-free "0.8.3331"  :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
 
   
  
@@ -32,5 +32,4 @@
              :url "http://www.eclipse.org/legal/epl-v10.html"}
    :jvm-opts ["-Xmx2g"]
    :min-lein-version "2.0.0"
-   :plugins [[lein-swank "1.4.1"]]
    :description "CTA Bus Tracker predictions for multi-leg commutes")

@@ -4,7 +4,9 @@
         [gotbs.util.relational :only [extend-rel
                                       project-rel
                                       add-seq
-                                      rename-rel]])
+                                      rename-rel
+                                      extract-rel
+                                      extend-with-id-of-normalized]])
     (:require [gotbs.cta.bustracker-data-parser :as parser])
   (:import java.io.File java.text.SimpleDateFormat))
 
@@ -27,31 +29,51 @@
 
 (defn routes [xrel]
   (into #{}
-        (project-rel [:snapshot/route-id] xrel)))
+        (project-rel [:route/cta_id] xrel)))
 
-(defn vehicles [xrel db]
+(defn vehicles [xrel]
   (into #{}
-        (project-rel [:snapshot/vehicle-id] xrel)))
+        (project-rel [:vehicle/cta_id] xrel)))
 
 (defn destinations [xrel]
   (into #{}
-        (project-rel [:snapshot/destination] xrel)))
-
+        (project-rel [:destination/name] xrel)))
 
 (defn find-by-attribute [db att v]
   (->>
    (q [:find '?e :in '$ '?val
         :where ['?e att '?val]] db (att v))
-   (map (fn [[e]] (d/entity db e)))))
+   (map (fn [[e]] (d/entity db e)))
+   (first)))
+
+(defn find-run [db runpoint]
+  
+  "TODO: this method is nonfunctional
+runpoint should have :run/route, :run/destination, and :run/vehicle populated"
+  (q '[:find ?e
+       :in $ ?rt ?dest ?veh
+       :where
+       [?e :run/route ?rt]
+       [?e :run/destination ?dest]
+       [?e :run/vehicle ?veh]]
+     db,
+     (:run/route runpoint),
+     (:run/destination runpoint),
+     (:run/vehicle runpoint)))
+
+(defn produce-by-attribute [db att v]
+  (if-let [existing (find-by-attribute db att v)]
+    existing
+    (assoc (select-keys v [att]) :db/id (d/tempid :db.part/user))))
 
 (defn find-route [db rt]
-  (find-by-attribute db :route/cta_id rt))
+  (produce-by-attribute db :route/cta_id rt))
 
 (defn find-vehicle [db v]
-  (find-by-attribute db :vehicle/cta_id v))
+  (produce-by-attribute db :vehicle/cta_id v))
 
 (defn find-destination [db dest]
-  (find-by-attribute db :destination/name dest))
+  (produce-by-attribute db :destination/name dest))
 
 
 (defn location-points [file]
@@ -74,12 +96,24 @@
          (extend-rel :snapshot/vehicle-id :vid)
          (extend-rel :route/cta_id :snapshot/route-id)
          (extend-rel :destination/name :snapshot/destination)
-         (extend-rel :vehicle/cta_id :snapshot/vehicle-id))))
+         (extend-rel :vehicle/cta_id :snapshot/vehicle-id)
+         (extend-rel :runpoint/longitude :snapshot/longitude)
+         (extend-rel :runpoint/latitude :snapshot/latitude)
+         (extend-rel :runpoint/travelled-distance :snapshot/travelled-distance)
+         (extend-rel :runpoint/time :snapshot/update-time))))
 
-(defn transactions [file]
+(defn transactions [file db]
   (let [points (location-points file)
-        responses (get-snapshot-reponses points)]
-    (concat responses points)))
+        routes (map (partial find-route db) (routes points))
+        destinations (map (partial find-destination db) (destinations points))
+        vehicles (map (partial find-vehicle db) (vehicles points))
+        runpoints (-> points
+                      (extend-with-id-of-normalized :run/route routes :db/id)
+                      (extend-with-id-of-normalized :run/destination destinations :db/id)
+                      (extend-with-id-of-normalized :run/vehicle vehicles :db/id))]
+    (concat routes
+            destinations
+            runpoints)))
 
 (defn snapshot-files [dirname]
   (filter
@@ -87,15 +121,37 @@
    (.listFiles
     (File. dirname))))
 
-
 (defn do-it [db-uri dirname]
   (let [conn (d/connect db-uri)]
     (doseq [file (snapshot-files dirname)]
       (try
-        @(d/transact conn (transactions file))))))
+        @(d/transact conn (transactions file (db conn)))))))
 
 
 (def filename "/Users/daltenburg/dev/busdata/dataslice/vehicles-120308024301.xml")
 
 (def uri "datomic:free://localhost:4334/gotbs")
+
+(defn reset-db! [uri]
+  (d/delete-database uri)
+  (d/create-database uri)
+  (let [conn (d/connect uri)
+        import-schema (read-string  (slurp "resources/schema/location-schema.dtm"))
+        run-schema (read-string (slurp "resources/schema/run-schema.dtm"))]
+    @(d/transact conn import-schema)
+    @(d/transact conn run-schema)
+    (db conn)))
+;; WHERE TO NEXT?
+
+;; Another function will take an xrel (the origial one) and a
+;; <NORMALIZED RELATION> and extend that xrel to include references to
+;; that NORMALIZED RELATION
+
+;; (def mdb (reset-db! uri))
+
+;; (pprint (take 100  (transactions file mdb)))
+
+
+(def file (File. filename))
+(def ld (location-points file))
 
