@@ -39,6 +39,22 @@
   (into #{}
         (project-rel [:destination/name] xrel)))
 
+(defn runs [xrel]
+  (into #{}
+        (project-rel [:run/route
+                      :run/destination
+                      :run/vehicle]
+                     xrel)))
+
+(defn runpoints [xrel]
+  (into #{}
+        (project-rel [:runpoint/run
+                      :runpoint/longitude
+                      :runpoint/latitude
+                      :runpoint/travelled-distance
+                      :runpoint/time]
+                     xrel)))
+
 (defn find-by-attribute [db att v]
   (->>
    (q [:find '?e :in '$ '?val
@@ -46,20 +62,22 @@
    (map (fn [[e]] (d/entity db e)))
    (first)))
 
-(defn find-run [db runpoint]
-  
-  "TODO: this method is nonfunctional
-runpoint should have :run/route, :run/destination, and :run/vehicle populated"
-  (q '[:find ?e
-       :in $ ?rt ?dest ?veh
-       :where
-       [?e :run/route ?rt]
-       [?e :run/destination ?dest]
-       [?e :run/vehicle ?veh]]
-     db,
-     (:run/route runpoint),
-     (:run/destination runpoint),
-     (:run/vehicle runpoint)))
+(comment (q '[:find ?e
+              :in $ ?rt ?dest ?veh
+              :where
+              [?e :run/route ?rt]
+              [?e :run/destination ?dest]
+              [?e :run/vehicle ?veh]]
+            db,
+            (:run/route run),
+            (:run/destination run),
+            (:run/vehicle run)))
+
+(defn find-run [db run]
+  (assoc run :db/id (d/tempid :db.part/user)))
+
+(defn find-runpoint [db runpoint]
+  (assoc runpoint :db/id (d/tempid :db.part/user)))
 
 (defn produce-by-attribute [db att v]
   (if-let [existing (find-by-attribute db att v)]
@@ -107,12 +125,19 @@ runpoint should have :run/route, :run/destination, and :run/vehicle populated"
         routes (map (partial find-route db) (routes points))
         destinations (map (partial find-destination db) (destinations points))
         vehicles (map (partial find-vehicle db) (vehicles points))
-        runpoints (-> points
-                      (extend-with-id-of-normalized :run/route routes :db/id)
-                      (extend-with-id-of-normalized :run/destination destinations :db/id)
-                      (extend-with-id-of-normalized :run/vehicle vehicles :db/id))]
+        annotated-points (-> points
+                             (extend-with-id-of-normalized :run/route routes :db/id)
+                             (extend-with-id-of-normalized :run/destination destinations :db/id)
+                             (extend-with-id-of-normalized :run/vehicle vehicles :db/id))
+        runs (map (partial find-run db) (runs annotated-points))
+        runpoints
+        (map (partial find-runpoint db)
+             (-> annotated-points
+                 (extend-with-id-of-normalized :runpoint/run runs :db/id)
+                 runpoints))]
     (concat routes
             destinations
+            runs
             runpoints)))
 
 (defn snapshot-files [dirname]
@@ -140,18 +165,22 @@ runpoint should have :run/route, :run/destination, and :run/vehicle populated"
         run-schema (read-string (slurp "resources/schema/run-schema.dtm"))]
     @(d/transact conn import-schema)
     @(d/transact conn run-schema)
-    (db conn)))
+    conn))
 ;; WHERE TO NEXT?
 
 ;; Another function will take an xrel (the origial one) and a
 ;; <NORMALIZED RELATION> and extend that xrel to include references to
 ;; that NORMALIZED RELATION
 
-;; (def mdb (reset-db! uri))
+
+;; (def my-conn  (reset-db! uri))
+;; (def mdb (db my-conn))
+;; (defn mdb (db conn))
 
 ;; (pprint (take 100  (transactions file mdb)))
 
 
 (def file (File. filename))
 (def ld (location-points file))
+;; (d/transact conn) (transactions file mdb)
 
