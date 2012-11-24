@@ -62,17 +62,6 @@
    (map (fn [[e]] (d/entity db e)))
    (first)))
 
-(comment (q '[:find ?e
-              :in $ ?rt ?dest ?veh
-              :where
-              [?e :run/route ?rt]
-              [?e :run/destination ?dest]
-              [?e :run/vehicle ?veh]]
-            db,
-            (:run/route run),
-            (:run/destination run),
-            (:run/vehicle run)))
-
 (defn find-run [db run]
   (assoc run :db/id (d/tempid :db.part/user)))
 
@@ -117,7 +106,7 @@
          (extend-rel :vehicle/cta_id :snapshot/vehicle-id)
          (extend-rel :runpoint/longitude :snapshot/longitude)
          (extend-rel :runpoint/latitude :snapshot/latitude)
-         (extend-rel :runpoint/travelled-distance :snapshot/travelled-distance)
+         (extend-rel :runpoint/travelled-distance (comp double :snapshot/travelled-distance))
          (extend-rel :runpoint/time :snapshot/update-time))))
 
 (defn transactions [file db]
@@ -135,10 +124,12 @@
              (-> annotated-points
                  (extend-with-id-of-normalized :runpoint/run runs :db/id)
                  runpoints))]
-    (concat routes
-            destinations
-            runs
-            runpoints)))
+    (mapcat seq
+            (list routes
+                  vehicles
+                  destinations
+                  runs
+                  runpoints))))
 
 (defn snapshot-files [dirname]
   (filter
@@ -166,21 +157,20 @@
     @(d/transact conn import-schema)
     @(d/transact conn run-schema)
     conn))
-;; WHERE TO NEXT?
-
-;; Another function will take an xrel (the origial one) and a
-;; <NORMALIZED RELATION> and extend that xrel to include references to
-;; that NORMALIZED RELATION
-
-
-;; (def my-conn  (reset-db! uri))
-;; (def mdb (db my-conn))
-;; (defn mdb (db conn))
-
-;; (pprint (take 100  (transactions file mdb)))
 
 
 (def file (File. filename))
 (def ld (location-points file))
-;; (d/transact conn) (transactions file mdb)
 
+;;(def my-conn  (reset-db! uri))
+(def my-conn (d/connect uri))
+(def mdb (db my-conn))
+(def all-t (transactions file mdb))
+
+(def a-run (first (filter :run/route all-t)))
+
+(def a-vehicle (first
+                (filter :vehicle/cta_id all-t)))
+
+
+;;(d/transact my-conn (transactions file mdb))
