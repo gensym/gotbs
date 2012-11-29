@@ -70,7 +70,7 @@
 
 (defn produce-by-attribute [db att v]
   (if-let [existing (find-by-attribute db att v)]
-    existing
+    (into {:db/id (:db/id existing)} existing)
     (assoc (select-keys v [att]) :db/id (d/tempid :db.part/user))))
 
 (defn find-route [db rt]
@@ -81,7 +81,6 @@
 
 (defn find-destination [db dest]
   (produce-by-attribute db :destination/name dest))
-
 
 (defn location-points [file]
   (let [filename (.getName file)]
@@ -108,6 +107,22 @@
          (extend-rel :runpoint/latitude :snapshot/latitude)
          (extend-rel :runpoint/travelled-distance (comp double :snapshot/travelled-distance))
          (extend-rel :runpoint/time :snapshot/update-time))))
+
+(defn wip-routes [file db]
+  (let [points (location-points file)
+        routes (map (partial find-route db) (routes points))
+        destinations (map (partial find-destination db) (destinations points))
+        vehicles (map (partial find-vehicle db) (vehicles points))]
+    routes))
+
+(defn wip-points [file db]
+  (let [points (location-points file)
+        routes (map (partial find-route db) (routes points))
+        destinations (map (partial find-destination db) (destinations points))
+        vehicles (map (partial find-vehicle db) (vehicles points))]
+    points))
+;;     (-> points
+;;        (extend-with-id-of-normalized :run/route routes :db/id))
 
 (defn transactions [file db]
   (let [points (location-points file)
@@ -145,6 +160,7 @@
 
 
 (def filename "/Users/daltenburg/dev/busdata/dataslice/vehicles-120308024301.xml")
+(def filename-2 "/Users/daltenburg/dev/busdata/dataslice/vehicles-120308024401.xml")
 
 (def uri "datomic:free://localhost:4334/gotbs")
 
@@ -160,17 +176,22 @@
 
 
 (def file (File. filename))
-(def ld (location-points file))
 
 ;;(def my-conn  (reset-db! uri))
 (def my-conn (d/connect uri))
 (def mdb (db my-conn))
-(def all-t (transactions file mdb))
 
-(def a-run (first (filter :run/route all-t)))
-
-(def a-vehicle (first
-                (filter :vehicle/cta_id all-t)))
-
-
+;;(def all-t (transactions file mdb))
 ;;(d/transact my-conn (transactions file mdb))
+
+;; (def new-t (transactions  (File. filename-2) (db my-conn)))
+
+
+
+
+;; (def right (wip-routes (File. filename-2) mdb))
+;; (def left (wip-points (File. filename-2) mdb))
+;; (join left right)
+
+
+;; TODO - UPSERT!
