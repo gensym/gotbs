@@ -8,7 +8,11 @@
                                       extract-rel
                                       extend-with-id-of-normalized]])
     (:require [gotbs.cta.bustracker-data-parser :as parser])
-  (:import java.io.File java.text.SimpleDateFormat))
+    (:import java.io.File java.text.SimpleDateFormat))
+
+(defn tempid? [dbid]
+  "This is a little bit shady..."
+  (= datomic.db.DbId (type dbid)))
 
 (defn fname-timestamp [fname]
   (let [tstring
@@ -29,31 +33,54 @@
 
 (defn routes [xrel]
   (into #{}
-        (project-rel [:route/cta_id] xrel)))
+        (map #(assoc % :meta/entity-type "route")
+             (project-rel [:route/cta_id] xrel))))
 
 (defn vehicles [xrel]
   (into #{}
-        (project-rel [:vehicle/cta_id] xrel)))
+        (map #(assoc % :meta/entity-type "vehicle")
+                    (project-rel [:vehicle/cta_id] xrel))))
 
 (defn destinations [xrel]
   (into #{}
-        (project-rel [:destination/name] xrel)))
-
-(defn runs [xrel]
-  (into #{}
-        (project-rel [:run/route
-                      :run/destination
-                      :run/vehicle]
-                     xrel)))
+        (map #(assoc % :meta/entity-type "destination")
+                    (project-rel [:destination/name] xrel))))
 
 (defn runpoints [xrel]
   (into #{}
-        (project-rel [:runpoint/run
-                      :runpoint/longitude
-                      :runpoint/latitude
-                      :runpoint/travelled-distance
-                      :runpoint/time]
-                     xrel)))
+        (map #(assoc % :meta/entity-type "runpoint")
+                    (project-rel [:runpoint/run
+                                  :runpoint/longitude
+                                  :runpoint/latitude
+                                  :runpoint/travelled-distance
+                                  :runpoint/time]
+                                 xrel))))
+
+(defn run-query [db annotated-snapshot]
+  (q '[:find ?e :in $ ?route ?dest ?veh :where
+       [?e :run/route ?r]
+       [?r :route/cta_id ?route]
+       [?e :run/destination ?d]
+       [?d :destination/name ?dest]
+       [?e :run/vehicle ?v]
+       [?v :vehicle/cta_id ?veh]]
+     db
+     (:route/cta_id annotated-snapshot)
+     (:destination/name annotated-snapshot)
+     (:vehicle/cta_id annotated-snapshot)))
+
+(defn find-run [db annotated-snapshot]
+  (if-let [existing  (->>
+                      (run-query db annotated-snapshot)
+                      (map (fn [[e]] (d/entity db e)))
+                      (first))]
+    (into {:db/id (:db/id existing)} existing)
+    (assoc 
+        (select-keys [:run/route
+                      :run/destination
+                      :run/vehicle] annotated-snapshot)
+      :meta/entity-type "run"
+      :db/id (d/tempid :db.part/user))))
 
 (defn find-by-attribute [db att v]
   (->>
@@ -61,9 +88,6 @@
         :where ['?e att '?val]] db (att v))
    (map (fn [[e]] (d/entity db e)))
    (first)))
-
-(defn find-run [db run]
-  (assoc run :db/id (d/tempid :db.part/user)))
 
 (defn find-runpoint [db runpoint]
   (assoc runpoint :db/id (d/tempid :db.part/user)))
@@ -121,8 +145,6 @@
         destinations (map (partial find-destination db) (destinations points))
         vehicles (map (partial find-vehicle db) (vehicles points))]
     points))
-;;     (-> points
-;;        (extend-with-id-of-normalized :run/route routes :db/id))
 
 (defn transactions [file db]
   (let [points (location-points file)
@@ -133,7 +155,7 @@
                              (extend-with-id-of-normalized :run/route routes :db/id)
                              (extend-with-id-of-normalized :run/destination destinations :db/id)
                              (extend-with-id-of-normalized :run/vehicle vehicles :db/id))
-        runs (map (partial find-run db) (runs annotated-points))
+        runs (map (partial find-run db) annotated-points)
         runpoints
         (map (partial find-runpoint db)
              (-> annotated-points
@@ -145,6 +167,23 @@
                   destinations
                   runs
                   runpoints))))
+
+(defn fffuuu [file db]
+  (let [points (location-points file)
+        routes (map (partial find-route db) (routes points))
+        destinations (map (partial find-destination db) (destinations points))
+        vehicles (map (partial find-vehicle db) (vehicles points))
+        annotated-points (-> points
+                             (extend-with-id-of-normalized :run/route routes :db/id)
+                             (extend-with-id-of-normalized :run/destination destinations :db/id)
+                             (extend-with-id-of-normalized :run/vehicle vehicles :db/id))
+        runs (map (partial find-run db) annotated-points)
+        runpoints
+        (map (partial find-runpoint db)
+             (-> annotated-points
+                 (extend-with-id-of-normalized :runpoint/run runs :db/id)
+                 runpoints))]
+    annotated-points))
 
 (defn snapshot-files [dirname]
   (filter
@@ -178,20 +217,22 @@
 (def file (File. filename))
 
 ;;(def my-conn  (reset-db! uri))
-(def my-conn (d/connect uri))
-(def mdb (db my-conn))
+;; (def my-conn (d/connect uri))
+;;(def mdb (db my-conn))
 
 ;;(def all-t (transactions file mdb))
 ;;(d/transact my-conn (transactions file mdb))
 
 ;; (def new-t (transactions  (File. filename-2) (db my-conn)))
+;; (def fu-t (fffuuu  (File. filename-2) (db my-conn)))
 
 
-
+;; (def annpoints (rps  (File. filename-2) (db my-conn)))
 
 ;; (def right (wip-routes (File. filename-2) mdb))
 ;; (def left (wip-points (File. filename-2) mdb))
 ;; (join left right)
 
 
-;; TODO - UPSERT!
+;; TODO - Figure this shit  out when trying to transact all-t:
+;; #<promise$settable_future$reify__3635@53254e59: #<Error java.lang.Error: :transact/bad-data tempid used only as value in transaction>>

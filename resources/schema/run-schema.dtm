@@ -1,4 +1,13 @@
 [
+ ;; this sure helps with troubleshooting
+ {:db/id #db/id[:db.part/db]
+  :db/ident :meta/entity-type
+  :db/index true
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Some identitiying tag for an entity's type. Don't depend on this being present "
+  :db.install/_attribute :db.part/db} 
+ 
  ;; route
  {:db/id #db/id[:db.part/db]
   :db/ident :route/name
