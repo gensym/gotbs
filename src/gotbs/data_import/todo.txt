@@ -1,0 +1,7 @@
+Looks like we insterted runs, but they're missing their references to
+other entity types.
+
+(def fall-t (fffuuu file mdb))
+(find-run mdb (first fall-t))
+
+ -- why so empty?

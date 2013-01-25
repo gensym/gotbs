@@ -1,66 +1,42 @@
 (ns gotbs.data-import.query
   (:use [datomic.api :only [db q] :as d]))
 
-(def uri "datomic:dev://localhost:4334/2012-JUN")
 
-(def conn (d/connect uri))
+(def uri "datomic:free://localhost:4334/gotbs")
 
-
-(def results (q '[:find ?e :where [?e :snapshot/vehicle-id]] (db conn)))
-
-(def vid (:snapshot/vehicle-id (d/entity (db conn) (ffirst results))))
-
-(def snapshots (q '[:find ?e :in $ ?vid :where [?e :snapshot/vehicle-id ?vid]] (db conn) vid))
-
-(def sorted-snapshots
-  (sort-by :snapshot/update-time
-           (map #(d/entity (db conn) (first  %)) snapshots)))
+;; (def conn (d/connect uri))
 
 
-(def distances (map :snapshot/travelled-distance sorted-snapshots))
 
-(defn noop [coll]
-  (reduce
-   (fn [a b] (conj a b))
-   []
-   coll))
+(defn known-entity-types [conn]
+  (->>
+   (q '[:find ?e :in $ :where [?e :meta/entity-type]] (db conn))
+   (map first)
+   (map (partial d/entity (db conn)))
+   (map :meta/entity-type)
+   (into #{})))
 
-(defn mps [coll]
-  (reduce
-   (fn [a b]
-     (conj a
-           {:id (:db/id b)
-            :pdist (:snapshot/travelled-distance b)
-            :dest (:snapshot/destination b)
-            :newrun (or (nil? (last a))
-                        (not (= (:snapshot/destination b) (:dest (last a)))))
-            }))
-   []
-   coll))
+(defn to-map [db entity]
+  (let [e (d/entity db entity)]
+    (reduce (fn [m v] (assoc m v (v e))) {} (keys e))))
 
-(def r (mps sorted-snapshots))
+(defn entities-of-type [conn entity-type]
+  (let [d (db conn)]
+    (d/entity d
+              (ffirst
+               (q '[:find ?e :in $ ?t :where [?e :meta/entity-type ?t]] d entity-type)))))
 
-(def lastid (atom (d/tempid :db.part/user)))
+(defn runpoints [conn]
+  (entities-of-type conn "runpoint"))
 
-(defn infinite-ids []
-  (lazy-seq
-   (cons (d/tempid :db.part/user) (infinite-ids))))
+(defn runs [conn]
+  (entities-of-type conn "run"))
 
-(def entities
-  (let [ids (infinite-ids)]
-    (map (fn[x] {:db/id x}) ids)))
+(defn routes [conn]
+  (entities-of-type conn "route"))
 
-(def txns
-  (reduce
-   (fn [a b]
-     (conj a
-           (let [runid
-                 (if (:newrun b)
-                   (swap! lastid (fn [_] (d/tempid :db.part/user)))
-                   @lastid)]
-             {:db/id (:id b)
-              :snapshot/run runid })))
-   []
-   r))
+(defn vehicles [conn]
+  (entities-of-type conn "vehicle"))
 
-;;@(d/transact conn txns)
+(defn destinations [conn]
+  (entities-of-type conn "destination"))
