@@ -67,7 +67,12 @@
                       (run-query db annotated-snapshot)
                       (map (fn [[e]] (d/entity db e)))
                       (first))]
-    (into {:db/id (:db/id existing)} existing)
+    (let [id (:db/id existing)]
+      (assoc
+          (into {}
+                (map (fn [[k v]] [k (:db/id v)]) existing))
+        :db/id id
+        :meta/entity-type "run"))
     (assoc 
         (select-keys annotated-snapshot
                      [:run/route
@@ -132,6 +137,23 @@
          (extend-rel :runpoint/travelled-distance (comp double :snapshot/travelled-distance))
          (extend-rel :runpoint/time :snapshot/update-time))))
 
+(defn trouble [file db]
+  (let [points (location-points file)
+        routes (map (partial find-route db) (routes points))
+        destinations (map (partial find-destination db) (destinations points))
+        vehicles (map (partial find-vehicle db) (vehicles points))
+        annotated-points (-> points
+                             (extend-with-id-of-normalized :run/route routes :db/id)
+                             (extend-with-id-of-normalized :run/destination destinations :db/id)
+                             (extend-with-id-of-normalized :run/vehicle vehicles :db/id))
+        runs (map (partial find-run db) annotated-points)
+        runpoints
+        (map (partial find-runpoint db)
+             (-> annotated-points
+                 (extend-with-id-of-normalized :runpoint/run runs :db/id)
+                 runpoints))]
+    annotated-points))
+
 
 (defn transactions [file db]
   (let [points (location-points file)
@@ -154,45 +176,3 @@
                   destinations
                   runs
                   runpoints))))
-
-(defn snapshot-files [dirname]
-  (filter
-   #(.startsWith (.getName %) "vehicles")
-   (.listFiles
-    (File. dirname))))
-
-(defn do-it [db-uri dirname]
-  (let [conn (d/connect db-uri)]
-    (doseq [file (snapshot-files dirname)]
-      (try
-        @(d/transact conn (transactions file (db conn)))))))
-
-
-(def filename "/Users/daltenburg/dev/busdata/dataslice/vehicles-120308024301.xml")
-(def filename-2 "/Users/daltenburg/dev/busdata/dataslice/vehicles-120308024401.xml")
-
-(def uri "datomic:free://localhost:4334/gotbs")
-
-(defn reset-db! [uri]
-  (d/delete-database uri)
-  (d/create-database uri)
-  (let [conn (d/connect uri)
-        import-schema (read-string  (slurp "resources/schema/location-schema.dtm"))
-        run-schema (read-string (slurp "resources/schema/run-schema.dtm"))]
-    @(d/transact conn import-schema)
-    @(d/transact conn run-schema)
-    conn))
-
-
-;;(def file (File. filename))
-
-;;(def my-conn  (reset-db! uri))
-;; (def my-conn (d/connect uri))
-;;(def mdb (db my-conn))
-
-;;(def all-t (transactions file mdb))
-;;(d/transact my-conn (transactions file mdb))
-
-;; (def new-t (transactions  (File. filename-2) (db my-conn)))
-
-

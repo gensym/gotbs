@@ -14,10 +14,6 @@
                  [clj-time/clj-time "0.3.7" :exclusions [org.clojure/clojure]]
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
                  [com.datomic/datomic-free "0.8.3619"  :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]
-
-
-
-  
  
    :profiles {:dev
              {:dependencies
@@ -26,7 +22,9 @@
                ]}}
    :main gotbs.run
    :aliases {
-             "createdb" ["run" "-m" "gotbs.data-import.create-db" "datomic:dev://localhost:4334/bus-data"]
+             "createdb" ["run" "-m" "gotbs.data-import.create-db" "datomic:free://localhost:4334/gotbs"]
+             "deletedb" ["run" "-m" "gotbs.data-import.delete-db" "datomic:free://localhost:4334/gotbs"]
+             "import-data" ["run" "-m" "gotbs.data-import.directories" "datomic:free://localhost:4334/gotbs"]
              }
    :license {:name "Eclipse Public License"
              :url "http://www.eclipse.org/legal/epl-v10.html"}

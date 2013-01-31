@@ -1,7 +1,6 @@
 (ns gotbs.data-import.query
   (:use [datomic.api :only [db q] :as d]))
 
-
 (def uri "datomic:free://localhost:4334/gotbs")
 
 ;; (def conn (d/connect uri))
