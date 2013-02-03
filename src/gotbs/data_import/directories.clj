@@ -10,7 +10,7 @@
 (defn files [dirname]
   (seq (.listFiles (File. dirname))))
 
-(defn process-files [srcdir destdir f]
+(defn process-files [srcdir destdir errordir f]
   (let [file-filter
         (proxy [java.io.FilenameFilter] []
           (accept [f s] (.startsWith s "vehicles")))]
@@ -20,24 +20,36 @@
             ostream (GZIPOutputStream.
                      (FileOutputStream.
                       (File. destdir
-                             (str (.getName file) ".gz"))))]
+                             (str (.getName file) ".gz"))))
+            errstream (FileOutputStream.
+                       (File. errordir
+                              (.getName file)))]
         (do
-          (f file)
-          (.transferTo
-           (.getChannel istream) 0 (.length file) (Channels/newChannel ostream))
+          (try
+            (f file)
+            (.transferTo
+             (.getChannel istream) 0 (.length file) (Channels/newChannel ostream))
+            (catch Exception e
+              (do
+                (.printStackTrace e)
+                (.transferTo
+                 (.getChannel istream) 0 (.length file) (Channels/newChannel errstream)))))
+          (.close errstream)
           (.close ostream)
           (.close istream)
           (.delete file))))))
 
 
-(defn -main [uri src dest]
+(defn -main [uri src dest error]
   "run with datomic:dev://localhost:4334/<DB-NAME>"
   (let [conn (d/connect uri)
         srcdir (File. src)
-        destdir (File. dest)]
+        destdir (File. dest)
+        errordir (File. error)]
     (process-files
      srcdir
      destdir
+     errordir
      (fn [file]
        (d/transact conn
                    (fi/transactions file (d/db conn))))))

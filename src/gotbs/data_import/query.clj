@@ -3,9 +3,9 @@
 
 (def uri "datomic:free://localhost:4334/gotbs")
 
-;; (def conn (d/connect uri))
+(comment (def conn (d/connect uri)))
 
-
+(comment (def conn (d/connect "datomic:free://localhost:4334/gotbs-test")))
 
 (defn known-entity-types [conn]
   (->>
@@ -21,9 +21,9 @@
 
 (defn entities-of-type [conn entity-type]
   (let [d (db conn)]
-    (d/entity d
-              (ffirst
-               (q '[:find ?e :in $ ?t :where [?e :meta/entity-type ?t]] d entity-type)))))
+    (map (partial d/entity d) 
+         (map first
+              (q '[:find ?e :in $ ?t :where [?e :meta/entity-type ?t]] d entity-type)))))
 
 (defn runpoints [conn]
   (entities-of-type conn "runpoint"))

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<bustime-response>
+  <!-- Run 1 -->
+  <vehicle>
+    <vid>1734</vid>
+    <tmstmp>20120307 20:42</tmstmp>
+    <lat>41.95356314522879</lat>
+    <lon>-87.68851470947266</lon>
+    <hdg>178</hdg>
+    <pid>1178</pid>
+    <rt>49</rt>
+    <des>79th</des>
+    <pdist>9173</pdist>
+  </vehicle>
+
+  <!-- Run 2 --> 
+  <vehicle>
+    <vid>1159</vid>
+    <tmstmp>20120307 20:42</tmstmp>
+    
+    <lat>41.87798023223877</lat>
+    <lon>-87.68645477294922</lon>
+    <hdg>178</hdg>
+    
+    <pid>1178</pid>
+    <rt>49</rt>
+    <des>79th</des>
+    <pdist>36808</pdist>
+  </vehicle>
+
+  <!-- Run 3 -->
+  <vehicle>
+    <vid>1384</vid>
+    <tmstmp>20120307 20:42</tmstmp>
+    
+    <lat>41.986019134521484</lat>
+    <lon>-87.6694564819336</lon>
+    <hdg>91</hdg>
+    
+    <pid>1197</pid>
+    <rt>50</rt>
+    <des>35th/Archer Orange Line</des>
+    <pdist>0</pdist>
+  </vehicle>
+</bustime-response>
+
+		

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<bustime-response>
+
+  <!-- Run 1 -->
+  <vehicle>
+    <vid>1734</vid>
+    <tmstmp>20120307 20:44</tmstmp>
+    
+    <lat>41.94675979614258</lat>
+    <lon>-87.68836669921875</lon>
+    <hdg>179</hdg>
+    
+    <pid>1178</pid>
+    <rt>49</rt>
+    <des>79th</des>
+    <pdist>11638</pdist>
+  </vehicle>
+
+  <!-- Run 6 -->
+  <vehicle>
+    <vid>1159</vid>
+    <tmstmp>20120307 20:44</tmstmp>
+    
+    <lat>41.875581051440946</lat>
+    <lon>-87.68641662597656</lon>
+    <hdg>179</hdg>
+    
+    <pid>1178</pid>
+    <rt>49</rt>
+    <des>79th</des>
+    <pdist>37684</pdist>
+  </vehicle>
+
+  <!-- Run 3 -->
+  <vehicle>
+    <vid>1384</vid>
+    <tmstmp>20120307 20:44</tmstmp>
+    
+    <lat>41.98467856393734</lat>
+    <lon>-87.6690307402275</lon>
+    <hdg>179</hdg>
+    
+    <pid>1197</pid>
+    <rt>50</rt>
+    <des>35th/Archer Orange Line</des>
+    <pdist>480</pdist>
+  </vehicle>
+  
+  <!-- Run 5 -->
+  <vehicle>
+    <vid>1874</vid>
+    <tmstmp>20120307 20:44</tmstmp>
+    
+    <lat>41.917640686035156</lat>
+    <lon>-87.68375558564158</lon>
+    <hdg>88</hdg>
+    
+    <pid>2170</pid>
+    <rt>73</rt>
+    <des>Clark/North</des>
+    <pdist>20218</pdist>
+  </vehicle>
+
+
+  
+</bustime-response>
+
+		
