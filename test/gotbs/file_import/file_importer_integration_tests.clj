@@ -6,6 +6,7 @@
   (import [java.io File]))
 
 (comment (def uri  "datomic:free://localhost:4334/gotbs-test"))
+(comment (def conn (d/connect uri)))
 
 (defn test-db-import [uri]
   (create/create-db uri)
@@ -22,10 +23,11 @@
 
       (println "Checking runs...")
       (let [runs (q/runs conn)]
-        (clojure.test/is (= 6 (count runs))))
-            
-      
-      (finally (comment (d/delete-database uri)))))
+        (clojure.test/is (= 6 (count runs)))
+        (println "OK"))
+      (finally
+        (do (println "Cleaning up")
+            (d/delete-database uri)))))
 
   (defn -main [uri]
     (org.apache.log4j.BasicConfigurator/configure)
