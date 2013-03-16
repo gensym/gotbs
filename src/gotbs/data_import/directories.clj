@@ -51,6 +51,7 @@
      destdir
      errordir
      (fn [file]
-       (d/transact conn
-                   (fi/transactions file (d/db conn))))))
+       (let [tx (fi/transactions file (d/db conn))]
+         (time
+          (d/transact conn tx))))))
   (System/exit 0))

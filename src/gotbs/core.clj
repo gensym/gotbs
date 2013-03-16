@@ -4,7 +4,8 @@
   (:use ring.middleware.reload (wrap-reload))
   (:use ring.middleware.params (wrap-params))
   (:use ring.middleware.file)
-  (:use ring.middleware.file-info))
+  (:use ring.middleware.file-info)
+  (:require [gotbs.web.runs :as runs]))
 
 (defn- json-response [content-fn req]
   {:status 200
@@ -27,6 +28,9 @@
       "/routes"    {:status 200
                     :headers {"Content-Type" "text/html"}
                     :body (apply str (routes req))}
+      "/runs" {:status 200
+               :headers {"Content-Type" "text/html"}
+               :body (apply str (runs/runs req))}
       "/routes/available.json" (json-response available-routes req) 
       "/routes/directions.json" (json-response route-directions req)
       "/routes/route-descriptor.json" (json-response route-descriptor req)

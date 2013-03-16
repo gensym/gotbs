@@ -1,49 +1,55 @@
 (ns gotbs.data-import.query
   (:use [datomic.api :only [db q] :as d]))
 
-(comment (def uri "datomic:free://localhost:4334/gotbs"))
+(comment (def uri-full "datomic:free://localhost:4334/gotbs"))
 (comment (def uri  "datomic:free://localhost:4334/gotbs-test"))
 
 (comment (def conn (d/connect uri)))
+(comment (def conn-full (d/connect uri-full)))
+
+(comment (def vid "1159"))
+
 
 (comment (def t #inst "2012-03-08T02:43:00.000-00:00"))
+(comment (def t2 #inst "2012-03-08T09:43:00.000-00:00"))
 (comment (def r (find-run conn "1874" "73")))
 (comment (def point (last-runpoint conn "1874" t)))
 (comment (def run (find-run conn "1874" "73" "Clark/North" t)))
 
-(defn before? [t1 t2]
-  (< (.compareTo t1 t2) 0))
+(comment (def run (find-run conn-full "1874" "73" "Clark/North" #inst "2012-04-08T09:43:00.000-00:00")))
 
 (defn prior-run [db vehicle_id time]
   (->>
-   (d/q '[:find (max ?time) ?run
+   (d/q '[:find ?run
           :in $ ?vehicle_id ?t
           :where
-          [?point :runpoint/time ?time]
-          [(gotbs.data-import.query/before? ?time ?t)]
-          [?point :runpoint/run ?run]
+          [(< ?time ?t)]
+          [?vehicle :vehicle/cta_id ?vehicle_id]
           [?run :run/vehicle ?vehicle]
-          [?vehicle :vehicle/cta_id ?vehicle_id]]
+          [?point-c :runpoint/run ?run]
+          [?point-c :runpoint/time ?time]
+          [(max ?time) ?mtime]
+          [?point :runpoint/time ?mtime]
+          [?point :runpoint/run ?run]]
         db vehicle_id time)
-   (sort-by (fn [[t r]] t))
-   (last)
-   (second)
+   (ffirst)
    (d/entity db)))
 
 (defn next-run [db vehicle_id time]
   (->>
-   (d/q '[:find (max ?time) ?run
+   (d/q '[:find ?run
           :in $ ?vehicle_id ?t
           :where
-          [?point :runpoint/time ?time]
-          [(gotbs.data-import.query/before? ?t ?time)]
-          [?point :runpoint/run ?run]
+          [(> ?time ?t)]
+          [?vehicle :vehicle/cta_id ?vehicle_id]
           [?run :run/vehicle ?vehicle]
-          [?vehicle :vehicle/cta_id ?vehicle_id]]
+          [?point-c :runpoint/run ?run]
+          [?point-c :runpoint/time ?time]
+          [(min ?time) ?mtime]
+          [?point :runpoint/time ?mtime]
+          [?point :runpoint/run ?run]]
         db vehicle_id time)
-   (sort-by (fn [[t r]] t))
-   (last)
-   (second)
+   (ffirst)
    (d/entity db)))
 
 (defn match-run-or-nil [candidate vehicle_id route_id destination]
@@ -52,12 +58,11 @@
            (= destination (:destination/name (:run/destination candidate))))
     candidate))
 
-(defn find-run [db vehicle_id route_id  destination time]
-  (let [before (prior-run db vehicle_id time)
-        after (next-run db vehicle_id time)]
+(defn find-run [db vehicle_id route_id  destination t]
+  (let [before (prior-run db vehicle_id t)]
     (if-let [a (match-run-or-nil before vehicle_id route_id destination)]
       a
-      (match-run-or-nil after vehicle_id route_id destination))))
+      (match-run-or-nil  (next-run db vehicle_id t) vehicle_id route_id destination))))
 
 (defn known-entity-types [conn]
   (->>

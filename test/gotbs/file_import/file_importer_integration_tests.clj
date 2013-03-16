@@ -27,7 +27,7 @@
         (println "OK"))
       (finally
         (do (println "Cleaning up")
-            (d/delete-database uri)))))
+            (comment (d/delete-database uri))))))
 
   (defn -main [uri]
     (org.apache.log4j.BasicConfigurator/configure)

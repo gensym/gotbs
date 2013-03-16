@@ -24,7 +24,6 @@
   [:div#routes]
   [])
 
-
 (deftemplate routestemplate "web/index.html"
   [req]
   [:div#main] (substitute (routes-body))
