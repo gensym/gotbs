@@ -9,7 +9,6 @@
 
 (comment (def vid "1159"))
 
-
 (comment (def t #inst "2012-03-08T02:43:00.000-00:00"))
 (comment (def t2 #inst "2012-03-08T09:43:00.000-00:00"))
 (comment (def r (find-run conn "1874" "73")))
