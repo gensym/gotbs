@@ -55,7 +55,11 @@ function run_canvas(canvas_id, timeRange) {
   };
 
   return canvas;
+}
 
+function get_run_data(data_func) {
+
+  $.get('/runs/for_route.json', {}, data_func);
 }
 
 

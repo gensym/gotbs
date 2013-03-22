@@ -29,15 +29,10 @@
       <script type='text/javascript' src="js/cta_runs.js"></script>
       
       <script id="data">
-
-        var timeRange = [2300, 2400]
-        var data = [
-        [
-        { dist: 0.1, time: 2300 },
-        { dist: 0.5, time: 2325 },
-        { dist: 0.7, time: 2350}, 
-        { dist: 1.0, time: 2360}]];
-        plot_runs('#timelines', timeRange, data);
+        var timeRange = [2300, 2400];
+        get_run_data(function(data) {
+          plot_runs('#timelines', timeRange, data);
+        });
 
       </script>
 

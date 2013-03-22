@@ -35,6 +35,7 @@
       "/routes/directions.json" (json-response route-directions req)
       "/routes/route-descriptor.json" (json-response route-descriptor req)
       "/routes/waypoints.json" (json-response route-waypoints req)
+      "/runs/for_route.json" (json-response runs/for-route req)
       {:status 200
        :headers {"Content-Type" "text/html"}
        :body (str "Welcome")}))
