@@ -40,9 +40,10 @@
    (map (partial d/entity db))
    (map run-with-points)))
 
-(defn rruns [db]
+(comment
+  (defn rruns [db]
     (let [db (d/db conn)
-        cta-route-id "56"
-        start-time #inst "2012-03-02T06:00:00.000-00:00"
+          cta-route-id "56"
+          start-time #inst "2012-03-02T06:00:00.000-00:00"
           end-time #inst "2012-03-08T11:00:00.000-00:00"]
-      (route-runs db cta-route-id start-time end-time)))
+      (route-runs db cta-route-id start-time end-time))))

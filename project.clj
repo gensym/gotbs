@@ -11,7 +11,7 @@
                  [ring/ring-core "1.0.1" :exclusions [org.clojure/clojure]]
                  [ring/ring-jetty-adapter "1.0.1" :exclusions [org.clojure/clojure]]
                  [ring/ring-devel "1.0.1" :exclusions [org.clojure/clojure]]
-                 [clj-time/clj-time "0.3.7" :exclusions [org.clojure/clojure]]
+                 [clj-time/clj-time "0.4.5" :exclusions [org.clojure/clojure]]
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
                  [com.datomic/datomic-free "0.8.3789"  :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]]
  

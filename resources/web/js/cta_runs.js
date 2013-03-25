@@ -1,13 +1,12 @@
-function run_canvas(canvas_id, timeRange) {
+function run_canvas(canvas_id, start_time, end_time) {
   var elem = $(canvas_id)[0];
   if (!elem || !elem.getContext) {
     return;
   }
-
   
   var toPoint = function(width, height, dist, time) {
-    var timespan = timeRange[1] - timeRange[0];
-    var x = (time - timeRange[0]) / timespan * width;
+    var timespan = end_time - start_time;
+    var x = (time - start_time) / timespan * width;
     
     return [x, dist * height];
   }
@@ -57,14 +56,14 @@ function run_canvas(canvas_id, timeRange) {
   return canvas;
 }
 
-function get_run_data(data_func) {
+function get_run_data(time_range, data_func) {
 
-  $.get('/runs/for_route.json', {}, data_func);
+  $.get('/runs/for_route.json', {from: time_range[0], to: time_range[1] }, data_func);
 }
 
 
-function plot_runs(canvas_id, timeRange, runs) {
-  var canvas = run_canvas(canvas_id, timeRange);
+function plot_runs(canvas_id, start_time, end_time, runs) {
+  var canvas = run_canvas(canvas_id, start_time, end_time);
   if (!canvas) {
     return;
   }

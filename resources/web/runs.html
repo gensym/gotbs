@@ -29,9 +29,14 @@
       <script type='text/javascript' src="js/cta_runs.js"></script>
       
       <script id="data">
-        var timeRange = [2300, 2400];
-        get_run_data(function(data) {
-          plot_runs('#timelines', timeRange, data);
+        var start = "130228180000";
+        var end = "130301180000";
+        var timeRange = [start, end];
+        get_run_data(timeRange, function(data) {
+          plot_runs('#timelines', 
+                     data["start-time"],
+                     data["end-time"], 
+                     data.runs);
         });
 
       </script>
