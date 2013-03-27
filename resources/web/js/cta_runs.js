@@ -57,22 +57,28 @@ function run_canvas(canvas_id, start_time, end_time) {
 }
 
 function get_run_data(time_range, data_func) {
-
-  $.get('/runs/for_route.json', {from: time_range[0], to: time_range[1] }, data_func);
+  $.get('/runs/for_route.json', {from: time_range[0].toJSON(), to: time_range[1].toJSON() }, data_func);
 }
 
-
 function plot_runs(canvas_id, start_time, end_time, runs) {
-  var canvas = run_canvas(canvas_id, start_time, end_time);
+  
+  var start = Date.parse(start_time);
+  var end = Date.parse(end_time);
+  var canvas = run_canvas(canvas_id, start, end);
   if (!canvas) {
     return;
   }
-
+  
   _.each(runs, 
          function(run) {
-           canvas.addRun(run);
+           var r = 
+             _.map(run, function(runpoint) {
+               var f = 
+                { dist: runpoint.dist, 
+                  time: Date.parse(runpoint.time) };
+               return f;
+               });
+           canvas.addRun(r);
          });
   canvas.redraw();
-
-
 }
