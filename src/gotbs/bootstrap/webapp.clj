@@ -10,6 +10,11 @@
             [clojure.data.json :as json]
             [gotbs.util.scheduler :as scheduler]))
 
+(comment (def datomic-uri "datomic:free://localhost:4334/gotbs"))
+(comment (def conn (datomic.api/connect datomic-uri)))
+(comment (def stop (start-all conn)))
+(comment (stop))
+
 (defn- start-jetty [handler port]
   (let [server (make-jetty-server handler port)]
     (.start server)
@@ -32,20 +37,23 @@
     (webbit/start webbit-server)
     (fn [] (webbit/stop webbit-server))))
 
-(defn start-jetty-core-app []
-  (start-jetty #'gotbs.core/app 8080))
+(defn start-jetty-core-app [database-connection]
+  (start-jetty (gotbs.core/app database-connection) 8080))
 
 (defn- action-fn [[rtid direction]]
   (let  [vehicles (busdata/in-flight-vehicles [rtid])]
     (filter #(= direction (busdata/vehicle-direction %)) vehicles)))
 
-(defn start-all []
+(defn start-all [database-connection]
   "Return a function that, when invoked, shuts down"
+  (log/info "Starting webapp")
   (let [subscriptions  (feed/make-subscriptions action-fn)
         location-subscriber (subscriber/make-subscriptions subscriptions)
         stoppables
         [(start-webbit 8888 location-subscriber)
-         (start-jetty-core-app)
+         (start-jetty-core-app database-connection)
          (start-feed-scheduler subscriptions)
          #(subscriber/stop location-subscriber)]]
-    (fn [] (dorun (map #(%) stoppables)))))
+    (fn []
+      (log/info "Stopping webapp")
+      (dorun (map #(%) stoppables)))))

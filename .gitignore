@@ -1,6 +1,7 @@
 pom.xml
 *jar
 lib
+logs
 classes
 notes.txt
 .lein-failures

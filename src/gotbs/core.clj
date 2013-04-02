@@ -5,23 +5,21 @@
   (:use ring.middleware.params (wrap-params))
   (:use ring.middleware.file)
   (:use ring.middleware.file-info)
-  (:require [gotbs.web.runs :as runs]))
+  (:require
+   [ring.middleware.logger :as logger]
+   [gotbs.web.runs :as runs]))
+
+(def db {})
 
 (defn- json-response [content-fn req]
   {:status 200
    :headers {"Content-Type" "application/json" }
-   :body (apply str (content-fn (:params req))) }
-  )
+   :body (apply str (content-fn (:params req))) }  )
 
-(defn router [req]
+
+
+(defn router [db req]
   (condp = (:uri req)
-      "/error"    {:status 404
-		   :headers {"Content-Type" "text/html"}
-		   :body (str "Error")}
-
-      "/info"     {:status 200
-		   :headers {"Content-Type" "text/html"}
-		   :body (str "This is Ring on " (:server-name req))}
       "/locations" {:status 200
 		    :headers {"Content-Type" "text/html"}
 		    :body (apply str (locations req))}
@@ -35,17 +33,19 @@
       "/routes/directions.json" (json-response route-directions req)
       "/routes/route-descriptor.json" (json-response route-descriptor req)
       "/routes/waypoints.json" (json-response route-waypoints req)
-      "/runs/for_route.json" (json-response runs/for-route req)
-      {:status 200
+      "/runs/for_route.json" (json-response (partial runs/for-route db) req)
+      {:status 404
        :headers {"Content-Type" "text/html"}
-       :body (str "Welcome")}))
+       :body (str "Oops")}))
 
-(defn handler [req]
-  (router req))
+(defn handler [conn req]
+  (router (datomic.api/db conn) req))
 
-(def app (-> (wrap-params handler)
-	     (wrap-file "resources/web")
-	     (wrap-file-info)
-             (wrap-reload ['gotbs.web.routes])))
-	     
 
+(comment       (logger/wrap-with-plaintext-logger))
+
+(defn app [db-connection]
+  (-> (wrap-params (partial handler db-connection))
+      (wrap-file "resources/web")
+      (wrap-file-info)
+      (wrap-reload ['gotbs.web.routes])))

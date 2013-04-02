@@ -26,6 +26,59 @@
   :db/doc "The route's ID as used by the CTA"
   :db.install/_attribute :db.part/db}
 
+ ;; pattern
+ ;; NEW
+
+ 
+ {:db/id #db/id[:db.part/db]
+  :db/ident :pattern/cta_id
+  :db/index true
+  :db/unique :db.unique/identity
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The pattern's ID as used by the CTA"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :pattern/route
+  :db/index true
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The route associated with a certain pattern"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :patternpoint/pattern
+  :db/index true
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "The pattern associated with a pattern point"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :patternpoint/longitude
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "A WGS 84 longitude"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :patternpoint/latitude
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "A WGS 84 latitude"
+  :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+  :db/ident :patternpoint/pathdistance
+  :db/index true
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Linear distance in feet from the beginning of the pattern's pattern"
+  :db.install/_attribute :db.part/db}
+ ;; END PATTERN
+
+
  ;; destination
 
  {:db/id #db/id[:db.part/db]

@@ -1,14 +1,24 @@
 (ns gotbs.web.runs
-  (:require [clojure.data.json :as json])
-  (:require [gotbs.run-data :as run])
+  (:require [clojure.data.json :as json]
+            [clojure.tools.logging :as log]
+            [gotbs.run-data :as run])
   (:use net.cgrand.enlive-html)
-  (:import org.joda.time.DateTime)
-  (:import org.joda.time.format.DateTimeFormat)
-  (:import java.text.SimpleDateFormat))
+  (:import org.joda.time.DateTime
+           org.joda.time.format.DateTimeFormat
+            java.text.SimpleDateFormat))
 
 
-(def ds "2013-03-27T00:29:41.568Z")
 (def formatter (DateTimeFormat/forPattern "yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
+
+
+(comment (def datomic-uri "datomic:free://localhost:4334/gotbs"))
+(comment (def conn (datomic.api/connect datomic-uri)))
+
+(comment (def from "2012-04-02T11:00:00.000Z"))
+(comment (def to "2012-04-08T16:00:00.000Z"))
+(comment (def mdb (datomic.api/db gotbs.bootstrap.webapp/conn)))
+(comment (def mdb (datomic.api/db conn)))
+(comment (for-route mdb {"from" from "to" to}))
 
 (defn- to-date [ds]
   (.toDate (.parseLocalDateTime formatter ds)))
@@ -27,11 +37,16 @@
     :start-time (to-string (:start-time run-message))
     :end-time (to-string (:end-time run-message))))
 
-(defn for-route [{start-time "from"
-                  end-time "to"}]
-  (let [start (to-date start-time)
-        end (to-date end-time)]
-    (json/json-str (format-dates (run/for-route start end)))))
+(defn for-route [db
+                 {from "from"
+                  to "to"}]
+    (let [start (to-date from)
+          end (to-date to)]
+      (do
+        (log/info "Sending runs for route from " from "to" to)
+        (->  (run/for-route db start end)
+             format-dates
+             json/json-str))))
 
 (defsnippet runs-body "web/runs.html"
   [:div#runs]
