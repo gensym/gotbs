@@ -6,8 +6,6 @@
 (comment (def conn (d/connect uri)))
 
 (comment (def mdb (d/db conn)))
-(comment (route-runs mdb  "56" #inst "2012-04-02T16:00:00.000-00:00" #inst "2012-04-08T21:00:00.000-00:00"))
-
 
 (defn run-with-points [run-entity]
   {:vehicle-id (-> run-entity :run/vehicle :vehicle/cta_id)
@@ -50,7 +48,6 @@
 ;; the runset
 (defn pattern-distance [runset]
   (apply max (cons 0 (map :distance (mapcat :points runset)))))
-
 
 ;; TODO - need a way to get the total distance for a route.
 ;; we should also take the route direction
