@@ -1,9 +1,12 @@
 pom.xml
 *jar
+classes
 lib
 logs
-classes
+out
+repl
+.repl
+target
 notes.txt
-.lein-failures
-.lein-deps-sum
-.lein-plugins
+.lein-*
+

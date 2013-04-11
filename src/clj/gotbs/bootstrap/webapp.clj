@@ -10,14 +10,6 @@
             [clojure.data.json :as json]
             [gotbs.util.scheduler :as scheduler]))
 
-(comment
-  (do
-    (def datomic-uri "datomic:free://localhost:4334/gotbs")
-    (def conn (datomic.api/connect datomic-uri))
-    (def stop (start-all conn))))
-
-(comment (stop))
-
 (defn- start-jetty [handler port]
   (let [server (make-jetty-server handler port)]
     (.start server)
