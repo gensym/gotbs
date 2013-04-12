@@ -25,8 +25,8 @@
   :cljsbuild {:builds
               [{:source-paths ["src/cljs"]
                 :compiler {
-                           :output-dir "resources/web/js/"
-                           :output-to "resources/web/js/gotbs_client.js"
+                           :output-dir "resources/web/cljs/"
+                           :output-to "resources/web/cljs/gotbs_client.js"
                            :optimizations :simple
                            :pretty-print true}}]}
  
