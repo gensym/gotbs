@@ -40,16 +40,12 @@
       
       <script id="data">
         var rd = run_dates("#run-date-label", "#run-start-date", "#run-start-date-button");
-
         rd.init();
         var timeRange = rd.range;
 
-        get_run_data(timeRange, function(data) {
-          plot_runs('#timelines', 
-                     data["start-time"],
-                     data["end-time"], 
-                     data.runs);
-        });
+
+
+        gotbs.js.timeline.get_data(timeRange[0], timeRange[1]);
 
       </script>
 

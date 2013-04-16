@@ -1,6 +1,5 @@
 (ns gotbs.web.runs
-  (:require [clojure.data.json :as json]
-            [clojure.tools.logging :as log]
+  (:require [clojure.tools.logging :as log]
             [gotbs.run-data :as run])
   (:use net.cgrand.enlive-html)
   (:import org.joda.time.DateTime
@@ -23,19 +22,6 @@
 (defn- to-date [ds]
   (.toDate (.parseLocalDateTime formatter ds)))
 
-(defn- to-string [d]
-  (.toString (DateTime. d) formatter))
-
-(defn- format-dates [run-message]
-  (assoc run-message
-    :runs
-    (map (fn [run]
-           (map (fn [rp]
-                  (assoc rp :time (to-string (:time rp))))
-                run))
-         (:runs run-message))
-    :start-time (to-string (:start-time run-message))
-    :end-time (to-string (:end-time run-message))))
 
 (defn for-route [db
                  {from "from"
@@ -44,9 +30,7 @@
           end (to-date to)]
       (do
         (log/info "Sending runs for route from " from "to" to)
-        (->  (run/for-route db start end)
-             format-dates
-             json/json-str))))
+         (run/for-route db start end))))
 
 (defsnippet runs-body "web/runs.html"
   [:div#runs]

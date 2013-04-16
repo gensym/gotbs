@@ -6,6 +6,7 @@
   (:use ring.middleware.file)
   (:use ring.middleware.file-info)
   (:require
+   [clojure.data.json :as json]
    [ring.middleware.logger :as logger]
    [gotbs.web.runs :as runs]))
 
@@ -16,7 +17,12 @@
    :headers {"Content-Type" "application/json" }
    :body (apply str (content-fn (:params req))) }  )
 
-
+(defn- edn-response [content-fn req]
+  {:status 200
+   :headers {"Content-Type" "application/edn" }
+   :body (-> (:params req)
+             content-fn
+             pr-str) })
 
 (defn router [db req]
   (condp = (:uri req)
@@ -33,7 +39,7 @@
       "/routes/directions.json" (json-response route-directions req)
       "/routes/route-descriptor.json" (json-response route-descriptor req)
       "/routes/waypoints.json" (json-response route-waypoints req)
-      "/runs/for_route.json" (json-response (partial runs/for-route db) req)
+      "/runs/for_route.edn" (edn-response (partial runs/for-route db) req)
       {:status 404
        :headers {"Content-Type" "text/html"}
        :body (str "Oops")}))

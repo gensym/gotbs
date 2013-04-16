@@ -38,12 +38,8 @@ function run_canvas(canvas_id, start_time, end_time) {
         });
        
         
-        console.log("X:" + points[0][0]);
-        console.log("Y:" + points[0][1]);
         ctx.moveTo(points[0][0], points[0][1]);
         for (var i = 1; i < points.length; i++) {
-          console.log("X:" + points[i][0]);
-          console.log("Y:" + points[i][1]);
           ctx.lineTo(points[i][0], points[i][1]);
         }
         ctx.stroke();

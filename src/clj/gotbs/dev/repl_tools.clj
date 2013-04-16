@@ -1,5 +1,6 @@
 (ns gotbs.dev.repl-tools
-  (:require [gotbs.bootstrap.webapp :as webapp]))
+  (:require [gotbs.bootstrap.webapp :as webapp]
+            [cljs.repl.browser]))
 
 (comment
   (do

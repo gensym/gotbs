@@ -18,16 +18,17 @@
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
                  [com.datomic/datomic-free "0.8.3862"
                   :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
+                 [com.cemerick/piggieback "0.0.4"]
                  [jayq "2.3.0"]]
   :source-paths ["src/clj"]
   :plugins [[lein-cljsbuild "0.3.0"]]
-
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :cljsbuild {:builds
-              [{:source-paths ["src/cljs"]
+              [{:source-paths ["src/brepl" "src/cljs"]
                 :compiler {
                            :output-dir "resources/web/cljs/"
                            :output-to "resources/web/cljs/gotbs_client.js"
-                           :optimizations :simple
+                           :optimizations :whitespace
                            :pretty-print true}}]}
  
    :profiles {:dev
