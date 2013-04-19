@@ -1,10 +1,6 @@
 (ns gotbs.js.timeline
-  (:require [goog.net.XhrIo :as gxhr]))
-
-(.write js/document "<p>WTF - get. it. on!</p>")
-(.log js/console "FFFuuu")
-
-(comment (def canvas-id "timelines"))
+  (:require [goog.net.XhrIo :as gxhr]
+            [cljs.reader :as reader]))
 
 (defn draw-path [context path]
   (if (not (empty? path))
@@ -19,8 +15,8 @@
   (let [xrange (- x1 x0)
         yrange (- y1 y0)]
     (map (fn [[x y]]
-           [(/ (- x x0) (* xrange width))
-            (/ (- y y0) (* yrange height))])
+           [(* (/ (- x x0) xrange) width)
+            (* (/ (- y y0) yrange) height)])
          path)))
 
 (defn find-range [pointsets]
@@ -33,6 +29,7 @@
         (max yx y)])
      [x x y y]
      (apply concat pointsets))))
+
 
 (defn ^:export draw-canvas [canvas-id paths] 
 
@@ -50,7 +47,9 @@
       (draw-path context path))
     (.restore context)))
 
-;; Everything below here should be moved out of this namespace
+;; TODO - Everything below here should be moved out of this namespace
+
+(defn to-xy [{x :time y :dist}] [x y])
 
 (defn get-uri [start-date end-date]
   (let [uri
@@ -63,10 +62,13 @@
 (defn  get-runs-json [start-date end-date]
   (gxhr/send (get-uri start-date end-date)
              (fn [message]
-               (let [runset  (.getResponseText (.-target message))]
-                 (.log js/console runset)
+               (let [runset (-> message
+                                (.-target)
+                                (.getResponseText)
+                                (reader/read-string))]
+                 
                  (set! (.-runs js/document) runset)
-                 (comment (draw-canvas "timelines" (.-runs runset)))))))
+                 (draw-canvas "timelines" (map (partial map to-xy) (:runs runset)))))))
 
 (defn ^:export get-data [start-date end-date]
   (get-runs-json start-date end-date))

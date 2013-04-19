@@ -9,4 +9,5 @@ repl
 target
 notes.txt
 .lein-*
+resources/web/cljs
 
