@@ -1,6 +1,4 @@
-(ns gotbs.js.timeline
-  (:require [goog.net.XhrIo :as gxhr]
-            [cljs.reader :as reader]))
+(ns gotbs.js.timeline)
 
 (defn draw-path [context path]
   (if (not (empty? path))
@@ -46,34 +44,3 @@
     (doseq [path points]
       (draw-path context path))
     (.restore context)))
-
-;; TODO - Everything below here should be moved out of this namespace
-
-(defn to-xy [{x :time y :dist}] [x y])
-
-(defn get-uri [start-date end-date]
-  (let [uri
-        (goog.Uri. "/")
-        qr (. uri (getQueryData))]
-    (.add qr "from" (.toJSON start-date))
-    (.add qr "to" (.toJSON end-date))
-    (.setPath uri "/runs/for_route.edn")))
-
-(defn  get-runs-json [start-date end-date]
-  (gxhr/send (get-uri start-date end-date)
-             (fn [message]
-               (let [runset (-> message
-                                (.-target)
-                                (.getResponseText)
-                                (reader/read-string))]
-                 
-                 (set! (.-runs js/document) runset)
-                 (draw-canvas "timelines" (map (partial map to-xy) (:runs runset)))))))
-
-(defn ^:export get-data [start-date end-date]
-  (get-runs-json start-date end-date))
-
-(def start-date #inst "2012-03-07T21:00:00.000-00:00")
-(def end-date #inst "2012-03-08T00:00:00.000-00:00")
-
-
