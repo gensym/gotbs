@@ -14,16 +14,19 @@
     (.add qr "to" (.toJSON end-date))
     (.setPath uri "/runs/for_route.edn")))
 
-(defn  get-runs-json [start-date end-date]
+(defn  get-runs-json [timelines start-date end-date]
   (gxhr/send (get-uri start-date end-date)
              (fn [message]
-               (let [runset (-> message
+               (let [paths (->> message
                                 (.-target)
                                 (.getResponseText)
-                                (reader/read-string))]
-                 
-                 (set! (.-runs js/document) runset)
-                 (timeline/draw-canvas "timelines" (map (partial map to-xy) (:runs runset)))))))
+                                (reader/read-string)
+                                (:runs)
+                                (map (partial map to-xy)))]
+                 (timeline/set-paths! timelines paths [] [])
+                 (timeline/draw timelines)))))
 
 (defn ^:export get-data [start-date end-date]
-  (get-runs-json start-date end-date))
+  (let [timelines (timeline/make-timelines-graph "timelines")]
+    (get-runs-json timelines start-date end-date)
+    timelines))
