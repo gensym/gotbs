@@ -27,13 +27,11 @@
 (defn scale-y [y0 y1 height y]
   (* ( / (- y y0) (- y1 y0)) height))
 
-
 (defn scale-path [x-scaler y-scaler path]
   (map (fn [[x y]]
          [(x-scaler x)
           (y-scaler y)])
        path))
-
 
 (defn find-range [pointsets]
   (let [[x y] (ffirst pointsets)]
@@ -45,8 +43,6 @@
         (max yx y)])
      [x x y y]
      (apply concat pointsets))))
-
-
 
 (defn set-paths! [timelines paths xlabels ylabels]
   (let [[x0 x1 y0 y1] (find-range paths)
@@ -70,12 +66,6 @@
      :y-scale (atom identity)
      :points (atom [])}))
 
-(comment
-  (do
-    (def timelines (.-timelines js/document))
-    (def points (.-points js/document))
-    (def context (.-context js/document))))
-
 (defn ^:export draw [timelines-graph]
   (let [{width :width
          height :height
@@ -88,10 +78,3 @@
       (draw-path context path))
     (.restore context)))
 
-(comment
-  (do
-    (def canvas-id "timelines")
-    (def paths (.-paths js/document))
-    (def graph (make-timelines-graph canvas-id paths [] []))
-    (def x-scaler (:x-scale graph))
-    (def y-scaler (:y-scale graph))))

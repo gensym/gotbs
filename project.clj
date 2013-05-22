@@ -18,20 +18,27 @@
                  [enlive "1.0.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
                  [com.datomic/datomic-free "0.8.3862"
                   :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
-                 [com.cemerick/piggieback "0.0.4"]
-                 [jayq "2.3.0"]]
+                 [domina "1.0.2-SNAPSHOT"]
+                 [org.clojure/google-closure-library-third-party "0.0-2029"]
+                 [com.cemerick/piggieback "0.0.4"]]
   :source-paths ["src/clj"]
   :plugins [[lein-cljsbuild "0.3.0"]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-  :cljsbuild {:builds
-              [{:source-paths ["src/brepl" "src/cljs"]
-                :compiler {
-                           :output-dir "resources/web/cljs/"
-                           :output-to "resources/web/cljs/gotbs_client.js"
-                           :optimizations :whitespace
-                           :pretty-print true}}]}
- 
-   :profiles {:dev
+  :cljsbuild { :builds
+              {:dev {
+                     :source-paths ["src/brepl" "src/cljs"]
+                     :compiler {:output-to "resources/web/cljs/gotbs_client.dbg.js"
+                                :optimizations :whitespace
+                                :pretty-print true}}
+               :prod {
+                      :source-paths ["src/cljs"]
+                      :compiler {:output-to "resources/web/cljs/gotbs_client.js"
+                                 :externs ["resources/web/js/moment_externs.js"]}}
+               :pre-prod {
+                          :source-paths ["src/brepl" "src/cljs"]
+                          :compiler { :output-to "resources/web/cljs/gotbs_client_pre.js"
+                                     :optimizations :simple}}}}
+    :profiles {:dev
              {:dependencies
               [[midje "1.3.2-SNAPSHOT" :exclusions [org.clojure/clojure]]
                [org.gensym/tools.trace "0.1" :exclusions [org.clojure/clojure]]
