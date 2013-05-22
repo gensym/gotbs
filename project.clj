@@ -36,7 +36,7 @@
                                  :externs ["resources/web/js/moment_externs.js"]}}
                :pre-prod {
                           :source-paths ["src/brepl" "src/cljs"]
-                          :compiler { :output-to "resources/web/cljs/gotbs_client_pre.js"
+                          :compiler { :output-to "resources/web/cljs/gotbs_client.pre.js"
                                      :optimizations :simple}}}}
     :profiles {:dev
              {:dependencies

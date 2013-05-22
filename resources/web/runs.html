@@ -14,15 +14,23 @@
 <div id="page-specific-scripts">
       <script type='text/javascript' src="js/moment.min.js"></script>
       <script type='text/javascript' src="js/run_dates.js"></script>
-      <script type='text/javascript' src="cljs/gotbs_client.js"></script>
+      <script type='text/javascript' src="cljs/gotbs_client.pre.js"></script>
       
       
       <script id="data">
-        var rd = run_dates("#run-date-label", "#run-start-date", "#run-start-date-button");
-        rd.init();
-        var timeRange = rd.range;
+        var rd = gotbs.js.run_dates.init(
+        "run-date-label",
+        "run-start-date", 
+        "run-start-date-button");
 
-        var timelines = gotbs.js.run_plots.get_data(timeRange[0], timeRange[1]);
+        gotbs.js.run_dates.update_label(rd);
+
+        var start = gotbs.js.run_dates.start_date(rd);
+        var end = gotbs.js.run_dates.end_date(rd);
+        console.log(start);
+        console.log(end);
+
+        var timelines = gotbs.js.run_plots.get_data(rd);
       </script>
 
 </div>

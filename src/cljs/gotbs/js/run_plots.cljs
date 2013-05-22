@@ -26,7 +26,8 @@
                  (timeline/set-paths! timelines paths [] [])
                  (timeline/draw timelines)))))
 
-(defn ^:export get-data [start-date end-date]
+(defn ^:export get-data [{start-date :start
+                          end-date :end}]
   (let [timelines (timeline/make-timelines-graph "timelines")]
     (get-runs-json timelines start-date end-date)
     timelines))
